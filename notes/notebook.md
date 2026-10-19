@@ -27,3 +27,14 @@ a different justification (counterfactual videos, commitment time), and I should
 
 Open doubts. Branching pseudotime from snapshots alone is not identifiable; some tracked cells
 with known fate will be needed to learn the fate direction. How few is itself a question.
+
+Later the same day. Found the source of the processed data: preprint Lippincott et al. 2025
+(bioRxiv 10.1101/2025.10.23.684203). Code and profiles on Zenodo 10.5281/zenodo.17419422
+(image processing, tracking with Ultrack, profiling) and 10.5281/zenodo.17419412 (analysis,
+models). Project repo github.com/WayScience/live_cell_timelapse_apoptosis_analysis.
+Doses: ten, 2-fold serial from 156 nM down to 0, triplicate wells, 0.1% DMSO vehicle; 13 live
+timepoints (0 to 360 min) and one terminal fixed image (AnnexinV-633 + Hoechst) registered to the
+last live frame. Ground truth is a continuous AnnexinV intensity per tracked cell at 6 h only;
+there is no binary label and no fate information before 6 h. So "when did the cell commit" has no
+direct ground truth; it can only be tested indirectly (prediction-from-frame-t curves, and dose
+monotonicity).
