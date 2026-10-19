@@ -5,6 +5,7 @@ data/processed/
 results/*
 !results/figures/
 !results/qc/
+!results/tables/
 __pycache__/
 *.pyc
 .DS_Store

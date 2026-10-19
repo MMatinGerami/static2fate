@@ -144,3 +144,41 @@ lethal dose, AnnexinV the earlier one at 19.53 nM. Provisional label for now: An
 control 90th percentile OR terminal nucleus below half its initial area. To be replaced by
 AnnexinV measured inside a cell mask from the ChromaLive channels. Saved
 data/processed/fate_table_complete_labelled.parquet.
+
+## 2026-10-20, night
+
+Cell masks. The terminal image has no ChromaLIVE channels, so cell masks are drawn on live
+frame 13 (seeded watershed from the nuclei on the log of the summed ChromaLIVE channels, cells
+limited to 60 px from their nucleus) and applied to the registered AnnexinV image; the Way lab
+did the same. QC in results/qc/C-02_F0001_cell_masks.png: masks follow the cells, a few
+neighbours are merged in dense spots, cells drift 5 to 10 px between frame 13 and fixation.
+
+Fate label, final for now: AnnexinV 90th percentile inside the cytoplasm mask above the control
+wells' 90th percentile of the same quantity (311). Fraction apoptotic: 0 nM 0.10 (by
+construction), 9.77 nM 0.21, 19.53 nM 0.37, 78.13 nM 0.89. Checks: at 78 nM Hoechst brightens
+3.2x (condensation) and nuclei shrink to a third; in control the 17% of "shrunken" nuclei have
+normal Hoechst, they are daughters of divisions, not deaths, so nuclear area alone would have
+been a wrong label. 851 labelled cells.
+
+Single-frame baseline (scripts/06_baseline.py, results/figures/fig2_single_frame_baseline.png).
+128 px patches (Hoechst, CL488a, CL561) per cell per live frame; frozen DINOv2-base CLS
+embedding or 11 handcrafted nucleus measurements; logistic regression, leave-one-field-out over
+the 12 fields.
+- Pooled over doses the curve sits on the dose-only floor (AUROC 0.84) until about 3 h; most
+  of the pooled "prediction" is just knowing the dose. The honest number is within one dose.
+- Within 19.53 nM, the two-fate well: AUROC 0.52 at 0 min (nothing before the drug, as it
+  should be), 0.60 at 2 h, 0.69 at 3 h, 0.75 to 0.80 from 4 h on (handcrafted), 0.75 to 0.80
+  (DINOv2). So from a single frame the fate becomes readable between 2 and 4 h, two to four
+  hours before the AnnexinV readout. The Way lab's "100 minutes" was a population-level
+  statement across doses; this is per cell within a dose.
+- Handcrafted nucleus measurements match or beat frozen DINOv2 at every frame. Genovesio's
+  "what are we really learning" point, reproduced on this problem without trying.
+
+What this sets up. The generative model has to add something a classifier cannot: the two
+counterfactual videos and the time at which they separate. The baseline curve above is the
+calibration target for the commitment-time estimate: if the model says a cell is committed at
+2 h, the classifier should start seeing it then, not later.
+
+Caveats carried forward. 851 cells from 12 fields of one plate; the control false-positive rate
+is fixed at 10% by the label definition; tracking keeps a quarter to a half of cells, with a
+bias against dense regions and mobile cells; crops are 128 px and some cells are larger.

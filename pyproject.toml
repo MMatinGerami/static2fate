@@ -17,6 +17,7 @@ dependencies = [
     "scipy>=1.18.1",
     "tifffile>=2026.10.15",
     "trackpy>=0.7",
+    "transformers>=5.20.2",
 ]
 
 [project.scripts]
