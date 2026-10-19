@@ -133,3 +133,14 @@ control-like with a tail. Fate labels: a two-component mixture on log AnnexinV (
 Caveat on the AnnexinV measure: it is the mean in an 8 px ring around the nucleus, which in dense
 areas includes neighbours' membranes, and density differs by dose because dead cells detach.
 Cell-level masks (ChromaLive channels) would be the proper cytoplasm; later.
+
+Fate label numbers (complete tracks). Two-component mixture on log10 AnnexinV ring mean, pooled
+over doses: component means 2.38 and 1.91 (sd 0.19, 0.27). Fraction in the high component:
+0 nM 0.26, 9.77 nM 0.28, 19.53 nM 0.41, 78.13 nM 0.95. With a plain threshold at the control
+90th percentile (240): 0.10, 0.11, 0.20, 0.60. Neither is right on its own: the mixture calls a
+quarter of control cells "high", the threshold misses 40% of the 78 nM cells whose nuclei have
+all collapsed (median area ratio 0.21 to 0.33). Nuclear shrinkage is the cleaner signal at the
+lethal dose, AnnexinV the earlier one at 19.53 nM. Provisional label for now: AnnexinV above the
+control 90th percentile OR terminal nucleus below half its initial area. To be replaced by
+AnnexinV measured inside a cell mask from the ChromaLive channels. Saved
+data/processed/fate_table_complete_labelled.parquet.
