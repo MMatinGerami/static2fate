@@ -38,3 +38,37 @@ last live frame. Ground truth is a continuous AnnexinV intensity per tracked cel
 there is no binary label and no fate information before 6 h. So "when did the cell commit" has no
 direct ground truth; it can only be tested indirectly (prediction-from-frame-t curves, and dose
 monotonicity).
+
+## 2026-10-20
+
+Downloaded the two Zenodo records (code snapshots of the two Way lab repos, 21 MB and 333 MB,
+unpacked under data/raw/zenodo/). They contain code and figures, not data. The only tables are
+well-level: 5.bulk_timelapse_model/data_splits/{train,test}.parquet (20 + 10 wells, 2,858
+columns of median CellProfiler + scDINO features, Metadata_apoptosis_ground_truth = control /
+negative / positive at the well level). The per-cell profiles, Ultrack tracks and per-cell
+AnnexinV values are not deposited anywhere I can find: not on BioStudies (images only, checked the
+study JSON: one study component, "Raw Images"), not on Zenodo, not in the GitHub repos, and the
+preprint's data statement points only to the two code records. The repo's 0.download_data README
+is a placeholder. So the processed data would have to be regenerated from the images.
+
+Useful facts from the code: plate map in data/platemap_6hr_4ch.csv (dose per well); illumination
+correction and max-projection per well/FOV; nuclei segmented with Cellpose, tracked with Ultrack
+(5.cell_tracking/scripts/0.nuclei_tracking.py, 14 frames of 1900x1900); terminal AnnexinV image
+registered to frame 13 by an x-y offset (4.cellprofiler_analysis/results/*_offsets.parquet, these
+ARE in the repo); endpoint cells matched to tracks by nucleus centroid within 10 px
+(7.sc_timelapse_model/scripts/0.data_cleaning.py). No binary apoptosis label is ever defined;
+the per-cell target is cytoplasmic integrated AnnexinV intensity.
+
+A shortcut exists. Static2Dynamic's Hugging Face repo (thethomasboyer/Static2Dynamic) has a
+"chromalive" folder: a trained 98 MB diffusion model, train/test sample lists, and a pseudotime
+parquet named heldout_test_trajs_2_doses_10_11 ... 380px patches. So Boyer already cut 380 px
+single-cell patches from this dataset, 3 channels as PNG, and held out tracked trajectories at
+the two highest doses. If the parquet lists patch paths with well/FOV/time/track ids, that is
+their tracking for free, and training on the same patches makes any comparison with Static2Dynamic
+exact. Need to look inside those parquet files (about 33 MB) before deciding how to cut patches.
+
+Plan for the first real step, pending the image download: one control well and one high-dose
+well, all 4 FOVs, 13 live frames + terminal, 4 channels: 2 x 4 x (13 x 4 + 2) = 432 TIFF, about
+3 GB. Segment nuclei (Cellpose, CPU is fine at this size), track, register the AnnexinV frame
+with the offsets from the repo, measure AnnexinV per track. That gives real videos with fate for
+a few hundred cells and is enough to see whether the question is answerable before 45 GB.
