@@ -2,7 +2,9 @@
 data/raw/*
 !data/raw/MANIFEST.md
 data/processed/
-results/
+results/*
+!results/figures/
+!results/qc/
 __pycache__/
 *.pyc
 .DS_Store

@@ -88,3 +88,48 @@ preprocessing style (so the comparison is fair), different regime.
 Consequence for the subset: not control plus top dose, but control, one top dose, and two
 intermediate doses, e.g. C-02 (0), C-07 (9.77), C-08 (19.53), C-10 (78.13): 4 wells x 4 FOV x 54
 files, 864 TIFF, about 6 GB.
+
+## 2026-10-20, evening
+
+Downloaded the four-well subset (864 TIFF, 16 fields, all intact) and Boyer's three ChromaLive
+parquet files. The parquet confirms random crops: file names carry well, FOV, time, crop
+coordinates, rotation and flip; the train set uses C-11, D-10, D-11, E-10, E-11 and C-10 (the
+156 and 78 nM wells). No tracking in there, as expected.
+
+Segmentation. Cellpose-SAM (cpsam_v2) is too slow here: the CPU run did not finish one
+1900x1900 frame in 10 min; on MPS in fp32 at half resolution it takes 7.8 s per frame and finds
+174 nuclei where the classical route finds 209. For the pilot I use Otsu on smoothed Hoechst plus
+distance-transform watershed: 1 s per frame, masks look right on inspection
+(results/qc/C-02_F0001_overview.png), one over-split on a touching pair in the crop I looked at.
+Cellpose stays in the code as an option for a later check.
+
+Tracking. trackpy with a constant-velocity predictor, search range 70 px, memory 2. Nearest-
+neighbour displacement between frames is p50 13 px, p90 44 px, p99 89 px, so the obvious 30 px
+range fragments nearly everything (1 full track out of ~210 cells). Yield of complete tracks
+(frame 1 to terminal) is 23 to 54% of the nuclei present at frame 1, lower in the control wells,
+which are denser. Good enough for a pilot; Ultrack (what the Way lab used) is the upgrade.
+
+Registration, and a problem in the deposit. The terminal AnnexinV image is offset from live
+frame 13 by up to 180 px; plain cross-correlation (normalization=None) recovers it and agrees
+with the Way lab's offsets on fields 1 and 2. On fields 3 and 4 nothing matched, including the
+Way lab's own offsets (r = 0.03). Cross-matching every live field against every terminal field
+in all four wells gives the same answer each time: the terminal file named F0004 is the partner
+of live F0003 (r = 0.48 to 0.60), live F0004 matches none of the four terminal files, and the
+terminal file named F0003 matches none of the live fields. So one terminal field per well is
+either mislabelled or from elsewhere, and the Way lab's F0003 offsets are in fact the F0003-to-
+F0004 shifts. The code now matches terminal fields by correlation and gives no fate to live
+F0004. Twelve of sixteen fields have ground truth. Worth telling the Way lab (Greg Way is the
+PI; dataset first author Michael Lippincott).
+
+First result. 952 complete tracks with a terminal AnnexinV value. Figure
+results/figures/fig0_terminal_annexin_vs_area_by_dose.png. At 78 nM every cell is shrunken (median
+terminal/initial nucleus area 0.33) and AnnexinV-high: one fate, which is the regime Static2Dynamic
+trained on. At 0 nM nuclei keep their size and AnnexinV is low apart from a small tail. At 19.53 nM
+the AnnexinV distribution is broad with a second mode and the nuclei are mostly not yet shrunken:
+PS exposure without condensation, cells in early apoptosis next to cells that look untouched.
+That is the two-fate regime the project needs, and it exists in the data. 9.77 nM is mostly
+control-like with a tail. Fate labels: a two-component mixture on log AnnexinV (numbers below).
+
+Caveat on the AnnexinV measure: it is the mean in an 8 px ring around the nucleus, which in dense
+areas includes neighbours' membranes, and density differs by dose because dead cells detach.
+Cell-level masks (ChromaLive channels) would be the proper cytoplasm; later.

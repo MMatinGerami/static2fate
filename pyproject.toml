@@ -6,7 +6,18 @@ authors = [
     { email = "mmatin.gerami@gmail.com" }
 ]
 requires-python = ">=3.13"
-dependencies = []
+dependencies = [
+    "cellpose>=4.2.1.1",
+    "matplotlib>=3.11.2",
+    "numpy>=2.5.4",
+    "pandas>=3.0.6",
+    "pyarrow>=26.0.0",
+    "scikit-image>=0.26.0",
+    "scikit-learn>=1.9.1",
+    "scipy>=1.18.1",
+    "tifffile>=2026.10.15",
+    "trackpy>=0.7",
+]
 
 [project.scripts]
 static2fate = "static2fate:main"
