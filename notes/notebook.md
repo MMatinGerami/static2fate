@@ -72,3 +72,19 @@ well, all 4 FOVs, 13 live frames + terminal, 4 channels: 2 x 4 x (13 x 4 + 2) = 
 3 GB. Segment nuclei (Cellpose, CPU is fine at this size), track, register the AnnexinV frame
 with the offsets from the repo, measure AnnexinV per track. That gives real videos with fate for
 a few hundred cells and is enough to see whether the question is answerable before 45 GB.
+
+Read the Static2Dynamic Datasets section (preprint text). Their ChromaLive use is not single-cell
+and not tracked: 48,000 random 380x380 crops over whole fields of view, rescaled to 128x128, from
+the 24 field movies of the two highest doses only (156 and 78 nM), where every cell dies. The
+563 true-versus-generated trajectory pairs come from segmenting cells inside those crops
+afterwards. Lower doses were used only to test pseudotime ordering. So the Hugging Face
+parquet will not contain tracking, and the pretrained model has only ever seen a one-fate regime.
+
+That sharpens the question. The branching lives at the intermediate doses (about 5 to 39 nM),
+where some cells die by 6 h and some do not, and AnnexinV says which. Static2Dynamic validated
+itself where there is one future; static2fate works where there are two. Same data, same
+preprocessing style (so the comparison is fair), different regime.
+
+Consequence for the subset: not control plus top dose, but control, one top dose, and two
+intermediate doses, e.g. C-02 (0), C-07 (9.77), C-08 (19.53), C-10 (78.13): 4 wells x 4 FOV x 54
+files, 864 TIFF, about 6 GB.
