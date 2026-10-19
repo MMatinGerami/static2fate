@@ -1,0 +1,9 @@
+.venv/
+data/raw/*
+!data/raw/MANIFEST.md
+data/processed/
+results/
+__pycache__/
+*.pyc
+.DS_Store
+wandb/
