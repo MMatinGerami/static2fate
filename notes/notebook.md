@@ -215,3 +215,17 @@ Reading of the curve: fate is not visible in a single frame before 1.5 to 2 h, a
 readable by 4 h. The branching generative model therefore has a concrete target: its commitment
 time should fall in the 2 to 4 h window, and a model that separates the two futures at 30 min
 is making it up.
+
+## 2026-10-21, correction
+
+Before sending the note I re-read the Way lab's preprocessing code. 1.pre_process_data/scripts/
+2.sort_files_properly.py says in a comment that the terminal stain was acquired with six fields
+per well, that timelapse FOV3 = terminal FOV4 and FOV4 = terminal FOV5, that terminal FOV3 and
+FOV6 are unused, and that they renamed the files accordingly after checking visually
+(verify_fov_mismatch.ipynb). So their ground truth is correct, and my earlier sentence that
+"the Way lab's F0003 and F0004 ground truth might be wrong" was wrong; struck. What my
+cross-correlation found is the state of the BioStudies copy, which carries the raw numbering
+with only F0001 to F0004 deposited: deposit F0003 is the unused field, deposit F0004 is live
+F0003's partner, and the F0005 files (live F0004's partner) are absent. Their documented mapping
+and my matching agree in all 30 wells, which is also the best check I could ask for on my
+registration code. Note rewritten as a deposit packaging issue.
