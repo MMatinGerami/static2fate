@@ -39,6 +39,15 @@ def frame_path(images: Path, well_fov: str, t: int, c: int) -> Path:
     return images / f"{well_fov}_T{t:04d}_Z0001_C{c:02d}.tif"
 
 
+def read_tiff(path: Path) -> np.ndarray | None:
+    """None for a file that is missing or truncated (two of the 6,480 deposited files are)."""
+    try:
+        img = tifffile.imread(path)
+    except Exception:
+        return None
+    return img if img.shape == (1900, 1900) else None
+
+
 def match_terminal(live_last: np.ndarray, terminals: dict[str, np.ndarray]) -> tuple[str | None, np.ndarray, float]:
     """Which terminal Hoechst image is this live field, and by what (dy, dx) shift?
 
@@ -82,13 +91,16 @@ class Field:
 
     @classmethod
     def load(cls, images: Path, well_fov: str) -> "Field":
-        live = {
-            name: np.stack([tifffile.imread(frame_path(images, well_fov, t, c)) for t in LIVE_FRAMES])
-            for name, c in LIVE_CHANNELS.items()
-        }
+        live = {}
+        for name, c in LIVE_CHANNELS.items():
+            frames = [read_tiff(frame_path(images, well_fov, t, c)) for t in LIVE_FRAMES]
+            if any(f is None for f in frames):
+                raise FileNotFoundError(f"{well_fov}: unreadable {name} frame(s) {[t for t, f in zip(LIVE_FRAMES, frames) if f is None]}")
+            live[name] = np.stack(frames)
         well = well_fov.split("_")[0]
         candidates = sorted(p.name.rsplit("_T", 1)[0] for p in images.glob(f"{well}_F*_T{TERMINAL_FRAME:04d}_Z0001_C01.tif"))
-        hoechst = {c: tifffile.imread(frame_path(images, c, TERMINAL_FRAME, 1)) for c in candidates}
+        hoechst = {c: read_tiff(frame_path(images, c, TERMINAL_FRAME, 1)) for c in candidates}
+        hoechst = {c: img for c, img in hoechst.items() if img is not None}
         name, shift, r = match_terminal(live["hoechst"][-1], hoechst)
         terminal = None
         if name is not None:

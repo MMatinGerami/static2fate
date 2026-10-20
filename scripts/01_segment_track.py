@@ -43,7 +43,11 @@ def main() -> None:
             print(f"{well_fov}: done already")
             continue
         t0 = time.time()
-        df, info = process_field(IMAGES, well_fov, model, args.diameter)
+        try:
+            df, info = process_field(IMAGES, well_fov, model, args.diameter)
+        except FileNotFoundError as e:
+            print(f"{well_fov}: skipped ({e})")
+            continue
         df.to_parquet(OUT / f"{well_fov}.parquet", index=False)
         info["seconds"] = round(time.time() - t0)
         info["segmenter"] = args.segmenter
