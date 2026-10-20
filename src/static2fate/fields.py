@@ -1,12 +1,14 @@
 """One field of view of S-BIAD2515: load, register the terminal frame, segment, measure, track.
 
 Frames 1..13 are live (Hoechst C01, ChromaLIVE C02 C03 C04, 30 min apart). Frame 14 is the
-fixed terminal image (Hoechst C01, AnnexinV C05). In the deposited files the terminal image is
-shifted by up to ~180 px against frame 13, and in every well checked the terminal file named
-F0004 is the partner of live F0003 while live F0004 has no terminal partner at all (the terminal
-file named F0003 matches none of the four live fields). So the terminal partner of each live
-field is found by cross-correlation against all four terminal files of the well, and a field
-without a convincing partner gets no fate.
+fixed terminal image (Hoechst C01, AnnexinV C05). The terminal image is shifted by up to ~180 px
+against frame 13. The terminal stain was acquired with six fields per well (documented in the
+Way lab's 1.pre_process_data/scripts/2.sort_files_properly.py: timelapse FOV3 = terminal FOV4,
+FOV4 = terminal FOV5, terminal FOV3 and FOV6 unused); the BioStudies copy carries the raw
+numbering with only F0001 to F0004 deposited, so the file named F0003 is the unused field, the
+file named F0004 belongs to live F0003, and live F0004 has no partner. The partner of each live
+field is therefore found by cross-correlation against all terminal files of the well (which
+reproduces their mapping in all 30 wells), and a field without a convincing partner gets no fate.
 
 Nuclei are segmented on Hoechst and linked over time with trackpy.
 """
