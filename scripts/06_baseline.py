@@ -89,8 +89,9 @@ def main() -> None:
         m = m.fillna(m.median())
         r = lofo_auroc(np.log1p(m.to_numpy().clip(0)), y, groups, dose)
         rows.append({"frame": t, "minutes": (t - 1) * 30, "features": "nucleus_measurements", **r})
-        print(f"frame {t:2d} ({(t - 1) * 30:3d} min): dinov2 {rows[-2]['all']:.3f} | hand {rows[-1]['all']:.3f} | "
-              f"within 19.53 nM: dinov2 {rows[-2].get('dose_19.53', np.nan):.3f} hand {rows[-1].get('dose_19.53', np.nan):.3f}")
+        print(f"frame {t:2d} ({(t - 1) * 30:3d} min): pooled dinov2 {rows[-2]['all']:.3f} hand {rows[-1]['all']:.3f} | "
+              f"19.53 nM: dinov2 {rows[-2].get('dose_19.53', np.nan):.3f} hand {rows[-1].get('dose_19.53', np.nan):.3f} | "
+              f"39.06 nM: dinov2 {rows[-2].get('dose_39.06', np.nan):.3f} hand {rows[-1].get('dose_39.06', np.nan):.3f}")
     df = pd.DataFrame(rows)
     (ROOT / "results/tables").mkdir(exist_ok=True, parents=True)
     df.to_csv(ROOT / "results/tables/baseline_auroc.csv", index=False)
@@ -104,11 +105,11 @@ def main() -> None:
     for feat, ls in [("dinov2_base", "-"), ("nucleus_measurements", "--")]:
         s = df[df["features"] == feat]
         ax[0].plot(s["minutes"], s["all"], ls, marker="o", label=feat)
-        for d, col in [(9.77, "C1"), (19.53, "C2"), (78.13, "C3")]:
+        for d, col in [(4.88, "C0"), (9.77, "C1"), (19.53, "C2"), (39.06, "C3")]:
             ax[1].plot(s["minutes"], s[f"dose_{d}"], ls, marker="o", color=col, label=f"{feat}, {d} nM")
     ax[0].axhline(roc_auc_score(y, dose), color="grey", ls=":", label="dose only")
     ax[0].set_title("all doses pooled (leave-one-field-out)")
-    ax[1].set_title("within one dose")
+    ax[1].set_title("within one dose (the doses where both fates occur)")
     for a in ax:
         a.set_xlabel("minutes after staurosporine (frame used)")
         a.set_ylabel("AUROC for AnnexinV-positive at 6 h")

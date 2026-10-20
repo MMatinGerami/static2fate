@@ -1,8 +1,12 @@
 """Final per-track fate table: one row per complete track with the cell-level AnnexinV readout.
 
 Label: apoptotic = AnnexinV cytoplasm 90th percentile above the control wells' 90th percentile
-of that same quantity. By construction about 10% of control cells are called positive; some of
-those are real spontaneous apoptosis, some are not. Writes data/processed/fate_labels.parquet.
+of that same quantity (so about 10% of control cells are positive by construction), OR a
+condensed nucleus at the terminal frame (area below half its initial value and Hoechst mean
+more than twice its initial value). The second clause exists because at 156 nM the AnnexinV
+readout drops (0.65 positive) while condensation keeps rising (0.81): late apoptotic cells round
+up and the frame-13 cytoplasm mask no longer fits them. Condensation is 1% in control, so the
+OR adds almost no false positives there. Writes data/processed/fate_labels.parquet.
 """
 
 import glob
@@ -32,11 +36,14 @@ def main() -> None:
     thr = float(np.percentile(ctrl["annexin_cyto_p90"].dropna(), 90))
     fate = fate.dropna(subset=["annexin_cyto_p90"])
     fate["annexin_threshold"] = thr
-    fate["apoptotic"] = fate["annexin_cyto_p90"] > thr
+    fate["annexin_positive"] = fate["annexin_cyto_p90"] > thr
+    fate["condensed"] = (fate["area_ratio"] < 0.5) & (fate["hoechst_ratio"] > 2)
+    fate["apoptotic"] = fate["annexin_positive"] | fate["condensed"]
     fate.to_parquet(P / "fate_labels.parquet", index=False)
 
     print(f"{len(fate)} complete tracks with a cell-level AnnexinV value; threshold {thr:.0f}")
-    print(fate.groupby("dose_nM").agg(n=("apoptotic", "size"), apoptotic=("apoptotic", "mean")).round(2).to_string())
+    print(fate.groupby("dose_nM").agg(n=("apoptotic", "size"), annexin_positive=("annexin_positive", "mean"),
+                                      condensed=("condensed", "mean"), apoptotic=("apoptotic", "mean")).round(2).to_string())
     print("\nmedian nucleus area ratio and Hoechst ratio by dose and label:")
     print(fate.groupby(["dose_nM", "apoptotic"])[["area_ratio", "hoechst_ratio"]].median().round(2).to_string())
 

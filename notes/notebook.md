@@ -182,3 +182,36 @@ calibration target for the commitment-time estimate: if the model says a cell is
 Caveats carried forward. 851 cells from 12 fields of one plate; the control false-positive rate
 is fixed at 10% by the label definition; tracking keeps a quarter to a half of cells, with a
 bias against dense regions and mobile cells; crops are 128 px and some cells are larger.
+
+## 2026-10-21
+
+All 30 wells. 6,480 files, 45 GB. Two files are truncated on the EBI server itself
+(E-04_F0004_T0009 CL488a, 4 KB; C-06_F0001 terminal Hoechst, 1.4 MB), so E-04_F0004 is skipped
+and C-06_F0001 has no fate. The terminal-field pattern holds in every well: F0001 and F0002 match
+themselves, F0003 matches the file named F0004, F0004 matches nothing, 30 out of 30. That is a
+systematic error in the deposit, not noise. 119 fields segmented and tracked, 89 with fate.
+
+Label, revised. The AnnexinV readout stops rising at the top dose (0.65 positive at 156 nM
+against 0.70 at 78 nM) while nuclear condensation keeps rising (0.54, 0.75, 0.81 at 39, 78,
+156 nM): late apoptotic cells round up and the frame-13 cytoplasm mask no longer fits them. So
+apoptotic = AnnexinV-positive OR condensed (terminal nucleus below half its initial area and
+Hoechst more than doubled). Condensation is 1% in control, so this adds nothing there.
+Fractions: 0 to 2.44 nM 0.11 to 0.17; 4.88 and 9.77 nM 0.19; 19.53 nM 0.31; 39.06 nM 0.74;
+78 and 156 nM 0.91 and 0.92. Replicate wells agree within a few points at every dose
+(e.g. 19.53 nM: 0.29, 0.31, 0.25). 6,676 labelled cells.
+
+The two-fate band is 9.77 to 39.06 nM. Below it, apoptosis is at the control rate; above it,
+nearly everything dies.
+
+Single-frame baseline on all cells (results/figures/fig2_single_frame_baseline.png,
+results/tables/baseline_auroc.csv). Within 19.53 nM: AUROC 0.51 at 0 min, 0.60 at 2 h, 0.69 at
+3 h, 0.78 at 4 h, 0.84 at 6 h (handcrafted); DINOv2 0.51, 0.59, 0.66, 0.72, 0.80. Within
+39.06 nM the curve is lower (0.79 at 6 h) because at 74% dying the "survivors" are partly label
+errors. At 78 and 156 nM, chance, as it should be when there is one fate. Handcrafted beats
+frozen DINOv2 from 2 h on at every informative dose. Pooled numbers are inflated by dose (dose
+alone gives 0.85) and should not be quoted.
+
+Reading of the curve: fate is not visible in a single frame before 1.5 to 2 h, and is largely
+readable by 4 h. The branching generative model therefore has a concrete target: its commitment
+time should fall in the 2 to 4 h window, and a model that separates the two futures at 30 min
+is making it up.
