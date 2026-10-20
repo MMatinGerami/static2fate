@@ -1,13 +1,17 @@
 #!/bin/zsh
-# Download a four-well subset of S-BIAD2515 (CC0) from the EBI FTP mirror.
-# Wells: C-02 (0 nM), C-07 (9.77 nM), C-08 (19.53 nM), C-10 (78.13 nM); all 4 FOVs,
-# T0001..T0013 live frames x 4 channels, T0014 terminal (C01 Hoechst, C05 AnnexinV).
+# Download S-BIAD2515 (CC0) from the EBI FTP mirror: the wells given as arguments, or all 30.
+# Per well: 4 FOVs, T0001..T0013 live frames x 4 channels, T0014 terminal (C01 Hoechst, C05 AnnexinV).
+# First run (19 Oct) fetched C-02 C-07 C-08 C-10; complete files are skipped on rerun.
 set -u
 BASE="https://ftp.ebi.ac.uk/biostudies/fire/S-BIAD/515/S-BIAD2515/Files"
 OUT="$(dirname "$0")/../data/raw/images"
 mkdir -p "$OUT"
 list=$(mktemp)
-for w in C-02 C-07 C-08 C-10; do
+WELLS=("$@")
+if [ ${#WELLS[@]} -eq 0 ]; then
+  WELLS=(); for r in C D E; do for c in $(seq -f "%02g" 2 11); do WELLS+=("${r}-${c}"); done; done
+fi
+for w in "${WELLS[@]}"; do
   for f in 1 2 3 4; do
     for t in $(seq -f "%04g" 1 13); do
       for c in 1 2 3 4; do echo "${w}_F000${f}_T${t}_Z0001_C0${c}.tif"; done

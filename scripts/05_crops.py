@@ -3,9 +3,8 @@
 128x128 px around the nucleus centroid, three channels (Hoechst, ChromaLIVE 488a, ChromaLIVE
 561), scaled to uint8 with one pair of percentiles per field and channel over all 13 frames, so
 that a cell getting brighter over time stays brighter in the patch. Patches that would leave the
-image are zero-padded. Output: data/processed/crops.npz with arrays
-  x      uint8 (n, 13, 3, 128, 128)
-  track  str   (n,)
+image are zero-padded. Output: data/processed/crops.npy, a uint8 memmap of shape
+(n, 13, 3, 128, 128) written field by field, and data/processed/crops_tracks.npy (n,) str.
 """
 
 import glob
@@ -45,7 +44,9 @@ def main() -> None:
     tracks["track"] = tracks["well_fov"] + "_" + tracks["particle"].astype(str)
     tracks = tracks[tracks["track"].isin(labels["track"]) & (tracks["frame"] <= 13)]
 
-    xs, names = [], []
+    n = tracks["track"].nunique()
+    x = np.lib.format.open_memmap(P / "crops.npy", mode="w+", dtype=np.uint8, shape=(n, 13, 3, SIZE, SIZE))
+    names = []
     for well_fov, g in tracks.groupby("well_fov"):
         stack = load_scaled(well_fov)
         for track, tg in g.groupby("track"):
@@ -57,12 +58,12 @@ def main() -> None:
                 if t in tg.index:
                     last = (tg.loc[t, "y"], tg.loc[t, "x"])
                 frames.append(crop(stack[t - 1 : t], *last)[0] if last is not None else np.zeros((3, SIZE, SIZE), np.uint8))
-            xs.append(np.stack(frames))
+            x[len(names)] = np.stack(frames)
             names.append(track)
         print(f"{well_fov}: {g['track'].nunique()} tracks")
-    x = np.stack(xs)
-    np.savez_compressed(P / "crops.npz", x=x, track=np.array(names))
-    print(f"wrote {x.shape} to crops.npz")
+    x.flush()
+    np.save(P / "crops_tracks.npy", np.array(names))
+    print(f"wrote {x.shape} to crops.npy")
 
 
 if __name__ == "__main__":

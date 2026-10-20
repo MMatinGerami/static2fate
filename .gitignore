@@ -10,3 +10,5 @@ __pycache__/
 *.pyc
 .DS_Store
 wandb/
+logs_run_all.out
+logs/

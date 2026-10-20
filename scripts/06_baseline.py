@@ -60,10 +60,10 @@ def lofo_auroc(X: np.ndarray, y: np.ndarray, groups: np.ndarray, dose: np.ndarra
 
 def main() -> None:
     labels = pd.read_parquet(P / "fate_labels.parquet").set_index("track")
-    crops = np.load(P / "crops.npz")
-    keep = np.isin(crops["track"], labels.index)  # crops were cut before NaN-readout tracks were dropped
-    tracks = crops["track"][keep]
-    x = crops["x"][keep]
+    all_tracks = np.load(P / "crops_tracks.npy")
+    keep = np.isin(all_tracks, labels.index)
+    tracks = all_tracks[keep]
+    x = np.load(P / "crops.npy", mmap_mode="r")
     labels = labels.loc[tracks]
     y = labels["apoptotic"].to_numpy().astype(int)
     groups = labels["well_fov"].to_numpy()
@@ -79,7 +79,8 @@ def main() -> None:
     if cache.exists():
         emb = np.load(cache)
     else:
-        emb = np.stack([embed(x[:, t]) for t in range(13)], axis=1)  # (n, 13, 768)
+        idx = np.flatnonzero(keep)
+        emb = np.stack([embed(np.asarray(x[idx, t])) for t in range(13)], axis=1)  # (n, 13, 768)
         np.save(cache, emb)
     for t in range(1, 14):
         r = lofo_auroc(emb[:, t - 1], y, groups, dose)
