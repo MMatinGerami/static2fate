@@ -1,0 +1,105 @@
+"""Small conditional flow-matching model for 64 px single-cell images.
+
+The model learns a velocity field v(x_s, s | frame, fate) that moves Gaussian noise (s = 0) to a
+cell image (s = 1) along straight paths (rectified flow / conditional flow matching). The
+condition is the time after drug (frame 0..12) and the fate observed at 6 h (0 survives,
+1 dies). Asking for both fates at the same frame gives two counterfactual images of the same
+moment, which is the simplest version of the two-future question.
+"""
+
+from __future__ import annotations
+
+import math
+
+import torch
+from torch import nn
+import torch.nn.functional as F
+
+
+def sinusoidal(t: torch.Tensor, dim: int) -> torch.Tensor:
+    half = dim // 2
+    freqs = torch.exp(-math.log(10000) * torch.arange(half, device=t.device) / half)
+    a = t.float()[:, None] * freqs[None]
+    return torch.cat([a.sin(), a.cos()], dim=1)
+
+
+class ResBlock(nn.Module):
+    def __init__(self, cin: int, cout: int, cdim: int):
+        super().__init__()
+        self.n1 = nn.GroupNorm(8, cin)
+        self.c1 = nn.Conv2d(cin, cout, 3, padding=1)
+        self.emb = nn.Linear(cdim, 2 * cout)
+        self.n2 = nn.GroupNorm(8, cout)
+        self.c2 = nn.Conv2d(cout, cout, 3, padding=1)
+        self.skip = nn.Conv2d(cin, cout, 1) if cin != cout else nn.Identity()
+
+    def forward(self, x, c):
+        h = self.c1(F.silu(self.n1(x)))
+        scale, shift = self.emb(c)[:, :, None, None].chunk(2, dim=1)
+        h = self.n2(h) * (1 + scale) + shift
+        h = self.c2(F.silu(h))
+        return h + self.skip(x)
+
+
+class UNet(nn.Module):
+    """Three resolutions (64, 32, 16), two blocks each, conditioning added through FiLM."""
+
+    def __init__(self, ch: int = 64, cdim: int = 256, n_frames: int = 13, n_fates: int = 2):
+        super().__init__()
+        self.s_mlp = nn.Sequential(nn.Linear(ch, cdim), nn.SiLU(), nn.Linear(cdim, cdim))
+        self.frame = nn.Embedding(n_frames, cdim)
+        self.fate = nn.Embedding(n_fates + 1, cdim)  # last index = no fate (classifier-free guidance)
+        self.ch = ch
+        self.inp = nn.Conv2d(3, ch, 3, padding=1)
+        self.d1 = nn.ModuleList([ResBlock(ch, ch, cdim), ResBlock(ch, ch, cdim)])
+        self.d2 = nn.ModuleList([ResBlock(ch, 2 * ch, cdim), ResBlock(2 * ch, 2 * ch, cdim)])
+        self.d3 = nn.ModuleList([ResBlock(2 * ch, 4 * ch, cdim), ResBlock(4 * ch, 4 * ch, cdim)])
+        self.mid = ResBlock(4 * ch, 4 * ch, cdim)
+        self.u3 = nn.ModuleList([ResBlock(8 * ch, 4 * ch, cdim), ResBlock(4 * ch, 4 * ch, cdim)])
+        self.u2 = nn.ModuleList([ResBlock(6 * ch, 2 * ch, cdim), ResBlock(2 * ch, 2 * ch, cdim)])
+        self.u1 = nn.ModuleList([ResBlock(3 * ch, ch, cdim), ResBlock(ch, ch, cdim)])
+        self.out = nn.Sequential(nn.GroupNorm(8, ch), nn.SiLU(), nn.Conv2d(ch, 3, 3, padding=1))
+
+    def forward(self, x, s, frame, fate):
+        c = self.s_mlp(sinusoidal(s * 1000, self.ch)) + self.frame(frame) + self.fate(fate)
+        h1 = self.inp(x)
+        for b in self.d1:
+            h1 = b(h1, c)
+        h2 = F.avg_pool2d(h1, 2)
+        for b in self.d2:
+            h2 = b(h2, c)
+        h3 = F.avg_pool2d(h2, 2)
+        for b in self.d3:
+            h3 = b(h3, c)
+        m = self.mid(F.avg_pool2d(h3, 2), c)
+        u = F.interpolate(m, scale_factor=2)
+        u = self.u3[1](self.u3[0](torch.cat([u, h3], 1), c), c)
+        u = F.interpolate(u, scale_factor=2)
+        u = self.u2[1](self.u2[0](torch.cat([u, h2], 1), c), c)
+        u = F.interpolate(u, scale_factor=2)
+        u = self.u1[1](self.u1[0](torch.cat([u, h1], 1), c), c)
+        return self.out(u)
+
+
+def flow_matching_loss(model, x1, frame, fate, p_drop: float = 0.1):
+    """Straight-path conditional flow matching; fate is dropped 10% of the time for guidance."""
+    x0 = torch.randn_like(x1)
+    s = torch.rand(x1.shape[0], device=x1.device)
+    xs = (1 - s[:, None, None, None]) * x0 + s[:, None, None, None] * x1
+    drop = torch.rand(x1.shape[0], device=x1.device) < p_drop
+    fate = torch.where(drop, torch.full_like(fate, 2), fate)
+    return F.mse_loss(model(xs, s, frame, fate), x1 - x0)
+
+
+@torch.no_grad()
+def sample(model, frame, fate, steps: int = 50, guidance: float = 2.0, generator=None, x0=None):
+    """Euler integration from noise; the same x0 can be reused to compare two fates."""
+    device = frame.device
+    x = x0 if x0 is not None else torch.randn(len(frame), 3, 64, 64, device=device, generator=generator)
+    null = torch.full_like(fate, 2)
+    for i in range(steps):
+        s = torch.full((len(frame),), i / steps, device=device)
+        v_c = model(x, s, frame, fate)
+        v_u = model(x, s, frame, null)
+        x = x + (v_u + guidance * (v_c - v_u)) / steps
+    return x.clamp(-1, 1)

@@ -1,0 +1,15 @@
+{
+ "device": "mps",
+ "seed": 0,
+ "steps": 5578,
+ "batch": 64,
+ "minutes": 45.0,
+ "train_cells": 1919,
+ "heldout_wells": [
+  "E-06",
+  "E-07",
+  "E-08",
+  "E-09"
+ ],
+ "torch": "2.14.1"
+}

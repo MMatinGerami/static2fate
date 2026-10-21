@@ -12,7 +12,7 @@ Way lab, CC0).
 
 ![two cells](results/figures/fig3_two_cells.png)
 
-Status (October 2026): data pipeline and baselines done; generative modelling in progress.
+Status (October 2026): data pipeline, baselines and a first generative model done.
 
 ## What is here
 
@@ -40,11 +40,28 @@ Status (October 2026): data pipeline and baselines done; generative modelling in
 
 ![single-frame baseline](results/figures/fig2_single_frame_baseline.png)
 
+## First generative model
+
+A small conditional flow-matching model (9.4 M parameters, written from scratch in
+`src/static2fate/flow.py`) generates a 64 px cell image given the time after drug and the fate.
+Trained 45 min on an Apple M5 Pro (MPS) on 1,919 cells; one replicate well per dose held out.
+
+Starting from the same noise and asking for both fates gives two branches of the same cell. They
+look the same up to 2 h and separate from 3 h, when the "dies" branch condenses its nucleus.
+
+![counterfactual pairs](results/figures/fig4_counterfactual_pairs.png)
+
+On held-out wells, nuclear Hoechst brightness of dying cells rises between 2 and 3 h, and so does
+that of generated dying cells (slightly too high by 6 h, 0.43 against 0.35). Nucleus size does not
+match: generated dying cells have nuclei far too small at early times (81 px against 184 px at 0 h).
+
+![generated vs real](results/figures/fig5_generated_vs_real.png)
+
 ## Next
 
-Train Static2Dynamic on the two-fate doses, then a version conditioned on fate whose two
-generated branches can be compared with real videos, with the 2 to 4 h window above as the check
-on when they should separate.
+- Start from a real observed cell (invert its first frame) instead of noise, then generate both fates.
+- Fix the nucleus size mismatch before trusting anything about morphology beyond brightness.
+- Train at 128 px and on the full time course as video, on a GPU.
 
 ## Run
 

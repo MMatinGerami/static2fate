@@ -256,3 +256,21 @@ order the model encodes; frames 1..k includes early frames that carry no fate si
 the pooled vector (a sliding window of the last 4 frames would be fairer); 128 px is half its
 training resolution and fluorescence is far from its training data. These are the representation
 and domain-shift questions, not reasons to drop it.
+
+## 2026-10-21, first generative model
+
+Conditional flow matching (rectified flow), 64 px crops, 3 channels, conditioned on frame and
+fate with classifier-free guidance (fate dropped 10%). UNet with FiLM, 9.4 M parameters, EMA
+0.999, batch 64, AdamW 2e-4, 45 min on MPS (5,578 steps), seed 0. Held out E-06 to E-09 (one
+replicate well per two-fate dose). MPS smoke test first: 0.74 s/step vs 5.5 s on CPU, finite.
+
+Same-noise pairs: identical at 0 to 2 h, separate from 3 h (condensed bright nucleus, green
+cytoplasm in the dies branch). Nobody gave it the timing.
+
+Held-out check on two nuclear readouts. Hoechst brightness: real dies 0.02, 0.02, 0.06, 0.19,
+0.26, 0.31, 0.35 at 0 to 6 h; generated dies -0.06, -0.06, 0.01, 0.22, 0.34, 0.36, 0.43;
+survives flat in both. Timing right, end overshoots. Nucleus area: wrong. Generated dies 81 px at
+0 h against 184 px real, survives also too small. Could be the fixed threshold on a different
+intensity scale, or the model really shrinking dying nuclei too early; not settled.
+
+Not yet: starting from a real cell (inversion), video consistency, 128 px.
