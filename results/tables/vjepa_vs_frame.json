@@ -1,0 +1,18 @@
+{
+ "model": "facebook/vjepa2-vitl-fpc64-256",
+ "input_px": 128,
+ "pooling": "mean over tokens",
+ "device": "mps",
+ "doses": [
+  4.88,
+  9.77,
+  19.53,
+  39.06
+ ],
+ "n_cells": 2735,
+ "n_fields": 35,
+ "classifier": "StandardScaler + LogisticRegression(C=0.1), leave-one-field-out",
+ "bootstrap": "1000 resamples of fields within dose, seeds 0..999",
+ "minutes": 10.0,
+ "torch": "2.14.1"
+}

@@ -230,3 +230,29 @@ F0003's partner, and the F0005 files (live F0004's partner) are absent. Their do
 and my matching agree in all 30 wells, which is also the best check I could ask for on my
 registration code. Note rewritten as a deposit packaging issue.
 
+
+## 2026-10-21
+
+Does a video encoder see fate earlier than one frame? scripts/07_vjepa.py: frozen V-JEPA 2
+(ViT-L, facebook/vjepa2-vitl-fpc64-256), clip = frames 1..k at native 128 px, tokens mean-pooled,
+same leave-one-field-out logistic regression, 2,735 cells at 4.88 to 39.06 nM, 35 fields. AUROC
+within dose, averaged over the four doses; CIs by resampling fields within dose (1,000, seed 0).
+Run on MPS, 10 min (smoke test: MPS and CPU agree to 7e-5 on pooled features).
+
+| last frame | V-JEPA clip | DINOv2 mean of 1..k | DINOv2 frame k | handcrafted frame k |
+|---|---|---|---|---|
+| 30 min  | 0.53 | 0.52 | 0.50 | 0.54 |
+| 90 min  | 0.52 | 0.53 | 0.55 | 0.56 |
+| 150 min | 0.60 | 0.57 | 0.58 | 0.63 |
+| 210 min | 0.64 | 0.63 | 0.67 | 0.68 |
+
+V-JEPA minus handcrafted at 210 min: -0.045 (-0.067 to -0.021). V-JEPA minus DINOv2 averaged
+over the same frames at 150 min: +0.036 (0.007 to 0.067). So the video model holds some temporal
+information that frame-averaging loses, but not more than the latest frame alone. Off the shelf it
+does not detect fate earlier.
+
+Why it might be unfair to V-JEPA, to test before concluding: mean pooling discards the temporal
+order the model encodes; frames 1..k includes early frames that carry no fate signal and dilute
+the pooled vector (a sliding window of the last 4 frames would be fairer); 128 px is half its
+training resolution and fluorescence is far from its training data. These are the representation
+and domain-shift questions, not reasons to drop it.

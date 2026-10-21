@@ -1,7 +1,7 @@
 [project]
 name = "static2fate"
 version = "0.1.0"
-description = "Add your description here"
+description = "Single-cell fate from live-cell imaging: two-fate counterfactuals on S-BIAD2515"
 authors = [
     { email = "mmatin.gerami@gmail.com" }
 ]
