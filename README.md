@@ -10,7 +10,9 @@ for 6 h and then stained for AnnexinV, so every cell has a video and a known fat
 ([S-BIAD2515](https://www.ebi.ac.uk/biostudies/BioImages/studies/S-BIAD2515), Lippincott et al.,
 Way lab, CC0).
 
-Status (October 2026): data pipeline and baselines done; generative modelling not started.
+![two cells](results/figures/fig3_two_cells.png)
+
+Status (October 2026): data pipeline and baselines done; generative modelling in progress.
 
 ## What is here
 
