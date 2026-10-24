@@ -5,6 +5,10 @@ cell image (s = 1) along straight paths (rectified flow / conditional flow match
 condition is the time after drug (frame 0..12) and the fate observed at 6 h (0 survives,
 1 dies). Asking for both fates at the same frame gives two counterfactual images of the same
 moment, which is the simplest version of the two-future question.
+
+With context=True the model also sees one observed image of the same cell (concatenated as three
+extra input channels) and the frame it was taken at, and predicts the cell at a later frame.
+This lets the prediction depend on how far along that particular cell already is.
 """
 
 from __future__ import annotations
@@ -44,13 +48,17 @@ class ResBlock(nn.Module):
 class UNet(nn.Module):
     """Three resolutions (64, 32, 16), two blocks each, conditioning added through FiLM."""
 
-    def __init__(self, ch: int = 64, cdim: int = 256, n_frames: int = 13, n_fates: int = 2):
+    def __init__(self, ch: int = 64, cdim: int = 256, n_frames: int = 13, n_fates: int = 2,
+                 context: bool = False):
         super().__init__()
+        self.context = context
+        if context:
+            self.ctx_frame = nn.Embedding(n_frames, cdim)
         self.s_mlp = nn.Sequential(nn.Linear(ch, cdim), nn.SiLU(), nn.Linear(cdim, cdim))
         self.frame = nn.Embedding(n_frames, cdim)
         self.fate = nn.Embedding(n_fates + 1, cdim)  # last index = no fate (classifier-free guidance)
         self.ch = ch
-        self.inp = nn.Conv2d(3, ch, 3, padding=1)
+        self.inp = nn.Conv2d(6 if context else 3, ch, 3, padding=1)
         self.d1 = nn.ModuleList([ResBlock(ch, ch, cdim), ResBlock(ch, ch, cdim)])
         self.d2 = nn.ModuleList([ResBlock(ch, 2 * ch, cdim), ResBlock(2 * ch, 2 * ch, cdim)])
         self.d3 = nn.ModuleList([ResBlock(2 * ch, 4 * ch, cdim), ResBlock(4 * ch, 4 * ch, cdim)])
@@ -60,8 +68,11 @@ class UNet(nn.Module):
         self.u1 = nn.ModuleList([ResBlock(3 * ch, ch, cdim), ResBlock(ch, ch, cdim)])
         self.out = nn.Sequential(nn.GroupNorm(8, ch), nn.SiLU(), nn.Conv2d(ch, 3, 3, padding=1))
 
-    def forward(self, x, s, frame, fate):
+    def forward(self, x, s, frame, fate, ctx=None, ctx_frame=None):
         c = self.s_mlp(sinusoidal(s * 1000, self.ch)) + self.frame(frame) + self.fate(fate)
+        if self.context:
+            x = torch.cat([x, ctx], 1)
+            c = c + self.ctx_frame(ctx_frame)
         h1 = self.inp(x)
         for b in self.d1:
             h1 = b(h1, c)
@@ -81,14 +92,17 @@ class UNet(nn.Module):
         return self.out(u)
 
 
-def flow_matching_loss(model, x1, frame, fate, p_drop: float = 0.1):
-    """Straight-path conditional flow matching; fate is dropped 10% of the time for guidance."""
+def flow_matching_loss(model, x1, frame, fate, p_drop: float = 0.1, **cond):
+    """Straight-path conditional flow matching; fate is dropped 10% of the time for guidance.
+
+    Extra conditions (ctx, ctx_frame) are passed through to the model unchanged.
+    """
     x0 = torch.randn_like(x1)
     s = torch.rand(x1.shape[0], device=x1.device)
     xs = (1 - s[:, None, None, None]) * x0 + s[:, None, None, None] * x1
     drop = torch.rand(x1.shape[0], device=x1.device) < p_drop
     fate = torch.where(drop, torch.full_like(fate, 2), fate)
-    return F.mse_loss(model(xs, s, frame, fate), x1 - x0)
+    return F.mse_loss(model(xs, s, frame, fate, **cond), x1 - x0)
 
 
 @torch.no_grad()
@@ -107,14 +121,18 @@ def invert(model, x1, frame, steps: int = 50):
 
 
 @torch.no_grad()
-def sample(model, frame, fate, steps: int = 50, guidance: float = 2.0, generator=None, x0=None):
+def sample(model, frame, fate, steps: int = 50, guidance: float = 2.0, generator=None, x0=None,
+           size: int = 64, **cond):
     """Euler integration from noise; the same x0 can be reused to compare two fates."""
     device = frame.device
-    x = x0 if x0 is not None else torch.randn(len(frame), 3, 64, 64, device=device, generator=generator)
-    null = torch.full_like(fate, 2)
+    x = x0 if x0 is not None else torch.randn(len(frame), 3, size, size, device=device, generator=generator)
+    n = len(frame)
+    both_fates = torch.cat([fate, torch.full_like(fate, 2)])
+    frame2 = torch.cat([frame, frame])
+    cond2 = {k: torch.cat([v, v]) for k, v in cond.items()}
     for i in range(steps):
-        s = torch.full((len(frame),), i / steps, device=device)
-        v_c = model(x, s, frame, fate)
-        v_u = model(x, s, frame, null)
+        s = torch.full((2 * n,), i / steps, device=device)
+        v = model(torch.cat([x, x]), s, frame2, both_fates, **cond2)  # conditional and null in one pass
+        v_c, v_u = v[:n], v[n:]
         x = x + (v_u + guidance * (v_c - v_u)) / steps
     return x.clamp(-1, 1)

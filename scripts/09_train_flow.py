@@ -10,6 +10,7 @@ Writes results/flow/model.pt, results/flow/train_log.csv and results/flow/run.js
 
 import argparse
 import json
+import os
 import sys
 import time
 from pathlib import Path
@@ -23,13 +24,13 @@ sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "src"))
 from static2fate.flow import UNet, flow_matching_loss  # noqa: E402
 
 ROOT = Path(__file__).resolve().parents[1]
-P = ROOT / "data/processed"
+P = Path(os.environ.get("STATIC2FATE_DATA", ROOT / "data/processed"))  # set on Kaggle
 OUT = ROOT / "results/flow"
 DOSES = [4.88, 9.77, 19.53, 39.06]
 HELDOUT_WELLS = ["E-06", "E-07", "E-08", "E-09"]  # one replicate well per dose
 
 
-def load(split: str):
+def load(split: str, size: int = 64):
     lab = pd.read_parquet(P / "fate_labels.parquet").set_index("track")
     tracks = np.load(P / "crops_tracks.npy")
     keep = np.isin(tracks, lab.index[lab["dose_nM"].isin(DOSES)])
@@ -38,8 +39,9 @@ def load(split: str):
     keep &= held if split == "test" else ~held
     idx = np.flatnonzero(keep)
     x = np.load(P / "crops.npy", mmap_mode="r")[idx]
-    x = torch.from_numpy(np.ascontiguousarray(x)).float().div(127.5).sub(1)  # (n, 13, 3, 128, 128)
-    x = F.avg_pool2d(x.flatten(0, 1), 2).view(len(idx), 13, 3, 64, 64)
+    x = torch.from_numpy(np.ascontiguousarray(x)).float().div_(127.5).sub_(1)  # (n, 13, 3, 128, 128)
+    if size != 128:
+        x = F.avg_pool2d(x.flatten(0, 1), 128 // size).view(len(idx), 13, 3, size, size)
     fate = torch.from_numpy(lab.loc[tracks[idx], "apoptotic"].to_numpy().astype(np.int64))
     return x, fate, tracks[idx]
 

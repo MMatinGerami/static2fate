@@ -13,3 +13,4 @@ wandb/
 logs_run_all.out
 logs/
 notes/private/
+data/kaggle/

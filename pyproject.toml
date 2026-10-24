@@ -16,6 +16,7 @@ dependencies = [
     "scikit-learn>=1.9.1",
     "scipy>=1.18.1",
     "tifffile>=2026.10.15",
+    "torch>=2.14.1",
     "trackpy>=0.7",
     "transformers>=5.20.2",
 ]
@@ -26,3 +27,8 @@ static2fate = "static2fate:main"
 [build-system]
 requires = ["uv_build>=0.13.1,<0.14.0"]
 build-backend = "uv_build"
+
+[dependency-groups]
+dev = [
+    "pytest>=9.1.1",
+]
