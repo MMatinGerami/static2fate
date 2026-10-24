@@ -334,3 +334,32 @@ rounding then flattening within 1 to 2 frames) and see how many labelled cells a
 
 GPU: Kaggle job ready (kaggle/train_kaggle.py, 128 px on one T4 and 64 px for 8 h on the
 other), data export 1.7 GB. Waiting for the account to be set up.
+
+## 2026-10-25
+
+Divisions. Wrote static2fate/divisions.py: condensation (area < 0.6x and Hoechst > 1.4x the
+previous 3 frames), recovery within 3 frames (area 1.5x, Hoechst 0.8x the condensed frame), and
+a sister track born within 70 px with a similar nucleus. Only tracks with all 13 live frames
+(4,670 of 6,676 labelled). Strips in results/qc: most flagged divisions really show two
+daughters; a few are crowded crops or dying cells.
+
+Counts: divided 21 of 2,724 survivors, 5 of 1,416 condensed dying, 4 of 530 AnnexinV-only.
+So the "AnnexinV-only cell that rounds up and flattens" in the context examples was a rare
+case, and divisions are not why the dies branch fails for that group.
+
+Other route: mitosis at the end of the movie reads as "condensed". 31 condensed dying cells are
+condensed only in the last hour and AnnexinV negative. By eye maybe a third look like mitosis
+(flat cell rounding up suddenly), the rest shrink progressively and bleb. Onset frame does not
+separate them (some clear apoptosis also crosses the threshold only at frame 13). Upper bound
+40 of 1,946 dying cells.
+
+But 0.8% dividing survivors in 6 h is far too low for HeLa (doubling about a day). Random
+control survivors: 0 of 16 divide by eye. Nucleus count per field, frame 13 over frame 1: 1.06
+to 1.17 at 0 to 9.8 nM, falling below 1 from 39 nM. So about a tenth of cells divide and almost
+none of them keep a complete track. Births of new tracks away from the border are about 0.9
+per cell, so most track starts are fragmentation, not division. The labelled set is selected
+for non-dividing cells. Has to go in the limits; fixing it means mother-daughter linking.
+
+Also checked a possible dark frame 2 seen in a few strips: median crop brightness per frame is
+flat (Hoechst 17 to 19, 561 23 to 27); 488 rises from 17 to 24 over the movie in all cells. Dark
+crops increase late (shrinking dying cells). No acquisition artefact.

@@ -118,14 +118,40 @@ question: some cells round up with bright chromatin and flatten again an hour la
 like division, not apoptosis, and a rounded mitotic cell can pass for a dying one in a single
 frame.
 
+## Are some "dying" cells dividing?
+
+`scripts/16_divisions.py` flags a division when a nucleus turns small and bright for a frame or
+two, comes back larger and dimmer within 1.5 h, and a new track is born next to it (the second
+daughter). Apoptotic nuclei condense too but do not come back. Image strips for checking the
+calls by eye are in `results/qc/divisions_*.png`: of the 16 flagged cells shown, about 10
+clearly divide, 4 are unclear and 2 are dying cells.
+
+| labelled cells (all 13 frames tracked) | n | divided | condensed in the last hour, AnnexinV negative |
+|---|---|---|---|
+| survive | 2,724 | 21 (0.8%) | 12 |
+| die, condensed | 1,416 | 5 (0.4%) | 31 |
+| die, AnnexinV only | 530 | 4 (0.8%) | 0 |
+
+So divisions do not explain the AnnexinV-only problem: 4 of 530 cells. The second way mitosis can
+enter the label is a cell caught rounding up at the end, which the "condensed" clause calls
+apoptotic; mitotic cells are AnnexinV negative, so the 31 cells in the last column are the
+suspects. By eye about a third of them look mitotic and the rest like ordinary apoptosis. At
+most 40 of 1,946 dying cells (2.1%) are affected, probably fewer.
+
+The bigger finding is what is missing. The nucleus count per field grows 6 to 17% over 6 h at
+0 to 9.8 nM (`results/tables/nucleus_count_growth.csv`), so roughly a tenth of cells divide,
+but only about 1% of labelled cells do. Division breaks the track (the nucleus rounds, moves and
+splits), so dividing cells rarely end up with a complete track and a label. The labelled set,
+and every model trained on it, is mostly cells that did not divide during the movie.
+
 ## Next
 
 - Invert the context frame under the context model, so it keeps the cell's identity and uses
   its state.
 - Score several samples per cell (energy score) instead of one, so a model is not penalised
   only for being stochastic.
-- Flag divisions in the tracks and check how many AnnexinV-only or early "dying" cells are
-  mitotic.
+- Link daughters to mothers in the tracker so dividing cells get a fate too; do cells that
+  divide under drug die more or less often?
 - Get the colour of apoptosis right; check whether the ChromaLIVE channel scaling per field is
   part of the problem.
 - 128 px and longer training on a GPU (`kaggle/train_kaggle.py`, two T4s), then video.
@@ -147,5 +173,5 @@ On a GPU: `uv run scripts/export_kaggle.py <user>` writes the 2,735 cells the mo
 Notes, decisions and corrections are dated in [notes/notebook.md](notes/notebook.md).
 
 Known limits: one plate; the label fixes a 10% positive rate in controls; tracking keeps a
-quarter to half of cells, fewer in dense regions; two deposited files are truncated and the
+quarter to half of cells, fewer in dense regions, and almost none that divide; two deposited files are truncated and the
 deposited terminal images need field matching (handled in `src/static2fate/fields.py`).
