@@ -1,0 +1,5 @@
+fate,source,nuc_area,nuc_hoechst,cyto_green,cyto_red
+0,generated,708.0,-0.382,-0.838,-0.67
+0,real,672.0,-0.34,-0.817,-0.697
+1,generated,163.0,0.469,-0.605,-0.853
+1,real,219.0,0.215,-0.685,-0.817

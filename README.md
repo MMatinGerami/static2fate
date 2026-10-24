@@ -12,7 +12,8 @@ Way lab, CC0).
 
 ![two cells](results/figures/fig3_two_cells.png)
 
-Status (October 2026): data pipeline, baselines and a first generative model done.
+Status (October 2026): data pipeline, baselines, a fate-conditioned generative model and a
+version that also sees an earlier frame of the cell.
 
 ## What is here
 
@@ -84,13 +85,50 @@ body, so the colour of the change is wrong even when its timing is right.
 
 ![branches from real cells](results/figures/fig7_branches_from_real_cells.png)
 
+## Giving the model an earlier frame of the cell
+
+The model above has no notion of how far along a cell is. A second model (same network, context
+image as three extra input channels, `scripts/13_train_ctx.py`, 60 min on MPS) is also given one
+observed frame of the cell, at 0 to 3 h, and generates a later frame under each fate. Scored the
+same way on the same 816 held-out cells (`scripts/14_eval_ctx.py`):
+
+| cells, model beats copying the 0 h frame | 3 h | 4 h | 5 h | 6 h |
+|---|---|---|---|---|
+| die, condensed: inversion | 0.46 | 0.57 | 0.67 | 0.72 |
+| die, condensed: context | 0.48 | 0.71 | 0.72 | 0.82 |
+| die, AnnexinV only: inversion | 0.34 | 0.33 | 0.35 | 0.37 |
+| die, AnnexinV only: context | 0.36 | 0.33 | 0.38 | 0.42 |
+| survive: inversion | 0.47 | 0.44 | 0.49 | 0.45 |
+| survive: context | 0.34 | 0.40 | 0.40 | 0.42 |
+
+Paired on the same cells (`results/tables/ctx_vs_inversion_paired.csv`), context helps cells
+that die with a condensed nucleus (+0.14 at 4 h, CI 0.06 to 0.24; +0.11 at 6 h, CI 0.03 to
+0.21). It does not help the AnnexinV-only cells, which is what I added it for: they are still
+pushed too far. For survivors it is worse at 3 h (-0.13, CI -0.17 to -0.08), because inversion
+keeps the cell's own noise while the context model draws new noise for every sample, and for a
+cell that barely changes that randomness costs more than the context gives. The overshoot of
+dying nuclei is unchanged (163 px generated against 219 px real at 6 h). Given the 2 h frame
+instead and compared with copying that frame, the pattern is the same
+(`results/tables/model_vs_copy.csv`).
+
+![context vs inversion](results/figures/fig8_context_vs_inversion.png)
+
+Looking at examples (`results/figures/fig9_context_examples.png`) also turned up a data
+question: some cells round up with bright chromatin and flatten again an hour later. That looks
+like division, not apoptosis, and a rounded mitotic cell can pass for a dying one in a single
+frame.
+
 ## Next
 
-- The model has no notion of how far along a cell is. Condition on the cell's own early frames
-  (or its pseudotime) so the dies branch can stay mild for cells that die late.
+- Invert the context frame under the context model, so it keeps the cell's identity and uses
+  its state.
+- Score several samples per cell (energy score) instead of one, so a model is not penalised
+  only for being stochastic.
+- Flag divisions in the tracks and check how many AnnexinV-only or early "dying" cells are
+  mitotic.
 - Get the colour of apoptosis right; check whether the ChromaLIVE channel scaling per field is
   part of the problem.
-- Train at 128 px and on the full time course as video, on a GPU.
+- 128 px and longer training on a GPU (`kaggle/train_kaggle.py`, two T4s), then video.
 
 ## Run
 
@@ -98,7 +136,13 @@ body, so the colour of the change is wrong even when its timing is right.
 uv sync
 scripts/00_download_subset.sh          # all 30 wells, 45 GB, from EBI
 scripts/run_all.sh                      # segmentation to baseline
+uv run scripts/09_train_flow.py --minutes 45     # flow models, then 10 to 15 for evaluation
+uv run scripts/13_train_ctx.py --minutes 60
+uv run pytest
 ```
+
+On a GPU: `uv run scripts/export_kaggle.py <user>` writes the 2,735 cells the models use
+(1.7 GB) as a dataset folder; `kaggle/train_kaggle.py` trains from it on Kaggle.
 
 Notes, decisions and corrections are dated in [notes/notebook.md](notes/notebook.md).
 

@@ -1,0 +1,18 @@
+{
+ "device": "mps",
+ "seed": 0,
+ "steps": 7162,
+ "batch": 64,
+ "size": 64,
+ "ch": 64,
+ "max_ctx_frame": 6,
+ "minutes": 60.0,
+ "train_cells": 1919,
+ "heldout_wells": [
+  "E-06",
+  "E-07",
+  "E-08",
+  "E-09"
+ ],
+ "torch": "2.14.1"
+}

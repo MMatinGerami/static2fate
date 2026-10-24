@@ -310,3 +310,27 @@ generated future closer to the cell's own real future than to another same-fate 
 Looking at the examples: real dying cells end as a red and blue condensed body; generated dying
 cells turn the cytoplasm green. Timing right, colour wrong. Population readouts redone with the
 Otsu readout: generated dying nucleus 150 px vs 219 real at 6 h, Hoechst 0.47 vs 0.22.
+
+Context model. The inversion results suggest the model needs to know how far along a cell is.
+UNet(context=True): one observed frame of the cell as three extra input channels, plus its
+frame index; trained on pairs (context frame 0 to 6, target frame after it), 60 min on MPS,
+7,162 steps, same split. Evaluated with scripts/14_eval_ctx.py, which also re-scores the
+inversion run; the inversion numbers come out identical to the table above (the copy-baseline
+comparison was an inline command before, now it is a script).
+
+Beats copy-0h, context 0 h vs inversion, paired by cell: condensed dying +0.14 at 4 h (CI 0.06
+to 0.24), +0.11 at 6 h (0.03 to 0.21), reaching 0.82; AnnexinV-only no change (0.33 to 0.42);
+survivors worse, -0.13 at 3 h (-0.17 to -0.08). So my hypothesis was wrong for the cells it was
+meant for: the AnnexinV-only cells are still condensed by the dies branch. Survivors lose
+because a fresh noise sample changes the cell, while inversion keeps it. One sample per cell
+penalises any stochastic model against a copy; should use several samples and an energy score,
+or invert under the context model. Dying nucleus at 6 h still 163 px vs 219 real, Hoechst 0.47
+vs 0.22.
+
+In the example grid one "AnnexinV-only" cell is round with bright chromatin at 2 h and flat
+again at 3 h. Probably a division. Mitotic cells round up and condense their chromatin, so in
+one frame they can look like early apoptosis. Need to flag divisions (track splits, or a
+rounding then flattening within 1 to 2 frames) and see how many labelled cells are affected.
+
+GPU: Kaggle job ready (kaggle/train_kaggle.py, 128 px on one T4 and 64 px for 8 h on the
+other), data export 1.7 GB. Waiting for the account to be set up.
