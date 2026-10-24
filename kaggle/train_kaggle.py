@@ -7,6 +7,7 @@ Push with: kaggle kernels push -p kaggle   (after replacing USERNAME in kernel-m
 
 import os
 import subprocess
+import time
 from pathlib import Path
 
 HOURS = float(os.environ.get("HOURS", 8))  # Kaggle sessions stop at 9 h (12 h on some accounts)
@@ -26,7 +27,13 @@ for gpu, (name, extra) in enumerate(runs.items()):
     cmd = ["python", str(REPO / "scripts/13_train_ctx.py"), "--device", "cuda", "--minutes", str(HOURS * 60),
            "--out", str(WORK / name), *extra]
     procs.append(subprocess.Popen(cmd, env=env, stdout=open(WORK / f"{name}.log", "w"), stderr=subprocess.STDOUT))
-for p in procs:
-    p.wait()
+# progress in the Kaggle log: first after 3 min (to catch a crash early), then every 10 min
+wait = 180
+while any(p.poll() is None for p in procs):
+    time.sleep(wait)
+    wait = 600
+    for name, p in zip(runs, procs):
+        lines = (WORK / f"{name}.log").read_text().strip().splitlines()
+        print(name, "running" if p.poll() is None else f"exited {p.returncode}", lines[-1] if lines else "", flush=True)
 for name in runs:
     print(name, (WORK / f"{name}.log").read_text()[-400:])
