@@ -20,10 +20,12 @@ commit = subprocess.run(["git", "-C", str(REPO), "rev-parse", "HEAD"], capture_o
 (WORK / "commit.txt").write_text(commit)
 subprocess.run(["nvidia-smi"])
 
-runs = {"ctx128": ["--size", "128", "--seed", "0"], "ctx64_long": ["--size", "64", "--seed", "1"]}
+# batch 64 at 128 px needs more than the 15 GB of a T4 (out of memory on the first try)
+runs = {"ctx128": ["--size", "128", "--seed", "0", "--batch", "32"], "ctx64_long": ["--size", "64", "--seed", "1"]}
 procs = []
 for gpu, (name, extra) in enumerate(runs.items()):
-    env = dict(os.environ, CUDA_VISIBLE_DEVICES=str(gpu), STATIC2FATE_DATA=str(data))
+    env = dict(os.environ, CUDA_VISIBLE_DEVICES=str(gpu), STATIC2FATE_DATA=str(data),
+               PYTORCH_CUDA_ALLOC_CONF="expandable_segments:True")
     cmd = ["python", str(REPO / "scripts/13_train_ctx.py"), "--device", "cuda", "--minutes", str(HOURS * 60),
            "--out", str(WORK / name), *extra]
     procs.append(subprocess.Popen(cmd, env=env, stdout=open(WORK / f"{name}.log", "w"), stderr=subprocess.STDOUT))
