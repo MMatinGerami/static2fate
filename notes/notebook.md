@@ -274,3 +274,39 @@ survives flat in both. Timing right, end overshoots. Nucleus area: wrong. Genera
 intensity scale, or the model really shrinking dying nuclei too early; not settled.
 
 Not yet: starting from a real cell (inversion), video consistency, 128 px.
+
+## 2026-10-24
+
+Nucleus size mismatch, diagnosed. The fixed Hoechst threshold (-0.2) was the main problem:
+generated images are about 0.1 dimmer in Hoechst than real ones (p99 0.07 vs 0.16 for
+survivors at 0 h), so fixed-threshold masks dropped nucleus pixels in generated cells. With the
+Otsu object nearest the crop centre (now src/static2fate/readouts.py), median areas real/gen:
+survives 559/584, 636/706, 672/780 px at 0, 3, 6 h; dies 533/466, 405/295, 219/148. So the
+model reproduces the shrinkage of dying nuclei over time, but exaggerates it (dying 13 to 32%
+too small, survivors 5 to 15% too large) and is slightly dim overall. Not an artefact any more,
+just a smaller real bias.
+
+Starting from real cells. Added flow.invert (backward Euler, 50 steps, fate left out) and
+scripts/11_invert_branches.py: invert the held-out cell's 0 h frame, regenerate it (round trip),
+then generate 3 to 6 h under each fate from the same noise. Dry run on 64 cells: round trip pixel
+MSE 0.002, readouts within 0.03 to 0.14 SD. Surviving cells: the survives branch is closer to
+their real future 83 to 92% of the time. Dying cells: the opposite, 17 to 33%. Guess: many
+"dies" labels are AnnexinV-only cells that still look normal at 6 h, while the dies branch
+condenses hard. Full run on 816 cells split by condensed vs AnnexinV-only to check.
+
+Full inversion run, 816 held-out cells (12 fields). True-fate branch closer to the real future
+than the other branch, balanced over fates: 0.62, 0.67, 0.71, 0.73 at 3 to 6 h. By group:
+survives 0.77 to 0.91; dies condensed 0.58 to 0.73; dies AnnexinV-only 0.41 to 0.45. My guess
+held: AnnexinV-only dying cells still look like survivors and the dies branch condenses them.
+
+But that comparison flatters the model: the survives branch is almost a frozen copy of 0 h, so
+it wins for survivors by default. Against the copy-0h baseline (true-fate branch closer to the
+real future than the 0 h frame is): survives 0.44 to 0.49, no gain; dies condensed 0.46, 0.57,
+0.67, 0.72 (6 h CI 0.54 to 0.80, field bootstrap); dies AnnexinV-only 0.33 to 0.37, worse than
+copying. Median distance at 6 h for condensed dying cells 2.3 (model) vs 3.6 (copy). Identity:
+generated future closer to the cell's own real future than to another same-fate same-dose cell's
+0.73 at 3 h falling to 0.63 at 6 h.
+
+Looking at the examples: real dying cells end as a red and blue condensed body; generated dying
+cells turn the cytoplasm green. Timing right, colour wrong. Population readouts redone with the
+Otsu readout: generated dying nucleus 150 px vs 219 real at 6 h, Hoechst 0.47 vs 0.22.

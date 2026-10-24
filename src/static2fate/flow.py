@@ -92,6 +92,21 @@ def flow_matching_loss(model, x1, frame, fate, p_drop: float = 0.1):
 
 
 @torch.no_grad()
+def invert(model, x1, frame, steps: int = 50):
+    """Integrate the ODE backwards from a real image to its noise, without a fate (null class).
+
+    Deterministic, like DDIM inversion: the noise found here regenerates (approximately) the
+    same cell, and can then be pushed forward under either fate.
+    """
+    x = x1.clone()
+    null = torch.full((len(x1),), 2, device=x1.device, dtype=torch.long)
+    for i in reversed(range(steps)):
+        s = torch.full((len(x1),), (i + 1) / steps, device=x1.device)
+        x = x - model(x, s, frame, null) / steps
+    return x
+
+
+@torch.no_grad()
 def sample(model, frame, fate, steps: int = 50, guidance: float = 2.0, generator=None, x0=None):
     """Euler integration from noise; the same x0 can be reused to compare two fates."""
     device = frame.device

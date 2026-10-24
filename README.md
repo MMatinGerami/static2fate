@@ -51,16 +51,45 @@ look the same up to 2 h and separate from 3 h, when the "dies" branch condenses 
 
 ![counterfactual pairs](results/figures/fig4_counterfactual_pairs.png)
 
-On held-out wells, nuclear Hoechst brightness of dying cells rises between 2 and 3 h, and so does
-that of generated dying cells (slightly too high by 6 h, 0.43 against 0.35). Nucleus size does not
-match: generated dying cells have nuclei far too small at early times (81 px against 184 px at 0 h).
+On held-out wells, generated dying cells change at the right time: nucleus brightness rises and
+nucleus area falls between 2 and 3 h, as in real dying cells. They overdo it, though. At 6 h the
+generated dying nucleus is 150 px against 219 px real, and Hoechst is 0.47 against 0.22. Survivors
+come out about 15% too large. Nucleus is the Otsu object nearest the crop centre
+(`src/static2fate/readouts.py`); an earlier fixed-threshold version exaggerated the size gap
+because generated images are slightly dimmer.
 
 ![generated vs real](results/figures/fig5_generated_vs_real.png)
 
+## Starting from a real cell
+
+Run the flow backwards from a held-out cell's 0 h image (fate left out) to get its noise, then
+forwards under each fate to 3 to 6 h. The round trip gives the cell back almost exactly (pixel
+MSE 0.002). Is the branch with the cell's true fate closer to what the cell actually looked like
+later than simply copying its 0 h frame? On 816 cells from four held-out wells (distances on
+nucleus area, nucleus Hoechst, cytoplasm green and red; 95% CIs from resampling the 12 fields):
+
+| cells | 3 h | 4 h | 5 h | 6 h |
+|---|---|---|---|---|
+| die, nucleus condensed (95) | 0.46 | 0.57 | 0.67 | 0.72 (0.54 to 0.80) |
+| survive (571) | 0.47 | 0.44 | 0.49 | 0.45 (0.39 to 0.49) |
+| die, AnnexinV only (150) | 0.34 | 0.33 | 0.35 | 0.37 (0.28 to 0.44) |
+
+So the dies branch predicts the course of cells that visibly die better than "nothing changes",
+from 4 h on. The survives branch is close to a frozen copy of the first frame and adds nothing.
+Cells that are AnnexinV-positive but still look normal at 6 h are pushed too far. In the images
+the generated dying cytoplasm turns green, while real dying cells end as a condensed red and blue
+body, so the colour of the change is wrong even when its timing is right.
+
+![model vs copy](results/figures/fig6_inversion_vs_copy.png)
+
+![branches from real cells](results/figures/fig7_branches_from_real_cells.png)
+
 ## Next
 
-- Start from a real observed cell (invert its first frame) instead of noise, then generate both fates.
-- Fix the nucleus size mismatch before trusting anything about morphology beyond brightness.
+- The model has no notion of how far along a cell is. Condition on the cell's own early frames
+  (or its pseudotime) so the dies branch can stay mild for cells that die late.
+- Get the colour of apoptosis right; check whether the ChromaLIVE channel scaling per field is
+  part of the problem.
 - Train at 128 px and on the full time course as video, on a GPU.
 
 ## Run
