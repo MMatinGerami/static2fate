@@ -4,8 +4,8 @@
    once on "dies", at frames 0, 2, ..., 12. If the model learned the biology, the two branches
    should look alike early and diverge later.
 2. A simple quantitative check on two nuclear readouts that mark apoptosis, computed the same
-   way on real held-out crops and on generated images: nucleus area (pixels above a fixed
-   Hoechst threshold) and mean Hoechst inside the nucleus. For each frame and fate, compare the
+   way on real held-out crops and on generated images: nucleus area (Otsu object nearest the
+   centre, see static2fate.readouts) and mean Hoechst inside the nucleus. For each frame and fate, compare the
    generated mean with the real mean, and compare the dies-minus-survives gap over time.
 
 Writes results/flow/counterfactual_grid.png, results/flow/nuclear_readouts.csv and
@@ -26,23 +26,18 @@ import torch
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "src"))
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 from static2fate.flow import UNet, sample  # noqa: E402
+from static2fate.readouts import cell_readouts  # noqa: E402
 
 ROOT = Path(__file__).resolve().parents[1]
 OUT = ROOT / "results/flow"
 FRAMES = list(range(0, 13, 2))
 N_GEN = 128  # generated images per frame and fate
-THR = -0.2  # Hoechst threshold in [-1, 1] units for the nucleus mask
 
 
 def nuclear(x: torch.Tensor) -> tuple[np.ndarray, np.ndarray]:
-    """x (n, 3, 64, 64) in [-1, 1]; channel 0 is Hoechst. Central nucleus only (16 px radius)."""
-    h = x[:, 0]
-    yy, xx = torch.meshgrid(torch.arange(64), torch.arange(64), indexing="ij")
-    centre = ((yy - 32) ** 2 + (xx - 32) ** 2 < 16**2).to(h.device)
-    mask = (h > THR) & centre
-    area = mask.flatten(1).sum(1).float()
-    mean = (h * mask).flatten(1).sum(1) / area.clamp(min=1)
-    return area.cpu().numpy(), mean.cpu().numpy()
+    """Nucleus area and mean Hoechst per image (NaN-free medians are taken by the caller)."""
+    r = cell_readouts(x)
+    return r[:, 0], r[:, 1]
 
 
 def main() -> None:
@@ -87,8 +82,8 @@ def main() -> None:
                          generator=torch.Generator(device="cpu").manual_seed(f * 10 + k) if device == "cpu" else None)
             ga, gm = nuclear(gen)
             rows.append({"frame": f, "minutes": f * 30, "fate": "dies" if k else "survives",
-                         "real_area": ra.mean(), "gen_area": ga.mean(),
-                         "real_hoechst": rm.mean(), "gen_hoechst": gm.mean(), "n_real": len(real)})
+                         "real_area": np.nanmedian(ra), "gen_area": np.nanmedian(ga),
+                         "real_hoechst": np.nanmedian(rm), "gen_hoechst": np.nanmedian(gm), "n_real": len(real)})
         print(rows[-2:], flush=True)
     df = pd.DataFrame(rows)
     df.to_csv(OUT / "nuclear_readouts.csv", index=False)
