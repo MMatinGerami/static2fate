@@ -162,11 +162,47 @@ the same 816 cells with the same 8-sample energy score, paired by cell
 Nothing changes by more than 0.1 at any hour, and the few intervals that exclude 0 go both
 ways (the longer run is a little better for survivors and a little worse for condensed dying
 cells at 3 to 4 h). The training loss is flat from about 2,000 steps in all three runs. So on
-this measure the model is not limited by compute or pixels; the gain has to come from what it
-is given (the fate as an input is coarse) or be measured with something finer than four
-readouts.
+this measure the model is not limited by compute or pixels. The next section shows the measure
+was the problem.
 
 ![model comparison](results/figures/fig11_model_comparison.png)
+
+## A finer comparison than four readouts
+
+The sampled futures (8 per cell, kept as images by `scripts/19_generate_samples.py`) were
+rescored in three feature spaces (`scripts/20_feature_score.py`): the four readouts, nine
+crop-level nucleus measurements (area, eccentricity, solidity, nucleus and ring mean per
+channel, `src/static2fate/features.py`) and frozen DINOv2-base embeddings, each standardised
+on the real held-out frames; at 64 px, with everything averaged down, and at 128 px, with the
+64 px samples upsampled and the real crops native. In DINOv2 space "copy + typical change" is a
+linear extrapolation that leaves the manifold of real images, so the baseline there is a random
+real training cell of the same fate at the same frame (8 draws). Energy score minus that
+baseline at 6 h; below 0 means the model's futures are closer to this cell's real future than
+another real cell of the same fate is:
+
+| | 64 px, 1 h | 64 px, 8 h | 128 px, 8 h |
+|---|---|---|---|
+| readouts: survive / die condensed / die AnnexinV only | -0.12 / -0.13 / +0.18 | -0.15 / -0.05 / +0.11 | -0.13 / -0.07 / +0.14 |
+| DINOv2 at 64 px | +3.0 / +5.4 / +5.0 | +0.7 / +1.0 / +1.2 | +1.1 / +2.0 / +1.8 |
+| DINOv2 at 128 px | +4.3 / +6.3 / +6.6 | +2.0 / +2.2 / +3.2 | +1.6 / +2.7 / +2.6 |
+
+In readout and handcrafted space the three models are still the same (paired differences
+within 0.15, mixed signs), and each is slightly closer than a random same-fate cell for
+survivors and condensed dying cells, not for AnnexinV-only cells. In DINOv2 space the 8 h
+models are 1.9 to 4.4 units closer to the real future than the 1 h model, paired by cell, with
+CIs excluding 0 in every group (`results/tables/feature_score_vs_1h.csv`). So the extra
+training did change the images: they look more like real cells, which four readouts could not
+see. At native 128 px the 128 px model is also closer than the upsampled 64 px model for
+survivors and AnnexinV-only cells (1.6 against 2.0, 2.6 against 3.2), not for condensed ones.
+
+Still, every model is farther from the cell's real future than a random real cell of the same
+fate is, and a linear probe tells generated from real with AUROC 0.995 to 1.000 in DINOv2
+space for all three (0.58 to 0.75 on the handcrafted features, 0.51 to 0.55 on the readouts;
+`scripts/21_real_vs_generated.py`). DINOv2 distance here is mostly realism and time after
+drug: the cell's own 0 h image is 17 units farther from its future than a random cell at the
+right frame is. So it measures how real the futures look, not whether they are this cell's.
+
+![feature spaces](results/figures/fig12b_feature_score_vs_random_cell.png)
 
 ## Are some "dying" cells dividing?
 
@@ -198,8 +234,11 @@ and every model trained on it, is mostly cells that did not divide during the mo
 
 - Invert the context frame under the context model, so it keeps the cell's identity and uses
   its state.
-- A richer comparison than four readouts: features from a frozen image encoder, or a
-  classifier telling real from generated futures.
+- Close the realism gap: a linear probe still separates generated from real perfectly. More
+  steps at 128 px, and a perceptual or adversarial term in the loss.
+- An identity measure: DINOv2 distance controlled for time and realism (is the cell's own
+  future the nearest among real same-frame candidates?), to ask whether the model knows this
+  cell beyond its fate.
 - Link daughters to mothers in the tracker so dividing cells get a fate too; do cells that
   divide under drug die more or less often?
 - Get the colour of apoptosis right; check whether the ChromaLIVE channel scaling per field is

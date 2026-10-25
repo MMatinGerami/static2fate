@@ -402,3 +402,45 @@ conditioning limited. A finer metric would settle which.
 Kaggle quota used this week: about 17 h of the 30 (training 8.5, evaluations 2.3 and 4.5,
 plus the aborted runs). The train job's first version used batch 64 at 128 px and ran out of
 memory.
+
+Finer comparison, first model. Saved 8 futures per held-out cell as images (19), then scored
+them (20) in three spaces, each standardised per dimension on the real held-out frames 6 to
+12: the four readouts, nine crop-level nucleus measurements (features.crop_features: area,
+eccentricity, solidity, nucleus and 8 px ring mean per channel), and DINOv2-base CLS (768 d).
+Two baselines: "copy + typical change" as before, and a random same-fate training cell at the
+same frame (M draws), which stays on the manifold of real images. Both at 64 px (everything
+averaged down) and 128 px (64 px samples upsampled, real crops native).
+
+1 h model, 6 h, model minus random real cell: readouts -0.13 condensed, -0.12 survivors,
++0.18 AnnexinV-only; handcrafted -0.15, -0.07, +0.04 (CIs mostly crossing 0); DINOv2 +5.4,
++3.0, +5.0 (CIs 2.7 to 6.4, larger at 128 px). So in DINOv2 space a random other real cell
+of the same fate is much closer to the real future than the model's samples. Also the copy of
+the cell's own 0 h frame is 17 units farther than a random real cell at the right frame, so
+DINOv2 distance here is mostly time after drug plus realism, not cell identity. Linear probe
+real vs generated (21, leave-one-field-out): DINOv2 AUROC 1.000 at 64 and 128 px,
+handcrafted 0.59 (0.72 at 128 px, where the upsampling is a giveaway), readouts 0.51.
+The generated images are telling in a way the readouts cannot see. Drift baseline in DINOv2
+space is off-manifold (model beats it by 1 to 2.4) and is not the right comparison there.
+
+All three models in feature space (Kaggle generation 2 h for 64 px, 4.6 h for 128 px; 128 px
+runs 24 s per cell with 8 samples). Readouts and handcrafted: Kaggle models minus the 1 h
+model within -0.12 to +0.17, mixed signs; nothing new. DINOv2 (paired, 6 h): 64 px 8 h -2.3
+survivors, -4.4 condensed, -3.6 AnnexinV-only at 64 px and -2.2, -4.1, -3.5 at 128 px; 128 px
+model -1.9, -3.3, -3.1 and -2.7, -3.7, -4.0. All CIs well away from 0, same sign at every
+hour. Against a random same-fate real cell (6 h): 1 h model +3.0 to +6.6; 64 px 8 h +0.7 to
++1.2 at 64 px, +2.0 to +3.2 at 128 px; 128 px model +1.1 to +2.0 at 64 px, +1.6 to +2.7 at
+128 px. At native 128 px the 128 px model is closer than the upsampled 64 px 8 h model for
+survivors (1.58 vs 1.99) and AnnexinV-only (2.59 vs 3.24), not condensed (2.74 vs 2.23,
+overlapping CIs). Downsampled to 64 the 64 px 8 h model is the closest, probably its 98k
+steps against 51k at batch 32.
+
+Probe real vs generated, DINOv2: 1.000 / 0.997 / 0.995 (1 h, 64 px 8 h, 128 px 8 h) at 64 px;
+1.000 / 1.000 / 0.996 at 128 px. Handcrafted 0.59 / 0.58 / 0.63 at 64 px and 0.72 / 0.75 /
+0.61 at 128 px (the upsampled models give themselves away there). Readouts 0.51 to 0.55.
+
+So the readout comparison of 25 Oct morning was blind: longer training made the images more
+real by a large margin in DINOv2 terms, and resolution helps at native resolution. But a
+frozen encoder still separates generated from real without error. Two things to keep apart
+from now on: realism (how far from the real manifold) and identity (whose future this is).
+DINOv2 distance as used here is the first; it cannot answer the second because time after
+drug and realism dominate it. The drift baseline is not usable in DINOv2 space.
