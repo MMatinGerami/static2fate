@@ -129,7 +129,7 @@ def main(mdir: Path, m: int, limit: int | None) -> None:
     means = d.groupby(["group", "hours"])[["es_model", "es_drift", "es_random_cell", "d_mean", "d_one", "d_copy",
                                              "d_inversion", "spread"]].mean()
     tab = tab.merge(means.reset_index(), on=["group", "hours"])
-    suffix = "" if mdir == ROOT / "results/flow_ctx" else f"_{mdir.name}"
+    suffix = "" if mdir.resolve() == (ROOT / "results/flow_ctx").resolve() else f"_{mdir.name}"
     tab.to_csv(ROOT / f"results/tables/energy_score{suffix}.csv", index=False)
     print(means.round(2).to_string())
     print(tab.pivot_table(index=["measure", "group"], columns="hours", values="estimate").round(2).to_string())
