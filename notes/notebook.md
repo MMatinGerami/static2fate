@@ -363,3 +363,24 @@ for non-dividing cells. Has to go in the limits; fixing it means mother-daughter
 Also checked a possible dark frame 2 seen in a few strips: median crop brightness per frame is
 flat (Hoechst 17 to 19, 561 23 to 27); 488 rises from 17 to 24 over the movie in all cells. Dark
 crops increase late (shrinking dying cells). No acquisition artefact.
+
+Energy score. One sample per cell penalises a stochastic model against a deterministic copy.
+scripts/17_energy_score.py: 8 samples per held-out cell and frame (context model, 0 h frame,
+true fate), energy score in the same standardised readouts. First version averaged the spread
+term over all pairs including i = j, which biases the score against the model; switched to
+distinct pairs (unbiased for any number of samples). DOI of Gneiting and Raftery checked on
+Crossref.
+
+Worry before the full run: the energy score credits spread, so maybe any noisy forecast beats
+copy. Added "copy + typical change" (0 h readouts plus the change of a random training cell
+with the same fate) and "random same-fate cell". The 32-cell smoke test suggested the baseline
+might beat the model.
+
+Full run, 816 cells, 80 min on MPS. Model vs copy, energy score difference at 6 h: survivors
+-0.48 (CI -0.57 to -0.41), condensed dying -2.25 (-2.55 to -1.52), AnnexinV-only -0.72 (-1.08
+to -0.33); below 0 at every hour. Copy + typical change gets most of that: -0.41, -2.03, -0.70.
+Model vs that baseline: condensed -0.24, -0.23, -0.34, -0.22 at 3 to 6 h (CI below 0 at 3 to
+5 h), survivors -0.04 to -0.07 (CI below 0 at 4 and 6 h), AnnexinV-only about 0. Even the mean
+of 8 samples as a point forecast beats copy for survivors (-0.05 to -0.12). So the "worse than
+copy for survivors" result was the one-sample penalty, and what the images add beyond the
+average course of each fate is mostly in visibly dying cells. Smoke test numbers were noise.

@@ -105,8 +105,8 @@ Paired on the same cells (`results/tables/ctx_vs_inversion_paired.csv`), context
 that die with a condensed nucleus (+0.14 at 4 h, CI 0.06 to 0.24; +0.11 at 6 h, CI 0.03 to
 0.21). It does not help the AnnexinV-only cells, which is what I added it for: they are still
 pushed too far. For survivors it is worse at 3 h (-0.13, CI -0.17 to -0.08), because inversion
-keeps the cell's own noise while the context model draws new noise for every sample, and for a
-cell that barely changes that randomness costs more than the context gives. The overshoot of
+keeps the cell's own noise while the context model draws new noise for every sample, and one
+random sample is penalised for that spread (scored with several samples below, this goes away). The overshoot of
 dying nuclei is unchanged (163 px generated against 219 px real at 6 h). Given the 2 h frame
 instead and compared with copying that frame, the pattern is the same
 (`results/tables/model_vs_copy.csv`).
@@ -117,6 +117,32 @@ Looking at examples (`results/figures/fig9_context_examples.png`) also turned up
 question: some cells round up with bright chromatin and flatten again an hour later. That looks
 like division, not apoptosis, and a rounded mitotic cell can pass for a dying one in a single
 frame.
+
+## Scoring several samples per cell
+
+One sample from a stochastic model is a harsh test against a deterministic copy. So each
+held-out cell got 8 samples per frame from the context model (0 h frame, true fate), scored with
+the energy score (mean distance to the real readouts minus half the mean distance between
+samples; for a single forecast it is the plain distance, so copy and inversion are on the same
+scale; `scripts/17_energy_score.py`). Because the energy score credits spread, I added a
+baseline that never looks at the image: the cell's 0 h readouts plus the change of a random
+training cell with the same fate, 8 draws ("copy + typical change").
+
+| energy score difference, 6 h (below 0 = first is better) | survive | die, condensed | die, AnnexinV only |
+|---|---|---|---|
+| context model vs copy | -0.48 (-0.57 to -0.41) | -2.25 (-2.55 to -1.52) | -0.72 (-1.08 to -0.33) |
+| copy + typical change vs copy | -0.41 (-0.46 to -0.36) | -2.03 (-2.16 to -1.73) | -0.70 (-0.99 to -0.38) |
+| context model vs copy + typical change | -0.07 (-0.13 to -0.01) | -0.22 (-0.41 to 0.25) | -0.02 (-0.13 to 0.12) |
+
+Scored this way the context model beats copying the cell for every group and hour, survivors
+included, and beats the inversion model everywhere. But most of that is what any forecast gets
+by knowing the usual course of each fate. Beyond that baseline the images add a clear gain only
+for cells that die with a condensed nucleus (-0.24, -0.23, -0.34 at 3, 4, 5 h, CIs below 0; at
+6 h the CI crosses 0), a small one for survivors, and nothing for AnnexinV-only cells. Both the
+model and the baseline are told the true fate, so this measures the dynamics given the fate,
+not fate prediction. Distances are on four readouts only.
+
+![energy score](results/figures/fig10_energy_score.png)
 
 ## Are some "dying" cells dividing?
 
@@ -148,8 +174,8 @@ and every model trained on it, is mostly cells that did not divide during the mo
 
 - Invert the context frame under the context model, so it keeps the cell's identity and uses
   its state.
-- Score several samples per cell (energy score) instead of one, so a model is not penalised
-  only for being stochastic.
+- A richer comparison than four readouts: features from a frozen image encoder, or a
+  classifier telling real from generated futures.
 - Link daughters to mothers in the tracker so dividing cells get a fate too; do cells that
   divide under drug die more or less often?
 - Get the colour of apoptosis right; check whether the ChromaLIVE channel scaling per field is

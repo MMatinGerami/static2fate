@@ -76,3 +76,17 @@ def test_field_bootstrap_ci_contains_estimate():
     t = field_bootstrap(d, "y", ["g"], n_boot=300).iloc[0]
     assert t.ci_low <= t.estimate <= t.ci_high and t.n == 240
     assert group_of(0, True) == "survives" and group_of(1, False) == "dies, AnnexinV only"
+
+
+def test_energy_score():
+    from static2fate.evaluate import energy_score
+
+    y = np.zeros(2)
+    assert energy_score(np.array([[3.0, 4.0]]), y) == 5.0  # one sample: plain distance
+    rng = np.random.default_rng(0)
+    truth = rng.normal(size=(4000, 2))
+    calibrated = np.mean([energy_score(rng.normal(size=(16, 2)), t) for t in truth[:500]])
+    too_narrow = np.mean([energy_score(0.2 * rng.normal(size=(16, 2)), t) for t in truth[:500]])
+    point = np.mean([energy_score(np.zeros((1, 2)), t) for t in truth[:500]])
+    assert calibrated < too_narrow and calibrated < point
+    assert np.isnan(energy_score(np.full((3, 2), np.nan), y))
