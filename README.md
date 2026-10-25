@@ -204,6 +204,41 @@ right frame is. So it measures how real the futures look, not whether they are t
 
 ![feature spaces](results/figures/fig12b_feature_score_vs_random_cell.png)
 
+## Is it still the same cell?
+
+The energy scores mix three things: realism, time after drug and whose cell it is. To isolate
+the last, every real held-out cell of the same fate at the target frame is a candidate, the
+candidates are ranked by distance to the query, and the percentile rank of the query cell's own
+real future is recorded (0 = nearest, 0.5 = chance; `scripts/22_identity.py`). Queries: each
+model's 8 samples (ranks averaged), the cell's own 0 h image, and its real 3 h image as a
+reference for how recognisable a cell is from a real frame 1 to 3 h earlier.
+
+| percentile rank of own future, 6 h | survive | die, condensed | die, AnnexinV only |
+|---|---|---|---|
+| DINOv2 at 64 px: models (1 h / 8 h / 128 px) | 0.47 / 0.44 / 0.46 | 0.48 / 0.43 / 0.46 | 0.49 / 0.48 / 0.48 |
+| DINOv2: copy 0 h | 0.35 | 0.50 | 0.33 |
+| DINOv2: real 3 h | 0.25 | 0.29 | 0.25 |
+| readouts: models (1 h / 8 h / 128 px) | 0.37 / 0.32 / 0.35 | 0.40 / 0.38 / 0.40 | 0.49 / 0.45 / 0.48 |
+| readouts: copy 0 h | 0.26 | 0.59 | 0.35 |
+| readouts: real 3 h | 0.18 | 0.38 | 0.21 |
+
+The generated futures keep little of the cell. In DINOv2 space their own future ranks near
+chance (0.43 to 0.51), while the cell's 0 h image ranks it at 0.33 to 0.35 for survivors and
+AnnexinV-only cells, and a real 3 h image at 0.25 to 0.29. Paired by cell, the models are 0.09
+to 0.16 worse than the 0 h copy in those groups, CIs excluding 0
+(`results/tables/identity_rank_paired.csv`). Only condensed dying cells change so much that
+the 0 h image stops being useful (0.50; 0.59 in readouts, worse than chance), and there the
+models match or beat it. Top-1 rates tell the same story: models 0.2 to 1%, copy 1 to 5%, a
+real 3 h frame 5 to 34%. Longer training helps a little (64 px 8 h against 1 h: -0.03 for
+survivors, CI -0.04 to -0.02), 128 px does not.
+
+So the context model makes plausible cells of the right fate and time, not this cell's future:
+the identity in the context image is mostly lost in sampling. That is the same thing the
+inversion comparison showed from the other side (the survives branch added nothing over a
+copy), now measured directly.
+
+![identity](results/figures/fig13_identity.png)
+
 ## Are some "dying" cells dividing?
 
 `scripts/16_divisions.py` flags a division when a nucleus turns small and bright for a frame or
@@ -236,9 +271,9 @@ and every model trained on it, is mostly cells that did not divide during the mo
   its state.
 - Close the realism gap: a linear probe still separates generated from real perfectly. More
   steps at 128 px, and a perceptual or adversarial term in the loss.
-- An identity measure: DINOv2 distance controlled for time and realism (is the cell's own
-  future the nearest among real same-frame candidates?), to ask whether the model knows this
-  cell beyond its fate.
+- Keep the cell: start the sampler from the inverted context frame instead of fresh noise, or
+  tie the output to the context more strongly (feature-level conditioning or guidance towards
+  the context), and re-run the identity ranking.
 - Link daughters to mothers in the tracker so dividing cells get a fate too; do cells that
   divide under drug die more or less often?
 - Get the colour of apoptosis right; check whether the ChromaLIVE channel scaling per field is

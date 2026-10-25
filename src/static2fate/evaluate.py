@@ -9,6 +9,7 @@ from __future__ import annotations
 
 import numpy as np
 import pandas as pd
+import torch
 
 
 def group_of(fate: int, condensed: bool) -> str:
@@ -52,3 +53,21 @@ def energy_score(samples: np.ndarray, y: np.ndarray) -> float:
         return float(first)
     second = np.linalg.norm(x[:, None] - x[None], axis=2).sum() / (len(x) * (len(x) - 1))
     return float(first - 0.5 * second)
+
+
+def rank_of_own(queries: np.ndarray, candidates: np.ndarray, own: np.ndarray):
+    """Where does each query's own cell rank among real candidates, by Euclidean distance?
+
+    queries (n, m, d): m forecasts per cell; candidates (K, d): one real image per candidate
+    cell at the target frame, including the n query cells' own; own (n,): row of each query
+    cell in candidates. Returns percentile ranks (n, m) in [0, 1], 0 when the own cell is the
+    nearest and 0.5 at chance, and top1 (n, m) booleans. Ties count against the query.
+    """
+    n, m, d = queries.shape
+    q = torch.from_numpy(np.ascontiguousarray(queries, dtype=np.float32)).reshape(n * m, d)
+    c = torch.from_numpy(np.ascontiguousarray(candidates, dtype=np.float32))
+    dist = torch.cdist(q, c).reshape(n, m, -1)
+    d_own = dist[torch.arange(n)[:, None], torch.arange(m)[None, :], torch.as_tensor(own)[:, None]]
+    closer = (dist <= d_own[:, :, None]).sum(-1) - 1  # candidates at least as close, minus own
+    pct = closer.numpy() / max(len(candidates) - 1, 1)
+    return pct, closer.numpy() == 0

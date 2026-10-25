@@ -444,3 +444,22 @@ frozen encoder still separates generated from real without error. Two things to 
 from now on: realism (how far from the real manifold) and identity (whose future this is).
 DINOv2 distance as used here is the first; it cannot answer the second because time after
 drug and realism dominate it. The drift baseline is not usable in DINOv2 space.
+
+Identity. evaluate.rank_of_own + scripts/22_identity.py: candidates are all real held-out cells
+of the same fate at the target frame (571 survivors, 245 dying); percentile rank of the query
+cell's own real future, 0 = nearest. Bug on the first run: `tab.query` is the DataFrame
+method, so the plot was empty; use tab["query"].
+
+6 h, DINOv2 at 64 px: models 0.43 to 0.51 (near chance), copy 0 h 0.35 survivors, 0.33
+AnnexinV-only, 0.50 condensed; real 3 h frame 0.25 to 0.29. Models minus copy, paired:
++0.09 to +0.16 for survivors and AnnexinV-only (CIs exclude 0), -0.07 to -0.01 condensed.
+Readouts the same pattern, and copy is worse than chance for condensed cells (0.59) because
+they change so much. 64 px 8 h minus 1 h: -0.03 survivors (CI -0.04 to -0.02), -0.05 condensed
+(CI crosses 0); 128 px minus 64 px 8 h +0.02 to +0.03. Top-1: models 0.2 to 1%, copy 1 to 5%,
+real 3 h 5 to 34%.
+
+So the sampler loses the cell: the futures are plausible same-fate cells, not this cell. The
+inversion model kept identity by construction (round trip MSE 0.002) and its survives branch
+was a near copy; the context model got the dynamics of condensed cells better but at the cost
+of identity. These are the two ends of one trade-off, and the next model has to hold both:
+noise from inverting the context frame, or stronger conditioning on it.

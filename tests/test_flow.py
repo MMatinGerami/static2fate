@@ -90,3 +90,15 @@ def test_energy_score():
     point = np.mean([energy_score(np.zeros((1, 2)), t) for t in truth[:500]])
     assert calibrated < too_narrow and calibrated < point
     assert np.isnan(energy_score(np.full((3, 2), np.nan), y))
+
+
+def test_rank_of_own():
+    from static2fate.evaluate import rank_of_own
+
+    cand = np.array([[0.0, 0], [10, 0], [20, 0], [30, 0]])
+    q = np.array([[[0.1, 0], [12, 0]],  # cell 0: own nearest, then behind [10,0] and [20,0]
+                  [[29, 0], [29, 0]]])  # cell 3 (own row 3): nearest both times
+    pct, top1 = rank_of_own(q, cand, np.array([0, 3]))
+    assert top1.tolist() == [[True, False], [True, True]]
+    assert pct[0].tolist() == [0.0, 2 / 3] and pct[1].tolist() == [0.0, 0.0]
+    assert pct.shape == (2, 2)
