@@ -30,8 +30,8 @@ DOSES = [4.88, 9.77, 19.53, 39.06]
 HELDOUT_WELLS = ["E-06", "E-07", "E-08", "E-09"]  # one replicate well per dose
 
 
-def load(split: str, size: int = 64, frames: list[int] | None = None):
-    """Crops of the two-fate doses as float in [-1, 1], (n, 13 or len(frames), 3, size, size)."""
+def split_index(split: str):
+    """Indices into crops.npy of the two-fate-dose cells of one split, and their track ids."""
     lab = pd.read_parquet(P / "fate_labels.parquet").set_index("track")
     tracks = np.load(P / "crops_tracks.npy")
     keep = np.isin(tracks, lab.index[lab["dose_nM"].isin(DOSES)])
@@ -39,6 +39,14 @@ def load(split: str, size: int = 64, frames: list[int] | None = None):
     held = np.isin(well, HELDOUT_WELLS)
     keep &= held if split == "test" else ~held
     idx = np.flatnonzero(keep)
+    return idx, tracks[idx]
+
+
+def load(split: str, size: int = 64, frames: list[int] | None = None):
+    """Crops of the two-fate doses as float in [-1, 1], (n, 13 or len(frames), 3, size, size)."""
+    lab = pd.read_parquet(P / "fate_labels.parquet").set_index("track")
+    tracks = np.load(P / "crops_tracks.npy")
+    idx, _ = split_index(split)
     x = np.load(P / "crops.npy", mmap_mode="r")[idx]
     if frames is not None:
         x = x[:, frames]
