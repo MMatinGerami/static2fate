@@ -102,3 +102,19 @@ def test_rank_of_own():
     assert top1.tolist() == [[True, False], [True, True]]
     assert pct[0].tolist() == [0.0, 2 / 3] and pct[1].tolist() == [0.0, 0.0]
     assert pct.shape == (2, 2)
+
+
+def test_sample_from_partial_noise_keeps_start_when_velocity_is_zero():
+    m = UNet(ch=16, cdim=32, context=True).eval()
+    for p in m.out.parameters():
+        torch.nn.init.zeros_(p)
+    x = torch.rand(2, 3, 64, 64) * 2 - 1
+    z = torch.randn(2, 3, 64, 64)
+    frame, fate = torch.tensor([6, 12]), torch.tensor([0, 1])
+    cond = {"ctx": x, "ctx_frame": torch.zeros(2, dtype=torch.long)}
+    full = sample(m, frame, fate, steps=10, x0=z.clone(), x_start=x, s0=1.0, **cond)
+    assert torch.allclose(full, x.clamp(-1, 1))  # s0 = 1: nothing left to integrate
+    half = sample(m, frame, fate, steps=10, x0=z.clone(), x_start=x, s0=0.5, **cond)
+    assert torch.allclose(half, (0.5 * z + 0.5 * x).clamp(-1, 1))
+    none = sample(m, frame, fate, steps=10, x0=z.clone(), x_start=x, s0=0.0, **cond)
+    assert torch.allclose(none, z.clamp(-1, 1))

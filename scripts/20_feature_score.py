@@ -19,6 +19,7 @@ fig12b_feature_score_vs_random_cell.png.
 """
 
 import importlib
+import os
 import sys
 from pathlib import Path
 
@@ -48,6 +49,7 @@ FUTURE = [6, 8, 10, 12]
 SPACES = ["readouts", "handcrafted", "dinov2"]
 RES = [64, 128]
 CHUNK = 256
+TAG = os.environ.get("STATIC2FATE_TAG", "")  # suffix for output tables and figures
 
 
 def resize(x: torch.Tensor, res: int) -> torch.Tensor:
@@ -132,13 +134,13 @@ def main(models: dict[str, Path]) -> None:
     d["model_minus_random"] = d.es_model - d.es_random
     d["drift_minus_copy"] = d.es_drift - d.d_copy
     d["random_minus_copy"] = d.es_random - d.d_copy
-    d.to_csv(FEAT / "feature_score_cells.csv", index=False)
+    d.to_csv(FEAT / f"feature_score_cells{TAG}.csv", index=False)
 
     by = ["model", "space", "res", "group", "hours"]
     measures = ["model_minus_copy", "model_minus_drift", "model_minus_random", "drift_minus_copy", "random_minus_copy"]
     tab = pd.concat([field_bootstrap(d, c, by).assign(measure=c) for c in measures])
-    tab.to_csv(ROOT / "results/tables/feature_score.csv", index=False)
-    base = "64 px, 1 h"
+    tab.to_csv(ROOT / f"results/tables/feature_score{TAG}.csv", index=False)
+    base = next(iter(models))  # paired differences against the first model given
     key = ["space", "res", "track", "field", "group", "hours"]
     w = d[d.model == base][key + ["es_model"]].rename(columns={"es_model": "es_base"})
     diffs = []
@@ -149,7 +151,7 @@ def main(models: dict[str, Path]) -> None:
         j["minus_1h"] = j.es_model - j.es_base
         diffs.append(field_bootstrap(j, "minus_1h", ["space", "res", "group", "hours"]).assign(model=name))
     vs = pd.concat(diffs) if diffs else pd.DataFrame()
-    vs.to_csv(ROOT / "results/tables/feature_score_vs_1h.csv", index=False)
+    vs.to_csv(ROOT / f"results/tables/feature_score_vs_1h{TAG}.csv", index=False)
     pd.set_option("display.width", 200)
     for meas in ("model_minus_drift", "model_minus_random"):
         print(meas)
@@ -159,9 +161,10 @@ def main(models: dict[str, Path]) -> None:
         print(vs.pivot_table(index=["space", "res", "group"], columns=["model", "hours"], values="estimate")
               .round(2).to_string())
 
-    plot(tab, list(models), "model_minus_drift", "copy + typical change", ROOT / "results/figures/fig12_feature_score.png")
+    plot(tab, list(models), "model_minus_drift", "copy + typical change",
+         ROOT / f"results/figures/fig12_feature_score{TAG}.png")
     plot(tab, list(models), "model_minus_random", "random same-fate cell",
-         ROOT / "results/figures/fig12b_feature_score_vs_random_cell.png")
+         ROOT / f"results/figures/fig12b_feature_score_vs_random_cell{TAG}.png")
 
 
 def plot(tab: pd.DataFrame, models: list[str], measure: str, baseline: str, out: Path) -> None:

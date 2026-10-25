@@ -122,15 +122,24 @@ def invert(model, x1, frame, steps: int = 50):
 
 @torch.no_grad()
 def sample(model, frame, fate, steps: int = 50, guidance: float = 2.0, generator=None, x0=None,
-           size: int = 64, **cond):
-    """Euler integration from noise; the same x0 can be reused to compare two fates."""
+           size: int = 64, x_start=None, s0: float = 0.0, **cond):
+    """Euler integration from noise; the same x0 can be reused to compare two fates.
+
+    With x_start and s0 > 0 the integration starts part way along the path, from
+    (1 - s0) * noise + s0 * x_start (as in SDEdit), so the result keeps the large-scale layout
+    of x_start, more so for larger s0, while the model fills in what the condition asks for.
+    """
     device = frame.device
     x = x0 if x0 is not None else torch.randn(len(frame), 3, size, size, device=device, generator=generator)
+    first = 0
+    if x_start is not None:
+        first = round(s0 * steps)
+        x = (1 - first / steps) * x + (first / steps) * x_start
     n = len(frame)
     both_fates = torch.cat([fate, torch.full_like(fate, 2)])
     frame2 = torch.cat([frame, frame])
     cond2 = {k: torch.cat([v, v]) for k, v in cond.items()}
-    for i in range(steps):
+    for i in range(first, steps):
         s = torch.full((2 * n,), i / steps, device=device)
         v = model(torch.cat([x, x]), s, frame2, both_fates, **cond2)  # conditional and null in one pass
         v_c, v_u = v[:n], v[n:]

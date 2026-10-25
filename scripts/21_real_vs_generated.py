@@ -60,7 +60,7 @@ def main(models: dict[str, Path]) -> None:
                 rows.append({"model": name, "space": sp, "res": res, "auroc": auc, "n": int(ok.sum())})
                 print(rows[-1], flush=True)
     out = pd.DataFrame(rows)
-    out.to_csv(ROOT / "results/tables/real_vs_generated_auroc.csv", index=False)
+    out.to_csv(ROOT / f"results/tables/real_vs_generated_auroc{fs.TAG}.csv", index=False)
     print(out.pivot_table(index=["space", "res"], columns="model", values="auroc").round(3).to_string())
 
 

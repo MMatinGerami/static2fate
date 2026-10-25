@@ -11,7 +11,7 @@ Queries: each of the 8 saved samples of each model (ranks averaged per cell); th
 a reference for how identifiable a cell is from a real frame 1 to 3 h earlier. Spaces and
 resolutions as in 20, features from its cache (run 20 first). 95% CIs resample the 12 fields.
 
-Usage: uv run scripts/22_identity.py
+Usage: uv run scripts/22_identity.py [name=dir ...]   (default: the three context models)
 Writes results/tables/identity_rank.csv and results/figures/fig13_identity.png.
 """
 
@@ -32,10 +32,10 @@ from static2fate.evaluate import field_bootstrap, group_of, rank_of_own  # noqa:
 
 fs = importlib.import_module("20_feature_score")
 ROOT = fs.ROOT
-QUERIES = list(fs.MODELS) + ["copy 0 h", "real 3 h"]
 
 
-def main() -> None:
+def main(models: dict[str, Path]) -> None:
+    queries_all = list(models) + ["copy 0 h", "real 3 h"]
     train = importlib.import_module("09_train_flow")
     _, tracks = train.split_index("test")
     lab = pd.read_parquet(train.P / "fate_labels.parquet").set_index("track")
@@ -47,7 +47,7 @@ def main() -> None:
     for res in fs.RES:
         real = {k: v.reshape(n, 1 + len(fs.FUTURE), -1) for k, v in np.load(fs.FEAT / f"test_{res}.npz").items()}
         gen = {}
-        for name, d in fs.MODELS.items():
+        for name, d in models.items():
             tg, arrays = fs.load_samples(d)
             assert (tg == tracks).all(), name
             m = arrays[0].shape[2]
@@ -57,7 +57,7 @@ def main() -> None:
             fut = real[sp][:, 1:].reshape(-1, real[sp].shape[-1])
             mu, sd = np.nanmean(fut, 0), np.nanstd(fut, 0) + 1e-8
             z = lambda a: (a - mu) / sd  # noqa: E731
-            queries = {name: lambda j, name=name: z(gen[name][sp][:, j]) for name in fs.MODELS}
+            queries = {name: lambda j, name=name: z(gen[name][sp][:, j]) for name in models}
             queries["copy 0 h"] = lambda j: z(real[sp][:, 0])[:, None]
             queries["real 3 h"] = lambda j: z(real[sp][:, 1])[:, None] if j > 0 else None
             for j, f in enumerate(fs.FUTURE):
@@ -84,11 +84,11 @@ def main() -> None:
                                          "top1": np.nanmean(top1[ci])})
         print(f"done {res} px", flush=True)
     d = pd.DataFrame(rows)
-    d.to_csv(fs.FEAT / "identity_cells.csv", index=False)
+    d.to_csv(fs.FEAT / f"identity_cells{fs.TAG}.csv", index=False)
     by = ["query", "space", "res", "group", "hours"]
     tab = pd.concat([field_bootstrap(d, c, by).assign(measure=c) for c in ("pct_rank", "top1")])
     tab = tab.merge(d.groupby(by).candidates.first().reset_index(), on=by)
-    tab.to_csv(ROOT / "results/tables/identity_rank.csv", index=False)
+    tab.to_csv(ROOT / f"results/tables/identity_rank{fs.TAG}.csv", index=False)
     pd.set_option("display.width", 250)
     for meas in ("pct_rank", "top1"):
         print(meas)
@@ -102,7 +102,7 @@ def main() -> None:
     for r, (sp, res) in enumerate(spaces):
         for c, grp in enumerate(groups):
             a = ax[r, c]
-            for k, qname in enumerate(QUERIES):
+            for k, qname in enumerate(queries_all):
                 col, ls = styles.get(qname, (f"C{k}", "-"))
                 s = tab[(tab.measure == "pct_rank") & (tab.space == sp) & (tab.res == res)
                         & (tab.group == grp) & (tab["query"] == qname)].sort_values("hours")
@@ -119,8 +119,9 @@ def main() -> None:
     ax[0, 0].legend(fontsize=7)
     ax[0, 0].set_ylim(0, 0.6)
     plt.tight_layout()
-    plt.savefig(ROOT / "results/figures/fig13_identity.png", dpi=110)
+    plt.savefig(ROOT / f"results/figures/fig13_identity{fs.TAG}.png", dpi=110)
 
 
 if __name__ == "__main__":
-    main()
+    args = dict(a.split("=", 1) for a in sys.argv[1:])
+    main({k: Path(v) for k, v in args.items()} if args else fs.MODELS)
