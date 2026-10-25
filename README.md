@@ -14,8 +14,9 @@ Way lab, CC0).
 
 ![two cells](results/figures/fig3_two_cells.png)
 
-Status (October 2026): data pipeline, baselines, a fate-conditioned generative model and a
-version that also sees an earlier frame of the cell.
+Status (October 2026): data pipeline, baselines, a fate-conditioned generative model, a
+version that also sees an earlier frame of the cell, and GPU runs showing that more training
+or resolution does not change the picture.
 
 ## What is here
 
@@ -146,6 +147,27 @@ not fate prediction. Distances are on four readouts only.
 
 ![energy score](results/figures/fig10_energy_score.png)
 
+## Eight times the training, twice the resolution
+
+Two more context models were trained on Kaggle (two T4 GPUs, 8 h each, `kaggle/`): the same
+64 px model for 98,000 steps instead of 7,000, and a 128 px model for 51,000 steps. Scored on
+the same 816 cells with the same 8-sample energy score, paired by cell
+(`scripts/18_compare_models.py`, `results/tables/model_comparison.csv`):
+
+| energy score minus the 1 h Mac model, 6 h | survive | die, condensed | die, AnnexinV only |
+|---|---|---|---|
+| 64 px, 8 h | -0.03 (-0.05 to 0.00) | +0.06 (-0.04 to 0.14) | +0.01 (-0.09 to 0.10) |
+| 128 px, 8 h | -0.01 (-0.03 to 0.02) | -0.01 (-0.13 to 0.06) | +0.02 (-0.04 to 0.07) |
+
+Nothing changes by more than 0.1 at any hour, and the few intervals that exclude 0 go both
+ways (the longer run is a little better for survivors and a little worse for condensed dying
+cells at 3 to 4 h). The training loss is flat from about 2,000 steps in all three runs. So on
+this measure the model is not limited by compute or pixels; the gain has to come from what it
+is given (the fate as an input is coarse) or be measured with something finer than four
+readouts.
+
+![model comparison](results/figures/fig11_model_comparison.png)
+
 ## Are some "dying" cells dividing?
 
 `scripts/16_divisions.py` flags a division when a nucleus turns small and bright for a frame or
@@ -182,7 +204,8 @@ and every model trained on it, is mostly cells that did not divide during the mo
   divide under drug die more or less often?
 - Get the colour of apoptosis right; check whether the ChromaLIVE channel scaling per field is
   part of the problem.
-- 128 px and longer training on a GPU (`kaggle/train_kaggle.py`, two T4s), then video.
+- Video: generate the whole 3 to 6 h course at once, with temporal consistency, instead of
+  one frame at a time.
 
 ## Run
 

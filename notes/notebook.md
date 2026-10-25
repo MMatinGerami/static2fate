@@ -384,3 +384,21 @@ Model vs that baseline: condensed -0.24, -0.23, -0.34, -0.22 at 3 to 6 h (CI bel
 of 8 samples as a point forecast beats copy for survivors (-0.05 to -0.12). So the "worse than
 copy for survivors" result was the one-sample penalty, and what the images add beyond the
 average course of each fate is mostly in visibly dying cells. Smoke test numbers were noise.
+
+Kaggle runs scored. Training (8 h each on one T4, float16): 64 px for 98,298 steps (seed 1),
+128 px batch 32 for 50,999 steps. Evaluation needed the batch halved at 128 px (out of memory
+with 32 cells x 8 samples) and the 128 px cells split over the two GPUs (about 4 h per half;
+readouts standardised on all 816 cells in both halves, then joined).
+
+Energy score paired by cell against the 1 h Mac model: 64 px 8 h, survivors -0.02 to -0.06 (CI
+below 0), condensed dying +0.11, +0.13 at 3, 4 h (CI above 0), AnnexinV-only about 0; 128 px,
+survivors -0.01 to -0.02, condensed +0.08, +0.10 at 3, 5 h, AnnexinV-only -0.08, -0.09 at 3,
+5 h. All within 0.15 and mixed in sign. Loss curves: all three drop to about 0.1 by 2,000
+steps and sit there (last-20 mean 0.097, 0.084, 0.082). So 14x the steps or 4x the pixels
+buy nothing visible in four readouts. Either the readouts are too coarse to see the difference
+(plausible: they are computed after averaging 128 px down to 64) or the model is data or
+conditioning limited. A finer metric would settle which.
+
+Kaggle quota used this week: about 17 h of the 30 (training 8.5, evaluations 2.3 and 4.5,
+plus the aborted runs). The train job's first version used batch 64 at 128 px and ran out of
+memory.

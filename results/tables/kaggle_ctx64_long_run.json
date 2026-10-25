@@ -1,0 +1,19 @@
+{
+ "device": "cuda",
+ "seed": 1,
+ "steps": 98298,
+ "batch": 64,
+ "size": 64,
+ "ch": 64,
+ "max_ctx_frame": 6,
+ "float16": true,
+ "minutes": 480.0,
+ "train_cells": 1919,
+ "heldout_wells": [
+  "E-06",
+  "E-07",
+  "E-08",
+  "E-09"
+ ],
+ "torch": "2.11.0+cu128"
+}

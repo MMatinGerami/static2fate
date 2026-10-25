@@ -78,6 +78,7 @@ def main() -> None:
         sm = log.loss.rolling(10, min_periods=1).mean()
         ax[3].plot(log.step, sm, color=f"C{k}", label=name, lw=1)
     ax[3].set_xscale("log")
+    ax[3].set_ylim(0, 0.3)
     ax[3].set_xlabel("training step")
     ax[3].set_ylabel("flow matching loss (smoothed)")
     ax[3].legend(fontsize=7)
