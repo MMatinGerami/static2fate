@@ -19,7 +19,9 @@ Paired differences against copy and inversion, 95% CIs from resampling the 12 he
 On CUDA the network runs in float16. Without results/flow/invert_branches.csv the inversion
 columns are left empty.
 
-Usage: uv run scripts/17_energy_score.py [model dir, default results/flow_ctx] [M, default 8] [n cells]
+Usage: uv run scripts/17_energy_score.py [model dir, default results/flow_ctx] [M, default 8] [cells]
+       cells is a count (first n) or a range start:stop of the held-out cells, so one model can
+       be split over several GPUs; readouts are standardised on all held-out cells either way
        uv run scripts/17_energy_score.py plot   (figure only, from the saved table)
 Writes <model dir>/energy_cells.csv, results/tables/energy_score[_<model dir name>].csv and
 results/figures/fig10_energy_score.png (default model only).
@@ -48,7 +50,7 @@ from static2fate.readouts import cell_readouts  # noqa: E402
 
 ROOT = Path(__file__).resolve().parents[1]
 FUTURE = [6, 8, 10, 12]
-CELLS_PER_BATCH = 32
+CELLS_PER_BATCH = {64: 32, 128: 8}  # 8 samples each, conditional and null passes together
 
 
 def readouts(x):
@@ -57,7 +59,7 @@ def readouts(x):
     return cell_readouts(x)
 
 
-def main(mdir: Path, m: int, limit: int | None) -> None:
+def main(mdir: Path, m: int, cells: str | None) -> None:
     train = importlib.import_module("09_train_flow")
     run = json.loads((mdir / "run.json").read_text())
     device = "mps" if torch.backends.mps.is_available() else "cuda" if torch.cuda.is_available() else "cpu"
@@ -65,8 +67,13 @@ def main(mdir: Path, m: int, limit: int | None) -> None:
     model.load_state_dict(torch.load(mdir / "model.pt", map_location=device, weights_only=True))
     model.eval()
     x, fate, tracks = train.load("test", run["size"])
-    if limit:
-        x, fate, tracks = x[:limit], fate[:limit], tracks[:limit]
+    real_all = np.stack([readouts(x[:, f]) for f in FUTURE])
+    mu, sd = np.nanmean(real_all.reshape(-1, 4), 0), np.nanstd(real_all.reshape(-1, 4), 0)
+    sel = slice(0, len(x))
+    if cells:
+        a, _, b = cells.partition(":")
+        sel = slice(int(a), int(b)) if b else slice(0, int(a))
+    x, fate, tracks, real_f = x[sel], fate[sel], tracks[sel], real_all[:, sel]
     lab = pd.read_parquet(train.P / "fate_labels.parquet").set_index("track")
     condensed = lab.loc[tracks, "condensed"].to_numpy()
     n, size = len(x), run["size"]
@@ -76,8 +83,9 @@ def main(mdir: Path, m: int, limit: int | None) -> None:
     # float16 network passes on CUDA (the ODE state stays float32); MPS and CPU stay float32
     amp = torch.autocast("cuda", dtype=torch.float16) if device == "cuda" else contextlib.nullcontext()
     g = torch.Generator().manual_seed(0)
-    for b in range(0, n, CELLS_PER_BATCH):
-        sl = slice(b, min(b + CELLS_PER_BATCH, n))
+    per_batch = CELLS_PER_BATCH[size]
+    for b in range(0, n, per_batch):
+        sl = slice(b, min(b + per_batch, n))
         k = sl.stop - sl.start
         ctx = x[sl, 0].repeat_interleave(m, 0).to(device)  # cell-major: cell 0 x m, cell 1 x m ...
         fk = fate[sl].repeat_interleave(m).to(device)
@@ -89,8 +97,6 @@ def main(mdir: Path, m: int, limit: int | None) -> None:
             gen[j, sl] = readouts(out).reshape(k, m, 4)
         print(f"cells {sl.stop}/{n}", flush=True)
 
-    real_f = np.stack([readouts(x[:, f]) for f in FUTURE])
-    mu, sd = np.nanmean(real_f.reshape(-1, 4), 0), np.nanstd(real_f.reshape(-1, 4), 0)
     zs = (gen - mu) / sd
     rf = (real_f - mu) / sd
     r0 = (readouts(x[:, 0]) - mu) / sd
@@ -173,4 +179,4 @@ if __name__ == "__main__":
         sys.exit()
     main(Path(sys.argv[1]) if len(sys.argv) > 1 else ROOT / "results/flow_ctx",
          int(sys.argv[2]) if len(sys.argv) > 2 else 8,
-         int(sys.argv[3]) if len(sys.argv) > 3 else None)
+         sys.argv[3] if len(sys.argv) > 3 else None)
