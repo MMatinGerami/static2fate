@@ -30,7 +30,8 @@ DOSES = [4.88, 9.77, 19.53, 39.06]
 HELDOUT_WELLS = ["E-06", "E-07", "E-08", "E-09"]  # one replicate well per dose
 
 
-def load(split: str, size: int = 64):
+def load(split: str, size: int = 64, frames: list[int] | None = None):
+    """Crops of the two-fate doses as float in [-1, 1], (n, 13 or len(frames), 3, size, size)."""
     lab = pd.read_parquet(P / "fate_labels.parquet").set_index("track")
     tracks = np.load(P / "crops_tracks.npy")
     keep = np.isin(tracks, lab.index[lab["dose_nM"].isin(DOSES)])
@@ -39,9 +40,12 @@ def load(split: str, size: int = 64):
     keep &= held if split == "test" else ~held
     idx = np.flatnonzero(keep)
     x = np.load(P / "crops.npy", mmap_mode="r")[idx]
-    x = torch.from_numpy(np.ascontiguousarray(x)).float().div_(127.5).sub_(1)  # (n, 13, 3, 128, 128)
+    if frames is not None:
+        x = x[:, frames]
+    nf = x.shape[1]
+    x = torch.from_numpy(np.ascontiguousarray(x)).float().div_(127.5).sub_(1)  # (n, nf, 3, 128, 128)
     if size != 128:
-        x = F.avg_pool2d(x.flatten(0, 1), 128 // size).view(len(idx), 13, 3, size, size)
+        x = F.avg_pool2d(x.flatten(0, 1), 128 // size).view(len(idx), nf, 3, size, size)
     fate = torch.from_numpy(lab.loc[tracks[idx], "apoptotic"].to_numpy().astype(np.int64))
     return x, fate, tracks[idx]
 
