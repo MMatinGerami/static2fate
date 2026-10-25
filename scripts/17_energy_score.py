@@ -16,12 +16,16 @@ forecast is scored in the standardised readout space of 11 and 14:
     and of the first sample alone (the earlier one-sample comparison).
 Paired differences against copy and inversion, 95% CIs from resampling the 12 held-out fields.
 
+On CUDA the network runs in float16. Without results/flow/invert_branches.csv the inversion
+columns are left empty.
+
 Usage: uv run scripts/17_energy_score.py [model dir, default results/flow_ctx] [M, default 8] [n cells]
        uv run scripts/17_energy_score.py plot   (figure only, from the saved table)
 Writes <model dir>/energy_cells.csv, results/tables/energy_score[_<model dir name>].csv and
 results/figures/fig10_energy_score.png (default model only).
 """
 
+import contextlib
 import importlib
 import json
 import sys
@@ -69,6 +73,8 @@ def main(mdir: Path, m: int, limit: int | None) -> None:
     print(f"held-out cells {n}, {m} samples each, size {size}, device {device}", flush=True)
 
     gen = np.full((len(FUTURE), n, m, 4), np.nan)  # readouts of every sample
+    # float16 network passes on CUDA (the ODE state stays float32); MPS and CPU stay float32
+    amp = torch.autocast("cuda", dtype=torch.float16) if device == "cuda" else contextlib.nullcontext()
     g = torch.Generator().manual_seed(0)
     for b in range(0, n, CELLS_PER_BATCH):
         sl = slice(b, min(b + CELLS_PER_BATCH, n))
@@ -77,8 +83,9 @@ def main(mdir: Path, m: int, limit: int | None) -> None:
         fk = fate[sl].repeat_interleave(m).to(device)
         for j, f in enumerate(FUTURE):
             z = torch.randn(k * m, 3, size, size, generator=g)
-            out = sample(model, torch.full((k * m,), f, device=device), fk, x0=z.to(device), ctx=ctx,
-                         ctx_frame=torch.zeros(k * m, dtype=torch.long, device=device)).cpu()
+            with amp:
+                out = sample(model, torch.full((k * m,), f, device=device), fk, x0=z.to(device), ctx=ctx,
+                             ctx_frame=torch.zeros(k * m, dtype=torch.long, device=device)).float().cpu()
             gen[j, sl] = readouts(out).reshape(k, m, 4)
         print(f"cells {sl.stop}/{n}", flush=True)
 
@@ -87,7 +94,8 @@ def main(mdir: Path, m: int, limit: int | None) -> None:
     zs = (gen - mu) / sd
     rf = (real_f - mu) / sd
     r0 = (readouts(x[:, 0]) - mu) / sd
-    inv = pd.read_csv(ROOT / "results/flow/invert_branches.csv").set_index(["track", "frame"])
+    inv_path = ROOT / "results/flow/invert_branches.csv"  # local only; absent on Kaggle
+    inv = pd.read_csv(inv_path).set_index(["track", "frame"]) if inv_path.exists() else pd.DataFrame()
 
     # baselines from the training wells
     xt, fate_t, _ = train.load("train", run["size"])
@@ -114,7 +122,7 @@ def main(mdir: Path, m: int, limit: int | None) -> None:
                          "es_drift": energy_score(drift, rf[j, i]),
                          "es_random_cell": energy_score(tf[j, pool], rf[j, i]),
                          "spread": np.nanmean(np.linalg.norm(zs[j, i][:, None] - zs[j, i][None], axis=2))})
-    d = pd.DataFrame(rows).dropna(subset=["es_model", "d_copy", "d_inversion"])
+    d = pd.DataFrame(rows).dropna(subset=["es_model", "d_copy"] + (["d_inversion"] if len(inv) else []))
     for a in ("es_model", "d_mean", "d_one", "d_inversion", "es_drift", "es_random_cell"):
         d[f"{a}_minus_copy"] = d[a] - d.d_copy
     d["es_model_minus_inversion"] = d.es_model - d.d_inversion
