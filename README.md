@@ -1,5 +1,7 @@
 # static2fate
 
+[![CI](https://github.com/MMatinGerami/static2fate/actions/workflows/ci.yml/badge.svg)](https://github.com/MMatinGerami/static2fate/actions/workflows/ci.yml)
+
 From one image of a drug-treated cell, can we tell which of two futures it will take, and when
 that became decided?
 

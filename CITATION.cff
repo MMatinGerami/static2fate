@@ -1,0 +1,14 @@
+cff-version: 1.2.0
+message: "If you use this software, please cite it as below."
+type: software
+title: "static2fate: single-cell fate from live-cell imaging"
+abstract: "Two-fate counterfactual generation and fate readout timing for HeLa cells under a staurosporine dose series (S-BIAD2515)."
+authors:
+  - family-names: Gerami
+    given-names: Matin
+    orcid: "https://orcid.org/0009-0004-5003-1240"
+    email: mmatin.gerami@gmail.com
+repository-code: "https://github.com/MMatinGerami/static2fate"
+license: MIT
+version: 0.1.0
+date-released: 2026-10-25

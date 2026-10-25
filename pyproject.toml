@@ -3,7 +3,7 @@ name = "static2fate"
 version = "0.1.0"
 description = "Single-cell fate from live-cell imaging: two-fate counterfactuals on S-BIAD2515"
 authors = [
-    { email = "mmatin.gerami@gmail.com" }
+    { name = "Matin Gerami", email = "mmatin.gerami@gmail.com" }
 ]
 requires-python = ">=3.13"
 dependencies = [
@@ -32,3 +32,6 @@ build-backend = "uv_build"
 dev = [
     "pytest>=9.1.1",
 ]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
