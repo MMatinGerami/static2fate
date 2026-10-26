@@ -4,8 +4,11 @@ x: percentile rank of the cell's own real future among same-fate real cells (22_
 0 = nearest, 0.5 = chance), lower is better. y: energy score of the samples minus the
 "copy + typical change" baseline in readout space (20_feature_score.py), lower is better.
 One point per sampler and the 0 h copy, per group, at 6 h, with field-bootstrap 95% CIs.
-Reads the *_keep tables written with STATIC2FATE_TAG=_keep.
-Writes results/tables/tradeoff_keep_cell.csv and results/figures/fig14_identity_vs_dynamics.png.
+Usage: uv run scripts/24_tradeoff.py <tag> [name=dir ...]
+The tag selects the tables written by 20 and 22 under STATIC2FATE_TAG=<tag>; the name=dir
+pairs (same as given to 20 and 22) are used for the example panel.
+Writes results/tables/tradeoff<tag>.csv, results/figures/fig14_identity_vs_dynamics<tag>.png
+and fig14b_examples<tag>.png.
 """
 
 import sys
@@ -19,6 +22,7 @@ import pandas as pd
 
 ROOT = Path(__file__).resolve().parents[1]
 TAG = sys.argv[1] if len(sys.argv) > 1 else "_keep"
+ARGS = dict(a.split("=", 1) for a in sys.argv[2:])
 SPACE_ID, RES_ID = "dinov2", 64  # identity measured in DINOv2 space at 64 px
 HOURS = 6.0
 
@@ -35,7 +39,7 @@ copy = pd.DataFrame({"sampler": "copy 0 h", "group": copy.group, "dynamics": -co
 dyn = pd.concat([dyn, copy])
 t = ident.merge(dyn, on=["sampler", "group"])[["sampler", "group", "identity", "id_low", "id_high",
                                                "dynamics", "dyn_low", "dyn_high"]]
-t.to_csv(ROOT / "results/tables/tradeoff_keep_cell.csv", index=False)
+t.to_csv(ROOT / f"results/tables/tradeoff{TAG}.csv", index=False)
 print(t.round(3).to_string(index=False))
 
 groups = ["dies, condensed", "dies, AnnexinV only", "survives"]
@@ -53,7 +57,7 @@ for a, grp in zip(ax, groups):
 ax[0].set_ylabel("dynamics: energy score minus\n\"copy + typical change\" (readouts)")
 ax[0].legend(fontsize=7)
 plt.tight_layout()
-plt.savefig(ROOT / "results/figures/fig14_identity_vs_dynamics.png", dpi=110)
+plt.savefig(ROOT / f"results/figures/fig14_identity_vs_dynamics{TAG}.png", dpi=110)
 
 # examples: real 0 h and 6 h, then one 6 h sample per sampler, for 3 cells of each group
 import importlib  # noqa: E402
@@ -63,8 +67,9 @@ import numpy as np  # noqa: E402
 sys.path.insert(0, str(ROOT / "scripts"))
 fs = importlib.import_module("20_feature_score")
 train = importlib.import_module("09_train_flow")
-DIRS = {"64 px, 8 h": ROOT / "results/kaggle/ctx64_long", "s0 0.3": ROOT / "results/keep_cell/ctx64_long_s03",
-        "s0 0.5": ROOT / "results/keep_cell/ctx64_long_s05", "s0 0.7": ROOT / "results/keep_cell/ctx64_long_s07"}
+DIRS = {k: Path(v) for k, v in ARGS.items()} or {
+    "64 px, 8 h": ROOT / "results/kaggle/ctx64_long", "s0 0.3": ROOT / "results/keep_cell/ctx64_long_s03",
+    "s0 0.5": ROOT / "results/keep_cell/ctx64_long_s05", "s0 0.7": ROOT / "results/keep_cell/ctx64_long_s07"}
 x, fate, tracks = train.load("test", 64, [0, 12])
 lab = pd.read_parquet(train.P / "fate_labels.parquet").set_index("track")
 cond = lab.loc[tracks, "condensed"].to_numpy()
@@ -92,4 +97,4 @@ for r, i in enumerate(pick):
 for c, name in enumerate(cols):
     ax[0, c].set_title(name, fontsize=7)
 plt.tight_layout()
-plt.savefig(ROOT / "results/figures/fig14b_keep_cell_examples.png", dpi=90)
+plt.savefig(ROOT / f"results/figures/fig14b_examples{TAG}.png", dpi=90)

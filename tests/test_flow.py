@@ -118,3 +118,17 @@ def test_sample_from_partial_noise_keeps_start_when_velocity_is_zero():
     assert torch.allclose(half, (0.5 * z + 0.5 * x).clamp(-1, 1))
     none = sample(m, frame, fate, steps=10, x0=z.clone(), x_start=x, s0=0.0, **cond)
     assert torch.allclose(none, z.clamp(-1, 1))
+
+
+def test_paired_loss_uses_given_source():
+    torch.manual_seed(0)
+    m = UNet(ch=16, cdim=32, context=True)
+    x1 = torch.rand(2, 3, 64, 64) * 2 - 1
+    src = x1 + 0.5 * torch.randn_like(x1)
+    cond = {"ctx": x1, "ctx_frame": torch.zeros(2, dtype=torch.long)}
+    loss = flow_matching_loss(m, x1, torch.tensor([6, 12]), torch.tensor([0, 1]), source=src, **cond)
+    assert torch.isfinite(loss)
+    # with source == x1 the target velocity is zero, so a zero-output model has zero loss
+    for p in m.out.parameters():
+        torch.nn.init.zeros_(p)
+    assert flow_matching_loss(m, x1, torch.tensor([6, 12]), torch.tensor([0, 1]), source=x1, **cond) == 0

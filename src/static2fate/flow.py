@@ -92,12 +92,14 @@ class UNet(nn.Module):
         return self.out(u)
 
 
-def flow_matching_loss(model, x1, frame, fate, p_drop: float = 0.1, **cond):
+def flow_matching_loss(model, x1, frame, fate, p_drop: float = 0.1, source=None, **cond):
     """Straight-path conditional flow matching; fate is dropped 10% of the time for guidance.
 
-    Extra conditions (ctx, ctx_frame) are passed through to the model unchanged.
+    Extra conditions (ctx, ctx_frame) are passed through to the model unchanged. With source
+    given, the path starts there instead of at Gaussian noise (paired flow: for example the
+    cell's own earlier image plus noise, so the model learns the change rather than the cell).
     """
-    x0 = torch.randn_like(x1)
+    x0 = torch.randn_like(x1) if source is None else source
     s = torch.rand(x1.shape[0], device=x1.device)
     xs = (1 - s[:, None, None, None]) * x0 + s[:, None, None, None] * x1
     drop = torch.rand(x1.shape[0], device=x1.device) < p_drop

@@ -263,9 +263,9 @@ partially noised images are also easier to tell from real ones on the handcrafte
 fixes the layout the model can no longer change, so identity has to be carried by the
 conditioning, not by the starting point.
 
-![identity vs dynamics](results/figures/fig14_identity_vs_dynamics.png)
+![identity vs dynamics](results/figures/fig14_identity_vs_dynamics_keep.png)
 
-![examples](results/figures/fig14b_keep_cell_examples.png)
+![examples](results/figures/fig14b_examples_keep.png)
 
 ## Are some "dying" cells dividing?
 

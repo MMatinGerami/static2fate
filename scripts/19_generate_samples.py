@@ -1,7 +1,8 @@
 """Generate and save M futures per held-out cell from a context model (0 h frame, true fate).
 
 Same draws as 17_energy_score.py but the images are kept, as uint8, so new comparisons
-(20_feature_score.py) do not need the GPU again.
+(20_feature_score.py) do not need the GPU again. For a paired-flow model (run.json has
+"sigma", 25_train_paired.py) the integration starts from the 0 h image plus sigma x noise.
 
 Usage: uv run scripts/19_generate_samples.py [model dir] [M, default 8] [cells: n or start:stop]
 Writes <model dir>/samples[_start_stop].npy, shape (cells, 4 frames, M, 3, s, s), and the
@@ -43,6 +44,7 @@ def main(mdir: Path, m: int, cells: str | None) -> None:
     n, size = len(x), run["size"]
     print(f"cells {n}, {m} samples each, size {size}, device {device}", flush=True)
     amp = torch.autocast("cuda", dtype=torch.float16) if device == "cuda" else contextlib.nullcontext()
+    sigma = run.get("sigma")  # paired flow: start from the context image plus noise
 
     out = np.lib.format.open_memmap(mdir / f"samples{suffix}.npy", mode="w+", dtype=np.uint8,
                                     shape=(n, len(FUTURE), m, 3, size, size))
@@ -54,9 +56,11 @@ def main(mdir: Path, m: int, cells: str | None) -> None:
         ctx = x[sl, 0].repeat_interleave(m, 0).to(device)
         fk = fate[sl].repeat_interleave(m).to(device)
         for j, f in enumerate(FUTURE):
-            z = torch.randn(k * m, 3, size, size, generator=g)
+            z = torch.randn(k * m, 3, size, size, generator=g).to(device)
+            if sigma is not None:
+                z = ctx + sigma * z
             with amp:
-                im = sample(model, torch.full((k * m,), f, device=device), fk, x0=z.to(device), ctx=ctx,
+                im = sample(model, torch.full((k * m,), f, device=device), fk, x0=z, ctx=ctx,
                             ctx_frame=torch.zeros(k * m, dtype=torch.long, device=device)).float().cpu()
             out[sl, j] = ((im + 1) * 127.5).round().clamp(0, 255).to(torch.uint8).view(k, m, 3, size, size).numpy()
         print(f"cells {sl.stop}/{n}", flush=True)
