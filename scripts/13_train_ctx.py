@@ -7,6 +7,8 @@ held-out wells and augmentation as 09_train_flow.py; context and target get the 
 rotation.
 
 Usage: uv run scripts/13_train_ctx.py --minutes 60 [--device mps|cuda] [--size 64|128]
+       [--init path/to/model.pt]   continue from saved (EMA) weights
+       [--perceptual 0.1]          add a VGG16 feature term with this weight (static2fate.perceptual)
 Writes <out>/model.pt (EMA weights), <out>/train_log.csv and <out>/run.json. A checkpoint is
 saved every --save-every minutes so a cut Kaggle or Colab session loses little. On CUDA the
 forward pass runs in float16 with loss scaling; on MPS and CPU everything stays float32.
@@ -25,7 +27,7 @@ import torch
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "src"))
 sys.path.insert(0, str(Path(__file__).resolve().parent))
-from static2fate.flow import UNet, flow_matching_loss  # noqa: E402
+from static2fate.flow import UNet, flow_matching_losses  # noqa: E402
 
 ROOT = Path(__file__).resolve().parents[1]
 MAX_CTX = 6
@@ -48,6 +50,8 @@ def main() -> None:
     ap.add_argument("--seed", type=int, default=0)
     ap.add_argument("--save-every", type=float, default=15)
     ap.add_argument("--out", default=str(ROOT / "results/flow_ctx"))
+    ap.add_argument("--init", default=None, help="model.pt to continue from")
+    ap.add_argument("--perceptual", type=float, default=0.0, help="weight of the VGG16 feature term")
     args = ap.parse_args()
     torch.manual_seed(args.seed)
     out = Path(args.out)
@@ -58,10 +62,18 @@ def main() -> None:
     n = len(x)
     print(f"train cells {n}, size {args.size}, dies {fate.float().mean():.2f}", flush=True)
     model = UNet(ch=args.ch, context=True).to(args.device)
+    if args.init:
+        model.load_state_dict(torch.load(args.init, map_location=args.device, weights_only=True))
+        print(f"continuing from {args.init}", flush=True)
     print(f"parameters {sum(p.numel() for p in model.parameters()) / 1e6:.1f} M", flush=True)
     opt = torch.optim.AdamW(model.parameters(), lr=2e-4, weight_decay=0.0)
     ema = UNet(ch=args.ch, context=True).to(args.device)
     ema.load_state_dict(model.state_dict())
+    perceptual = None
+    if args.perceptual > 0:
+        from static2fate.perceptual import Perceptual
+
+        perceptual = Perceptual().to(args.device)
 
     def save(step, t0):
         torch.save(ema.state_dict(), out / "model.pt")
@@ -69,6 +81,7 @@ def main() -> None:
         (out / "run.json").write_text(json.dumps({
             "device": args.device, "seed": args.seed, "steps": step, "batch": args.batch,
             "size": args.size, "ch": args.ch, "max_ctx_frame": MAX_CTX, "float16": amp,
+            "init": args.init, "perceptual": args.perceptual,
             "minutes": round((time.time() - t0) / 60, 1), "train_cells": n,
             "heldout_wells": train.HELDOUT_WELLS, "torch": torch.__version__}, indent=1))
 
@@ -79,8 +92,9 @@ def main() -> None:
         ci, tc, t = pairs(n, args.batch)
         both = train.augment(torch.stack([x[ci, tc], x[ci, t]], 1)).to(args.device)
         with torch.autocast("cuda", dtype=torch.float16) if amp else contextlib.nullcontext():
-            loss = flow_matching_loss(model, both[:, 1], t.to(args.device), fate[ci].to(args.device),
-                                      ctx=both[:, 0], ctx_frame=tc.to(args.device))
+            terms = flow_matching_losses(model, both[:, 1], t.to(args.device), fate[ci].to(args.device),
+                                         perceptual=perceptual, ctx=both[:, 0], ctx_frame=tc.to(args.device))
+            loss = terms["mse"] + args.perceptual * terms["perceptual"]
         opt.zero_grad()
         scaler.scale(loss).backward()
         scaler.unscale_(opt)
@@ -93,7 +107,8 @@ def main() -> None:
         if not torch.isfinite(loss):
             raise RuntimeError(f"non-finite loss at step {step}")
         if step % 200 == 0:
-            log.append({"step": step, "minutes": round((time.time() - t0) / 60, 2), "loss": loss.item()})
+            log.append({"step": step, "minutes": round((time.time() - t0) / 60, 2), "loss": loss.item(),
+                        "mse": terms["mse"].item(), "perceptual": terms["perceptual"].item()})
             print(log[-1], flush=True)
         if time.time() - last_save > args.save_every * 60:
             save(step, t0)

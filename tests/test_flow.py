@@ -132,3 +132,24 @@ def test_paired_loss_uses_given_source():
     for p in m.out.parameters():
         torch.nn.init.zeros_(p)
     assert flow_matching_loss(m, x1, torch.tensor([6, 12]), torch.tensor([0, 1]), source=x1, **cond) == 0
+
+
+def test_losses_match_and_perceptual_is_zero_for_identical_images():
+    from static2fate.flow import flow_matching_losses
+
+    torch.manual_seed(0)
+    m = UNet(ch=16, cdim=32, context=True)
+    x1 = torch.rand(2, 3, 64, 64) * 2 - 1
+    cond = {"ctx": x1, "ctx_frame": torch.zeros(2, dtype=torch.long)}
+    torch.manual_seed(1)
+    a = flow_matching_loss(m, x1, torch.tensor([6, 12]), torch.tensor([0, 1]), **cond)
+    torch.manual_seed(1)
+    b = flow_matching_losses(m, x1, torch.tensor([6, 12]), torch.tensor([0, 1]), **cond)
+    assert torch.allclose(a, b["mse"]) and b["perceptual"] == 0
+
+    class Same:  # a perceptual module that measures plain pixel distance
+        def __call__(self, p, q):
+            return ((p - q) ** 2).mean((1, 2, 3))
+
+    out = flow_matching_losses(m, x1, torch.tensor([6, 12]), torch.tensor([0, 1]), perceptual=Same(), **cond)
+    assert out["perceptual"] > 0

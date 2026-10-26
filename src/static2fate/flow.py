@@ -107,6 +107,28 @@ def flow_matching_loss(model, x1, frame, fate, p_drop: float = 0.1, source=None,
     return F.mse_loss(model(xs, s, frame, fate, **cond), x1 - x0)
 
 
+def flow_matching_losses(model, x1, frame, fate, p_drop: float = 0.1, source=None, perceptual=None, **cond):
+    """The flow matching loss plus, if a perceptual module is given, a feature-space term.
+
+    From the predicted velocity v at (x_s, s) the clean image is estimated as
+    x1_hat = x_s + (1 - s) v; its perceptual distance to x1 is weighted by s, since near the
+    noise end the estimate is uninformative. Returns {"mse": ..., "perceptual": ...} as
+    tensors (perceptual is 0 when no module is given); the caller weights and sums them.
+    """
+    x0 = torch.randn_like(x1) if source is None else source
+    s = torch.rand(x1.shape[0], device=x1.device)
+    s4 = s[:, None, None, None]
+    xs = (1 - s4) * x0 + s4 * x1
+    drop = torch.rand(x1.shape[0], device=x1.device) < p_drop
+    fate = torch.where(drop, torch.full_like(fate, 2), fate)
+    v = model(xs, s, frame, fate, **cond)
+    out = {"mse": F.mse_loss(v, x1 - x0), "perceptual": torch.zeros((), device=x1.device)}
+    if perceptual is not None:
+        x1_hat = xs + (1 - s4) * v
+        out["perceptual"] = (s * perceptual(x1_hat, x1)).mean()
+    return out
+
+
 @torch.no_grad()
 def invert(model, x1, frame, steps: int = 50):
     """Integrate the ODE backwards from a real image to its noise, without a fate (null class).
