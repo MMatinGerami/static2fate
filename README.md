@@ -232,10 +232,9 @@ models match or beat it. Top-1 rates tell the same story: models 0.2 to 1%, copy
 real 3 h frame 5 to 34%. Longer training helps a little (64 px 8 h against 1 h: -0.03 for
 survivors, CI -0.04 to -0.02), 128 px does not.
 
-So the context model makes plausible cells of the right fate and time, not this cell's future:
-the identity in the context image is mostly lost in sampling. That is the same thing the
-inversion comparison showed from the other side (the survives branch added nothing over a
-copy), now measured directly.
+So in these feature spaces the generated future is not recognisable as this cell's. Whether
+anything of the cell is kept is a separate question, answered further down with per-cell
+correlations: the measurements are, the texture is not.
 
 ![identity](results/figures/fig13_identity.png)
 
@@ -266,6 +265,57 @@ conditioning, not by the starting point.
 ![identity vs dynamics](results/figures/fig14_identity_vs_dynamics_keep.png)
 
 ![examples](results/figures/fig14b_examples_keep.png)
+
+## Learning the change instead of the image
+
+A paired flow: the path starts at the cell's own earlier image plus sigma x noise instead of
+at Gaussian noise, and ends at its later frame, so the velocity field has to learn the change
+of this cell (`scripts/25_train_paired.py`; sigma 0.2, 0.5 and 1, 45 min each on the Mac;
+sampling starts from the real 0 h image plus the same noise). At 6 h:
+
+| sampler | identity, rank of own future (survive / condensed / AnnexinV only) | dynamics (readouts, same order) |
+|---|---|---|
+| from noise (64 px, 8 h) | 0.44 / 0.43 / 0.48 | -0.10 / -0.17 / +0.03 |
+| paired, sigma 0.2 | 0.47 / 0.50 / 0.48 | -0.05 / -0.04 / +0.04 |
+| paired, sigma 0.5 | 0.47 / 0.49 / 0.48 | -0.07 / -0.23 / +0.08 |
+| paired, sigma 1 | 0.47 / 0.48 / 0.48 | -0.05 / -0.21 / +0.12 |
+| partial noise, s0 = 0.5, untrained start | 0.38 / 0.48 / 0.37 | +0.27 / +1.79 / +0.61 |
+
+Trained on the paired path, the model does condense dying nuclei from a start that still
+holds the cell, which the untrained partial-noise start could not. But the own future still
+ranks near chance, at every sigma and every hour, and realism is worse (DINOv2 distance to a
+random real cell 4 to 9 against 0.7 to 1.4 for the 8 h noise-start model, in part the 45 min
+of training; probe on handcrafted features 0.64 to 0.73 against 0.58). The layout of the 0 h
+cell survives in the images, but the model repaints the texture and the cytoplasm, and that
+is what the feature spaces respond to.
+
+![examples](results/figures/fig14b_examples_paired.png)
+
+![trade-off](results/figures/fig14_identity_vs_dynamics_paired.png)
+
+## Does the model know this cell at all?
+
+The ranking asks whether the generated future is the nearest real image to this cell's
+future, a demanding test that a texture mismatch fails on its own. A looser one: across the
+cells of a group, does the sampler's predicted readout rise and fall with the cell's real
+readout? Spearman correlation at 6 h, prediction = mean over samples
+(`scripts/26_percell_skill.py`, `results/tables/percell_skill_paired.csv`):
+
+| readout, group | from noise, 8 h | copy 0 h | paired, sigma 0.5 | real 3 h |
+|---|---|---|---|---|
+| nucleus area, survive | 0.50 | 0.50 | 0.39 | 0.66 |
+| nucleus area, die condensed | 0.35 | 0.42 | 0.31 | 0.52 |
+| nucleus area, die AnnexinV only | 0.48 | 0.23 | 0.36 | 0.62 |
+| cytoplasm red, die condensed | 0.38 | 0.19 | 0.24 | 0.55 |
+| nucleus Hoechst, survive | 0.59 | 0.59 | 0.56 | 0.72 |
+
+So the noise-start model does carry the cell: its per-cell predictions of nucleus size and
+cytoplasm follow the real future as well as the 0 h copy does, and better for dying cells,
+where the copy is stale. A real 3 h frame is the ceiling (0.5 to 0.7). What the ranking
+punished is realism and texture, not the measurements. The paired models are below the
+noise-start model here as well (0.39 against 0.50 for survivor nucleus area), so starting from
+the cell added no per-cell information. The best model remains the context model sampled from
+noise and trained 8 h; the next gains are in realism, not in the starting point.
 
 ## Are some "dying" cells dividing?
 
@@ -299,10 +349,10 @@ and every model trained on it, is mostly cells that did not divide during the mo
   its state.
 - Close the realism gap: a linear probe still separates generated from real perfectly. More
   steps at 128 px, and a perceptual or adversarial term in the loss.
-- Carry identity through the conditioning: inject context features at every resolution of
-  the UNet (or cross-attention to them), and train with an identity term (the generated future
-  should be nearer its own cell's real future than other cells', in a frozen feature space).
-  Score with the identity ranking and the trade-off figure.
+- Realism is now the bottleneck: a frozen encoder separates generated from real without
+  error, and texture, not the measurements, is what makes generated futures unrecognisable.
+  Longer training helped; next a perceptual term in the loss, or generation in the latent
+  space of an autoencoder trained on these cells.
 - Link daughters to mothers in the tracker so dividing cells get a fate too; do cells that
   divide under drug die more or less often?
 - Get the colour of apoptosis right; check whether the ChromaLIVE channel scaling per field is

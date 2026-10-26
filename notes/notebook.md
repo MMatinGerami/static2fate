@@ -490,3 +490,42 @@ leave a trace. DINOv2 1.0 as always.
 Conclusion: identity cannot come from the initial state in a straight-path flow; it must come
 from the conditioning. Next model: context features injected at every UNet level (or
 cross-attention), plus an identity term in the loss, then the same trade-off figure.
+
+Paired flow, first two noise levels. flow_matching_loss takes a source; 25_train_paired.py:
+source = context image + sigma x noise, target = later frame of the same cell, fate and frame
+conditioning as before, 45 min on MPS each (5,674 steps at sigma 0.5, loss 0.05; 5,710 at
+sigma 1, loss 0.11). Sampling starts from the real 0 h image + sigma x noise (19 reads sigma
+from run.json). 4 samples per cell, scored with TAG=_paired next to the 8 h noise-start model
+and the SDEdit s0 0.5 sampler.
+
+6 h: dynamics (readout energy minus drift) sigma 0.5 -0.06 survivors, -0.13 condensed, +0.11
+AnnexinV-only; sigma 1 -0.05, -0.23, +0.09; noise-start -0.10, -0.17, +0.03. So training on the
+paired path fixes what SDEdit lost: the model condenses the nucleus from a start that still
+holds the cell. But identity did not come with it: rank of own future in DINOv2 0.47 to 0.49
+(noise-start 0.43 to 0.48, copy 0.33 to 0.35), and the same in readouts and handcrafted at
+every hour, 3 h included. The example panel shows why: the layout of the 0 h cell is kept, but
+the model repaints texture and cytoplasm, and that is what the features respond to. Realism
+is worse than the 8 h noise-start model (DINOv2 model minus random cell 4 to 7 against 0.7 to
+1.4), at the level of the 1 h noise-start model, which is a fair comparison at 45 min of
+training. sigma 0.5 and 1 behave the same, so the noise is already large relative to the
+image (pixel std about 0.4): the start carries little. Training sigma 0.2 now.
+
+Paired flow, sigma 0.2, and per-cell skill. sigma 0.2: 5,604 steps, loss 0.02; identity rank
+0.47 to 0.50, same as the other sigmas, dynamics -0.05 / -0.04 / +0.04 (survivors, condensed,
+AnnexinV-only), realism worst of all (DINOv2 model minus random cell 6.4 to 9.0; handcrafted
+probe 0.73). So three sigmas, one answer: the paired path keeps the layout and the dynamics
+but not what the feature spaces call the cell.
+
+Then a looser test, 26_percell_skill.py: Spearman across cells, within group and hour, of the
+real readout at 6 h against the prediction (mean over samples). Noise-start 8 h model:
+nucleus area 0.50 / 0.35 / 0.48 (survivors / condensed / AnnexinV-only), copy 0.50 / 0.42 /
+0.23, real 3 h 0.66 / 0.52 / 0.62; cytoplasm red 0.55 / 0.38 / 0.40 vs copy 0.54 / 0.19 /
+0.32. So the model does track the cell's own measurements, as well as the copy and better
+where the copy is stale (dying cells). The ranking was answering a different question:
+"is this the nearest real image", which texture decides. Paired models: nucleus area 0.39 to
+0.41 for survivors, below the noise-start model; the start adds nothing.
+
+Revised reading of the whole identity thread: the noise-start context model carries the
+cell's measurements but not its texture; starting from the cell (SDEdit, paired flow) does
+not fix texture and costs skill. Realism is the thing to work on next. The README identity
+section's conclusion was too strong and is corrected.
