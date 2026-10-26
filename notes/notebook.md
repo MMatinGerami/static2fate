@@ -463,3 +463,30 @@ inversion model kept identity by construction (round trip MSE 0.002) and its sur
 was a near copy; the context model got the dynamics of condensed cells better but at the cost
 of identity. These are the two ends of one trade-off, and the next model has to hold both:
 noise from inverting the context frame, or stronger conditioning on it.
+
+## 2026-10-26
+
+Trailer and tag. A commit from another session on 25 Oct (CI workflow, citation, v0.1.0
+release) carried a co-author trailer; rewrote the six messages since, force-pushed, and moved
+the v0.1.0 tag (annotated, release still attached) to the rewritten commit. The old commit is
+unreachable from any ref now.
+
+Keep the cell, first try. flow.sample takes x_start and s0: integration starts at s0 from
+(1 - s0) noise + s0 x_start (SDEdit). 23_keep_cell.py: 64 px 8 h model, 0 h image as both
+context and start, s0 0.3 / 0.5 / 0.7, 4 samples per cell (27, 19, 12 min on MPS; the 0.7 run
+was interrupted by sleep overnight and finished at 06:01). Scored with 20, 21, 22 under
+STATIC2FATE_TAG=_keep and the new 24_tradeoff.py.
+
+6 h, identity rank (DINOv2, 64 px) / dynamics (readout energy score minus drift baseline):
+from noise 0.44 / -0.10 survivors, 0.43 / -0.17 condensed, 0.48 / +0.03 AnnexinV-only;
+s0 0.3 0.38 / +0.14, 0.48 / +1.77, 0.39 / +0.48; s0 0.5 0.38 / +0.27, 0.48 / +1.80,
+0.37 / +0.61; s0 0.7 0.38 / +0.34, 0.49 / +1.90, 0.36 / +0.70; copy 0.35 / +0.41,
+0.50 / +2.02, 0.33 / +0.74. So partial noising moves straight from the model's corner to
+the copy's corner; the first 30% of the path already removes nearly all the dynamics. For
+condensed dying cells the starting layout (large flat nucleus) cannot be undone from s0 = 0.3.
+Probe: handcrafted 0.69 to 0.72 (from 0.58), readouts 0.63 (from 0.54): the noised starts
+leave a trace. DINOv2 1.0 as always.
+
+Conclusion: identity cannot come from the initial state in a straight-path flow; it must come
+from the conditioning. Next model: context features injected at every UNet level (or
+cross-attention), plus an identity term in the loss, then the same trade-off figure.

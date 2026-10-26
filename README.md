@@ -239,6 +239,34 @@ copy), now measured directly.
 
 ![identity](results/figures/fig13_identity.png)
 
+## Starting from the cell instead of from noise
+
+The obvious fix is to start the sampler from the cell: integrate from part way along the
+noise-to-image path, from (1 - s0) x noise + s0 x the 0 h image, as in SDEdit
+(`scripts/23_keep_cell.py`, the 64 px 8 h model, s0 = 0.3, 0.5, 0.7, 4 samples per cell).
+Identity and dynamics for each sampler on the same cells at 6 h (`scripts/24_tradeoff.py`):
+
+| sampler | identity, rank of own future (survive / condensed / AnnexinV only) | dynamics, readout energy score minus baseline (same order) |
+|---|---|---|
+| from noise (64 px, 8 h) | 0.44 / 0.43 / 0.48 | -0.10 / -0.17 / +0.03 |
+| s0 = 0.3 | 0.38 / 0.48 / 0.39 | +0.14 / +1.77 / +0.48 |
+| s0 = 0.5 | 0.38 / 0.48 / 0.37 | +0.27 / +1.80 / +0.61 |
+| s0 = 0.7 | 0.38 / 0.49 / 0.36 | +0.34 / +1.90 / +0.70 |
+| copy of the 0 h image | 0.35 / 0.50 / 0.33 | +0.41 / +2.02 / +0.74 |
+
+Starting from the cell does keep it (ranks move most of the way to the copy's), but at the
+cost of nearly all the dynamics: already at s0 = 0.3 the condensed dying cells are as badly
+predicted as by the copy, and survivors lose most of the gain. There is no strength in
+between that holds both; the two ends of the trade-off are the model and the copy. The
+partially noised images are also easier to tell from real ones on the handcrafted features
+(probe AUROC 0.69 to 0.72 against 0.58). With straight-line flow matching the starting image
+fixes the layout the model can no longer change, so identity has to be carried by the
+conditioning, not by the starting point.
+
+![identity vs dynamics](results/figures/fig14_identity_vs_dynamics.png)
+
+![examples](results/figures/fig14b_keep_cell_examples.png)
+
 ## Are some "dying" cells dividing?
 
 `scripts/16_divisions.py` flags a division when a nucleus turns small and bright for a frame or
@@ -271,9 +299,10 @@ and every model trained on it, is mostly cells that did not divide during the mo
   its state.
 - Close the realism gap: a linear probe still separates generated from real perfectly. More
   steps at 128 px, and a perceptual or adversarial term in the loss.
-- Keep the cell: start the sampler from the inverted context frame instead of fresh noise, or
-  tie the output to the context more strongly (feature-level conditioning or guidance towards
-  the context), and re-run the identity ranking.
+- Carry identity through the conditioning: inject context features at every resolution of
+  the UNet (or cross-attention to them), and train with an identity term (the generated future
+  should be nearer its own cell's real future than other cells', in a frozen feature space).
+  Score with the identity ranking and the trade-off figure.
 - Link daughters to mothers in the tracker so dividing cells get a fate too; do cells that
   divide under drug die more or less often?
 - Get the colour of apoptosis right; check whether the ChromaLIVE channel scaling per field is
