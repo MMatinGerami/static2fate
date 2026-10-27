@@ -529,3 +529,28 @@ Revised reading of the whole identity thread: the noise-start context model carr
 cell's measurements but not its texture; starting from the cell (SDEdit, paired flow) does
 not fix texture and costs skill. Realism is the thing to work on next. The README identity
 section's conclusion was too strong and is corrected.
+
+## 2026-10-27
+
+Realism: two continuations of ctx64_long on Kaggle (continue_kaggle.py, one T4 each, 8 h,
+seed 2): ctx64_more (same loss, 101k more steps) and ctx64_perc (plus 0.5 x VGG16 feature
+distance between the x1 estimate and the real image, 82k steps; the term was 0.15 against an
+MSE of 0.08). Generated 8 samples per held-out cell for both on the Mac (80 min each) and
+re-ran 20, 21, 22, 26 and 24 with tag _realism.
+
+Nothing moved. MSE over the last 20 logged steps: 0.084 (ctx64_long), 0.086, 0.085; the
+loss had already flattened before the continuation started (first 20 logged steps of the
+continuation 0.083). From the same noise draw the three models give nearly the same image:
+mean |diff| 0.036 (+8 h) and 0.039 (perceptual) against 0.16 between two samples of one
+model. Probe AUROC DINOv2 0.997 for all three; handcrafted 0.58 / 0.58 / 0.61; readouts 0.54
+/ 0.54 / 0.56. DINOv2 energy score minus random real cell at 6 h (survive / condensed /
+AnnexinV-only): base 0.68 / 0.97 / 1.40; +8 h 0.68 / 0.80 / 1.20; perceptual 1.39 / 0.67 /
+1.64, so the VGG term made survivors look less real to DINOv2 (CIs 1.11 to 1.63 against 0.46
+to 0.89). Dynamics, identity (0.41 to 0.48) and per-cell nucleus-area skill (0.50 / 0.51 for
+survivors) unchanged within CIs; condensed skill 0.24 for the perceptual model against 0.35
+(CIs overlap).
+
+Reading: at this capacity (ch 64, 1,919 training cells) the model has converged, and the
+pixel loss plus a VGG term does not buy texture that DINOv2 accepts. Next for realism is
+capacity and data (wider UNet, all labelled two-fate cells, or a latent autoencoder), not more
+hours. Kaggle quota this week is spent; the new week starts Saturday.

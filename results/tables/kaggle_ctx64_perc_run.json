@@ -1,0 +1,21 @@
+{
+ "device": "cuda",
+ "seed": 2,
+ "steps": 82351,
+ "batch": 64,
+ "size": 64,
+ "ch": 64,
+ "max_ctx_frame": 6,
+ "float16": true,
+ "init": "/kaggle/input/notebooks/matingerami/static2fate-train/ctx64_long/model.pt",
+ "perceptual": 0.5,
+ "minutes": 480.0,
+ "train_cells": 1919,
+ "heldout_wells": [
+  "E-06",
+  "E-07",
+  "E-08",
+  "E-09"
+ ],
+ "torch": "2.11.0+cu128"
+}

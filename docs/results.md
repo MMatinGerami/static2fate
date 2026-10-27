@@ -306,6 +306,38 @@ noise-start model here as well (0.39 against 0.50 for survivor nucleus area), so
 the cell added no per-cell information. The best model remains the context model sampled from
 noise and trained 8 h; the next gains are in realism, not in the starting point.
 
+## Training for realism
+
+Two continuations of the 64 px, 8 h context model, another 8 h each on one T4
+(`kaggle/continue/continue_kaggle.py`, 82k and 101k further steps, batch 64, seed 2): one
+with the same loss ("+8 h"), one with a perceptual term added, the squared distance between
+the model's current estimate of the clean image and the real one in frozen VGG16 features
+(relu1_2, relu2_2, relu3_3, unit-normalised; `src/static2fate/perceptual.py`, weight 0.5,
+"+8 h, perceptual"). VGG16 is not the evaluation encoder, so DINOv2 stays an independent
+judge. Same scoring as before, 8 samples per cell, tag `_realism`.
+
+| at 6 h, 64 px | 64 px, 8 h | +8 h | +8 h, perceptual |
+|---|---|---|---|
+| training MSE, last 20 logged steps | 0.084 | 0.086 | 0.085 |
+| probe real vs generated, AUROC (DINOv2 / handcrafted / readouts) | 0.997 / 0.58 / 0.54 | 0.997 / 0.58 / 0.54 | 0.997 / 0.61 / 0.56 |
+| DINOv2 energy score minus a random real cell (survive / condensed / AnnexinV only) | 0.68 / 0.97 / 1.40 | 0.68 / 0.80 / 1.20 | 1.39 / 0.67 / 1.64 |
+| dynamics, readouts minus "copy + typical change" (same order) | -0.10 / -0.17 / +0.03 | -0.08 / -0.14 / +0.08 | -0.11 / -0.18 / +0.08 |
+| identity, rank of own future in DINOv2 (same order) | 0.44 / 0.43 / 0.48 | 0.44 / 0.42 / 0.48 | 0.44 / 0.41 / 0.47 |
+| per-cell skill, nucleus area (same order) | 0.50 / 0.35 / 0.48 | 0.50 / 0.34 / 0.39 | 0.51 / 0.24 / 0.46 |
+
+Neither helped. The training loss had already flattened at 0.084 before the continuation
+began and did not move in 8 more hours, and from the same noise draw the continued models
+produce nearly the same image as the model they started from (mean absolute pixel difference
+0.036 and 0.039 between models, against 0.16 between two samples of one model). The
+perceptual term changed the texture a little in the direction VGG16 likes, and DINOv2
+disagrees: survivors are now twice as far from a random real cell (1.39 against 0.68, 95% CIs
+1.11 to 1.63 and 0.46 to 0.89) and the handcrafted probe separates a little more easily
+(0.61 against 0.58). Dynamics, identity and per-cell skill are unchanged within their
+intervals. So the realism gap is not a matter of training time or of the pixel loss alone: at
+this capacity (a 64-channel UNet, 1,919 training cells) the model has learned what it can.
+
+![examples](../results/figures/fig14b_examples_realism.png)
+
 ## Are some "dying" cells dividing?
 
 `scripts/16_divisions.py` flags a division when a nucleus turns small and bright for a frame or
@@ -336,12 +368,12 @@ and every model trained on it, is mostly cells that did not divide during the mo
 
 - Invert the context frame under the context model, so it keeps the cell's identity and uses
   its state.
-- Close the realism gap: a linear probe still separates generated from real perfectly. More
-  steps at 128 px, and a perceptual or adversarial term in the loss.
-- Realism is now the bottleneck: a frozen encoder separates generated from real without
-  error, and texture, not the measurements, is what makes generated futures unrecognisable.
-  Longer training helped; next a perceptual term in the loss, or generation in the latent
-  space of an autoencoder trained on these cells.
+- Realism is the bottleneck: a frozen encoder separates generated from real without error,
+  and texture, not the measurements, is what makes generated futures unrecognisable. Eight
+  more hours of training and a VGG16 perceptual term changed nothing (the loss had
+  flattened), so the next step is capacity and data, not the loss: a wider UNet trained on all
+  labelled cells of the two-fate doses, or generation in the latent space of an autoencoder
+  trained on these cells.
 - Link daughters to mothers in the tracker so dividing cells get a fate too; do cells that
   divide under drug die more or less often?
 - Get the colour of apoptosis right; check whether the ChromaLIVE channel scaling per field is
