@@ -9,6 +9,11 @@ rotation.
 Usage: uv run scripts/13_train_ctx.py --minutes 60 [--device mps|cuda] [--size 64|128]
        [--init path/to/model.pt]   continue from saved (EMA) weights
        [--perceptual 0.1]          add a VGG16 feature term with this weight (static2fate.perceptual)
+       [--ch 128]                  UNet width (64 by default)
+       [--all-doses]               train on every dose, not only the four two-fate doses; the
+                                   held-out wells, and so the evaluation, stay the same
+       [--snapshot-every 120]      also keep the EMA weights as model_<step>.pt every so many
+                                   minutes, to follow held-out loss over training
 Writes <out>/model.pt (EMA weights), <out>/train_log.csv and <out>/run.json. A checkpoint is
 saved every --save-every minutes so a cut Kaggle or Colab session loses little. On CUDA the
 forward pass runs in float16 with loss scaling; on MPS and CPU everything stays float32.
@@ -52,13 +57,15 @@ def main() -> None:
     ap.add_argument("--out", default=str(ROOT / "results/flow_ctx"))
     ap.add_argument("--init", default=None, help="model.pt to continue from")
     ap.add_argument("--perceptual", type=float, default=0.0, help="weight of the VGG16 feature term")
+    ap.add_argument("--all-doses", action="store_true", help="train on all ten doses")
+    ap.add_argument("--snapshot-every", type=float, default=0, help="minutes between kept snapshots")
     args = ap.parse_args()
     torch.manual_seed(args.seed)
     out = Path(args.out)
     out.mkdir(parents=True, exist_ok=True)
     train = importlib.import_module("09_train_flow")
 
-    x, fate, _ = train.load("train", args.size)
+    x, fate, _ = train.load("train", args.size, doses=None if args.all_doses else train.DOSES)
     n = len(x)
     print(f"train cells {n}, size {args.size}, dies {fate.float().mean():.2f}", flush=True)
     model = UNet(ch=args.ch, context=True).to(args.device)
@@ -81,13 +88,13 @@ def main() -> None:
         (out / "run.json").write_text(json.dumps({
             "device": args.device, "seed": args.seed, "steps": step, "batch": args.batch,
             "size": args.size, "ch": args.ch, "max_ctx_frame": MAX_CTX, "float16": amp,
-            "init": args.init, "perceptual": args.perceptual,
+            "init": args.init, "perceptual": args.perceptual, "all_doses": args.all_doses,
             "minutes": round((time.time() - t0) / 60, 1), "train_cells": n,
             "heldout_wells": train.HELDOUT_WELLS, "torch": torch.__version__}, indent=1))
 
     amp = args.device.startswith("cuda")
     scaler = torch.amp.GradScaler("cuda", enabled=amp)
-    log, step, t0, last_save = [], 0, time.time(), time.time()
+    log, step, t0, last_save, last_snap = [], 0, time.time(), time.time(), time.time()
     while time.time() - t0 < args.minutes * 60:
         ci, tc, t = pairs(n, args.batch)
         both = train.augment(torch.stack([x[ci, tc], x[ci, t]], 1)).to(args.device)
@@ -110,6 +117,9 @@ def main() -> None:
             log.append({"step": step, "minutes": round((time.time() - t0) / 60, 2), "loss": loss.item(),
                         "mse": terms["mse"].item(), "perceptual": terms["perceptual"].item()})
             print(log[-1], flush=True)
+        if args.snapshot_every and time.time() - last_snap > args.snapshot_every * 60:
+            torch.save(ema.state_dict(), out / f"model_{step}.pt")
+            last_snap = time.time()
         if time.time() - last_save > args.save_every * 60:
             save(step, t0)
             last_save = time.time()

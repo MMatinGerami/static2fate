@@ -30,11 +30,14 @@ DOSES = [4.88, 9.77, 19.53, 39.06]
 HELDOUT_WELLS = ["E-06", "E-07", "E-08", "E-09"]  # one replicate well per dose
 
 
-def split_index(split: str):
-    """Indices into crops.npy of the two-fate-dose cells of one split, and their track ids."""
+def split_index(split: str, doses: list[float] | None = DOSES):
+    """Indices into crops.npy of the cells of one split, and their track ids.
+
+    By default only the two-fate doses; doses=None keeps every dose (same held-out wells).
+    """
     lab = pd.read_parquet(P / "fate_labels.parquet").set_index("track")
     tracks = np.load(P / "crops_tracks.npy")
-    keep = np.isin(tracks, lab.index[lab["dose_nM"].isin(DOSES)])
+    keep = np.isin(tracks, lab.index if doses is None else lab.index[lab["dose_nM"].isin(doses)])
     well = np.array([t[:4] for t in tracks])
     held = np.isin(well, HELDOUT_WELLS)
     keep &= held if split == "test" else ~held
@@ -42,18 +45,26 @@ def split_index(split: str):
     return idx, tracks[idx]
 
 
-def load(split: str, size: int = 64, frames: list[int] | None = None):
-    """Crops of the two-fate doses as float in [-1, 1], (n, 13 or len(frames), 3, size, size)."""
+def load(split: str, size: int = 64, frames: list[int] | None = None, doses: list[float] | None = DOSES):
+    """Crops as float in [-1, 1], (n, 13 or len(frames), 3, size, size); doses as in split_index.
+
+    Converted in chunks of cells, so all doses at 64 px fit in memory (the float copy at 128 px
+    of every cell would not).
+    """
     lab = pd.read_parquet(P / "fate_labels.parquet").set_index("track")
     tracks = np.load(P / "crops_tracks.npy")
-    idx, _ = split_index(split)
-    x = np.load(P / "crops.npy", mmap_mode="r")[idx]
-    if frames is not None:
-        x = x[:, frames]
-    nf = x.shape[1]
-    x = torch.from_numpy(np.ascontiguousarray(x)).float().div_(127.5).sub_(1)  # (n, nf, 3, 128, 128)
-    if size != 128:
-        x = F.avg_pool2d(x.flatten(0, 1), 128 // size).view(len(idx), nf, 3, size, size)
+    idx, _ = split_index(split, doses)
+    crops = np.load(P / "crops.npy", mmap_mode="r")
+    nf = crops.shape[1] if frames is None else len(frames)
+    x = torch.empty(len(idx), nf, 3, size, size)
+    for b in range(0, len(idx), 256):
+        c = crops[idx[b:b + 256]]
+        if frames is not None:
+            c = c[:, frames]
+        c = torch.from_numpy(np.ascontiguousarray(c)).float().div_(127.5).sub_(1)  # (k, nf, 3, 128, 128)
+        if size != 128:
+            c = F.avg_pool2d(c.flatten(0, 1), 128 // size).view(len(c), nf, 3, size, size)
+        x[b:b + 256] = c
     fate = torch.from_numpy(lab.loc[tracks[idx], "apoptotic"].to_numpy().astype(np.int64))
     return x, fate, tracks[idx]
 

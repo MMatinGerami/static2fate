@@ -554,3 +554,23 @@ Reading: at this capacity (ch 64, 1,919 training cells) the model has converged,
 pixel loss plus a VGG term does not buy texture that DINOv2 accepts. Next for realism is
 capacity and data (wider UNet, all labelled two-fate cells, or a latent autoencoder), not more
 hours. Kaggle quota this week is spent; the new week starts Saturday.
+
+## 2026-10-30
+
+Before choosing between a wider model and a latent model, checked whether the context model is
+short of data at all: 27_fit_check.py, flow matching MSE with fixed draws (16 per cell, fate
+given, no dropout, no augmentation) on train and held-out cells. Held-out is slightly lower
+than train for every model (1 h 0.086 vs 0.090; 8 h 0.081 vs 0.084; +8 h 0.081 vs 0.083; SE
+about 0.001), in every flow-time bin. So no memorisation, and no gain past 8 h: capacity-limited,
+not data-limited. The bin s in (0.9, 1] carries most of the loss (0.30), the fine-detail end,
+which fits the texture gap seen in DINOv2.
+
+Held-out lower than train is a little odd; the held-out wells are one replicate per dose, so
+it is probably the mix of cells (the two sets are not exchangeable), not something to read into.
+
+Next run (Kaggle, both T4s, 8 h): ch 128 (35 M parameters, about 3x slower per step) on the same
+1,919 cells, and ch 128 on all ten doses (5,860 training cells, 42% dying; held-out wells
+unchanged). Snapshots every 2 h to plot held-out loss against steps, since 8 h at ch 128 is
+only about a third of the ch 64 steps. Loader now converts in chunks so all doses fit in RAM;
+it returns the same tensors as before (checked). Kaggle dataset re-exported with all doses
+(4.27 GB).

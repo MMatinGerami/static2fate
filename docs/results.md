@@ -338,6 +338,27 @@ this capacity (a 64-channel UNet, 1,919 training cells) the model has learned wh
 
 ![examples](../results/figures/fig14b_examples_realism.png)
 
+## Too small, or short of cells?
+
+If the model were short of data it would fit its 1,919 training cells better than new ones. It
+does not. Flow matching loss with the same draws on training and held-out cells
+(`scripts/27_fit_check.py`, 16 draws per cell, fate given, no augmentation;
+`results/tables/fit_check.csv`):
+
+| model | training cells | held-out cells | held-out, flow time 0.9 to 1 |
+|---|---|---|---|
+| 64 px, 1 h (7k steps) | 0.090 | 0.086 | 0.315 |
+| 64 px, 8 h (98k steps) | 0.084 | 0.081 | 0.304 |
+| + 8 h (199k steps) | 0.083 | 0.081 | 0.303 |
+
+Held-out loss is no higher than training loss at any flow time (standard errors about 0.001),
+and it stopped falling after 8 h. Most of the loss sits at the end of the path (flow time 0.9 to 1), where fine texture is
+decided, which is where the realism gap is. A model that has stopped improving without
+memorising is limited by what it can represent, so the next run doubles the width (64 to 128
+channels, 35 M parameters) on the same cells, and once more on all ten doses (5,860 training
+cells; held-out wells unchanged) to see whether more varied cells add to it
+(`kaggle/wide/wide_kaggle.py`).
+
 ## Are some "dying" cells dividing?
 
 `scripts/16_divisions.py` flags a division when a nucleus turns small and bright for a frame or
