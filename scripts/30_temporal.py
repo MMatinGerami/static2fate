@@ -143,22 +143,26 @@ def figure(out, sources, pos, group, fate, lab, tracks):
     if (ok & (group == "dies, condensed")).any():
         ex.append(int(np.nanargmax(np.where(ok & (group == "dies, condensed"), drop, np.nan))))
     hour_idx = {name: [frames.index(h) for h in HOUR] for name, (_, frames, _) in sources.items()}
-    inner = gs[1, :].subgridspec(len(ex) * len(names), len(HOUR), wspace=0.05, hspace=0.05)
+    # one block of rows (sources) by columns (hours) per example cell, blocks side by side
+    widths = [1] * len(HOUR) * len(ex)
+    for b in range(1, len(ex)):
+        widths.insert(b * len(HOUR) + b - 1, 0.3)  # gap between blocks
+    inner = gs[1, :].subgridspec(len(names), len(widths), width_ratios=widths, wspace=0.05, hspace=0.05)
     for e, i in enumerate(ex):
         for k, name in enumerate(names):
             tg, frames, arr = sources[name]
             gi = int(np.flatnonzero(tg == tracks[i])[0])
             clip = np.asarray(arr[gi, 0])[hour_idx[name]]
             for j, h in enumerate(HOUR):
-                ax = fig.add_subplot(inner[e * len(names) + k, j])
+                ax = fig.add_subplot(inner[k, e * (len(HOUR) + 1) + j])
                 im = clip[j].astype(np.float32) / 255
                 ax.imshow(np.dstack([im[2], im[1], im[0]]).clip(0, 1))
                 ax.set_xticks([])
                 ax.set_yticks([])
-                if j == 0:
-                    ax.set_ylabel(f"{group[i].split(',')[0]}\n{name}", fontsize=8)
-                if e == 0 and k == 0:
-                    ax.set_title(f"{h / 2:.0f} h", fontsize=9)
+                if j == 0 and e == 0:
+                    ax.set_ylabel(name.replace(", ", ",\n"), fontsize=8)
+                if k == 0:
+                    ax.set_title(f"{group[i]}, {h / 2:.0f} h" if j == 0 else f"{h / 2:.0f} h", fontsize=8)
     fig.suptitle("Temporal consistency of generated futures (held-out cells, context 0 h, true fate)", fontsize=11)
     fig.tight_layout()
     fig.savefig(ROOT / f"results/figures/fig15_temporal{TAG}.png", dpi=130)

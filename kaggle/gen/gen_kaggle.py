@@ -1,6 +1,7 @@
-"""Kaggle job: save 8 futures per held-out cell from the two models of the training job.
+"""Kaggle job: save 8 futures per held-out cell from the two models of a training job.
 
-One model per T4: 64 px for 98,000 steps on GPU 0, 128 px on GPU 1 (about 2 and 4 h). Uses
+One model per T4, from the job named in kernel_sources (first the 64 and 128 px models of
+static2fate-train, then the two wide models of static2fate-wide). Uses
 scripts/19_generate_samples.py; the sample arrays end up in /kaggle/working/<model>/ and are
 scored on the Mac by scripts/20_feature_score.py.
 Push with: kaggle kernels push -p kaggle/gen   (after replacing USERNAME in kernel-metadata.json)
@@ -15,7 +16,7 @@ from pathlib import Path
 
 WORK = Path("/kaggle/working")
 REPO = WORK / "static2fate"
-MODELS = ["ctx64_long", "ctx128"]
+MODELS = ["ctx64_w128", "ctx64_w128_all"]
 
 data = next(Path("/kaggle/input").rglob("crops_tracks.npy")).parent
 subprocess.run(["git", "clone", "--depth", "1", "https://github.com/MMatinGerami/static2fate", str(REPO)], check=True)

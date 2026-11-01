@@ -359,6 +359,43 @@ channels, 35 M parameters) on the same cells, and once more on all ten doses (5,
 cells; held-out wells unchanged) to see whether more varied cells add to it
 (`kaggle/wide/wide_kaggle.py`).
 
+### Twice the width changes nothing
+
+The two wide models (`kaggle/wide/`, 128 channels, 35 M parameters, 8 h on one T4 each,
+batch 64, seed 3): 40k steps on the 1,919 two-fate cells and 36k steps on all ten doses
+(5,860 cells). Eight samples per held-out cell were drawn on Kaggle (`kaggle/gen/`), scored
+with the same chain, tag `_wide`:
+
+| at 6 h, 64 px | 64 ch, 8 h | 128 ch, 8 h | 128 ch, 8 h, all doses |
+|---|---|---|---|
+| training MSE, last 4k steps | 0.084 | 0.085 | 0.078 |
+| probe real vs generated, AUROC (DINOv2 / handcrafted / readouts) | 0.997 / 0.58 / 0.54 | 0.996 / 0.59 / 0.53 | 0.997 / 0.61 / 0.56 |
+| DINOv2 energy score minus a random real cell (survive / condensed / AnnexinV only) | 0.68 / 0.97 / 1.40 | 0.67 / 0.92 / 1.29 | 0.62 / 0.85 / 2.01 |
+| dynamics, readouts minus "copy + typical change" (same order) | -0.10 / -0.17 / +0.03 | -0.10 / -0.23 / 0.00 | -0.07 / -0.23 / +0.20 |
+| identity, rank of own future in DINOv2 (same order) | 0.44 / 0.43 / 0.48 | 0.44 / 0.43 / 0.49 | 0.44 / 0.40 / 0.51 |
+| per-cell skill, nucleus area (same order) | 0.50 / 0.35 / 0.48 | 0.51 / 0.37 / 0.45 | 0.49 / 0.42 / 0.45 |
+
+Every score is within the 64-channel model's interval. Four times the parameters, at the same
+training loss, give the same images: the DINOv2 distances to a random real cell differ by
+less than 0.1 (CIs about 0.4 wide), the probe still separates generated from real without
+error, identity stays at chance. Three times as many training cells (all doses) help nowhere
+either, and the AnnexinV-only dying cells get worse (DINOv2 2.01 against 1.40, dynamics
++0.20 against +0.03): the extra cells are mostly at doses where dying looks different (dead
+before 3 h). The training loss of the all-doses model is lower (0.078) only because its mix of
+cells is easier on average.
+
+The clearest sign is in the images themselves. The three models were sampled from the same
+noise (same seed and cell order in `19_generate_samples.py`), and the 128-channel model's
+sample differs from the 64-channel model's by a mean absolute pixel difference of 0.030
+(0.041 for the all-doses model, 0.035 between the two wide models), against 0.162 between two
+samples of one model. Three models of different width, seed and training set, started from
+the same noise, land on nearly the same image. The velocity field they learn is set by the
+data, not by the capacity, and what they share is the realism gap. Doubling the width is not
+the next step; changing what is learned is, for example generating in the latent space of an
+autoencoder trained on these cells, where texture is encoded rather than regressed.
+
+![examples](../results/figures/fig14b_examples_wide.png)
+
 ## Are some "dying" cells dividing?
 
 `scripts/16_divisions.py` flags a division when a nucleus turns small and bright for a frame or
@@ -416,9 +453,53 @@ the layout of `19_generate_samples.py`, so the energy scores, identity ranks and
 of scripts 20, 22 and 26 apply unchanged, and `30_temporal.py` adds the table above and
 `fig15_temporal.png` (example clips, real against video against frame model).
 
-On the laptop the model trains at 1.7 s per batch of 16 clips (112 images) and the loss falls
-from 1.9 to 0.20 within 200 steps. The Kaggle job (`kaggle/video/`, 7 h per T4 then sampling)
-trains it on the two-fate doses and on all doses; results to come.
+Trained on Kaggle (`kaggle/video/`, one T4 each, 7 h, batch 16 clips, seed 3): on the 1,919
+two-fate training cells (28k steps) and on all ten doses (5,860 cells, 29k steps), held-out
+wells unchanged. Eight clips per held-out cell, drawn from the 0 h frame with the true fate.
+The same measurements as above (`results/tables/temporal_video.csv`, 95% CIs over fields):
+
+| per 60 min, survives / AnnexinV only / condensed | real cells | frame model | video model | video model, all doses |
+|---|---|---|---|---|
+| mean absolute pixel change | 0.14 / 0.15 / 0.12 | 0.16 / 0.18 / 0.17 | 0.12 / 0.12 / 0.12 | 0.11 / 0.09 / 0.09 |
+| absolute nucleus area change (px) | 102 / 119 / 114 | 153 / 187 / 176 | 98 / 96 / 105 | 90 / 54 / 54 |
+| area direction reversals (0 to 2) | 1.10 / 1.07 / 0.65 | 1.30 / 1.24 / 1.22 | 1.08 / 0.79 / 0.74 | 1.06 / 0.79 / 0.72 |
+
+The jumps are gone. The video model's nucleus changes area between hours by as much as a real
+nucleus does (98 against 102 px for survivors, 105 against 114 for condensing cells, all
+within the real cells' intervals), and the nucleus of a condensing cell shrinks in one
+direction (0.74 reversals, real 0.65 with CI 0.56 to 0.83) where the frame model's changed
+direction at random (1.22). At 30 min steps, which the frame model cannot make, the video
+model's pixel and nucleus area changes are again those of real cells (survivors 0.098 against
+0.117 per pixel, 74 against 73 px). Two things it gets wrong: it treats AnnexinV-only dying
+cells like condensing ones (0.79 reversals where real AnnexinV-only cells, whose nucleus does
+not condense, show 1.07), and its survivors move a little less than real ones (pixel change
+0.117 against 0.138, CI 0.132 to 0.145). The model trained on all doses is too still: in dying
+cells the nucleus changes by half the real amount (54 against 114 to 119 px) and the pixel
+change is 0.09 against 0.12 to 0.15. At 78 and 156 nM most cells are dead before 3 h, so the
+3 to 6 h clips of dying cells at those doses are nearly static, and the model has learned that
+dying cells hardly move.
+
+![temporal](../results/figures/fig15_temporal_video.png)
+
+Joint generation fixes what it was built to fix. The same chain as for the frame models on
+frames 6, 8, 10 and 12 of the clips (tag `_video`, 8 samples per cell, the frame model is the
+64 px, 8 h run scored alongside):
+
+| at 6 h, 64 px | frame model | video model | video model, all doses |
+|---|---|---|---|
+| training steps (images seen) | 98k (6.3 M) | 28k (3.2 M) | 29k (3.3 M) |
+| probe real vs generated, AUROC (DINOv2 / handcrafted / readouts) | 0.997 / 0.58 / 0.54 | 0.998 / 0.57 / 0.53 | 0.998 / 0.61 / 0.52 |
+| DINOv2 energy score minus a random real cell (survive / condensed / AnnexinV only) | 0.68 / 0.97 / 1.40 | 1.45 / 2.91 / 2.58 | 1.31 / 1.99 / 2.86 |
+| dynamics, readouts minus "copy + typical change" (same order) | -0.10 / -0.17 / +0.03 | -0.05 / -0.20 / +0.08 | -0.04 / -0.16 / +0.35 |
+| identity, rank of own future in DINOv2 (same order) | 0.44 / 0.43 / 0.48 | 0.46 / 0.47 / 0.49 | 0.46 / 0.42 / 0.51 |
+| per-cell skill, nucleus area (same order) | 0.50 / 0.35 / 0.48 | 0.48 / 0.18 / 0.22 | 0.46 / 0.48 / 0.34 |
+
+Per frame the video model is a little behind the frame model: the DINOv2 distance to a random
+real cell is two to three times larger (its training saw half as many images, in 7 h at
+batch 16 clips), identity is at chance as before, dynamics in readout space are the same, and
+the per-cell skill for nucleus area in dying cells is lower (0.18 and 0.22 against 0.35 and
+0.48; the all-doses model keeps it at 0.48 and 0.34). So at this budget the clip model buys
+temporal consistency with some single-frame quality; the two are not yet had together.
 
 ## Next
 
@@ -427,12 +508,14 @@ trains it on the two-fate doses and on all doses; results to come.
 - Realism is the bottleneck: a frozen encoder separates generated from real without error,
   and texture, not the measurements, is what makes generated futures unrecognisable. Eight
   more hours of training and a VGG16 perceptual term changed nothing (the loss had
-  flattened), so the next step is capacity and data, not the loss: a wider UNet trained on all
-  labelled cells of the two-fate doses, or generation in the latent space of an autoencoder
-  trained on these cells.
+  flattened), and neither did four times the parameters or three times the cells (the wide
+  models produce nearly the same image from the same noise). Next is generation in the
+  latent space of an autoencoder trained on these cells, where texture is encoded rather
+  than regressed.
 - Link daughters to mothers in the tracker so dividing cells get a fate too; do cells that
   divide under drug die more or less often?
 - Get the colour of apoptosis right; check whether the ChromaLIVE channel scaling per field is
   part of the problem.
-- Score the video model (Kaggle job `kaggle/video/`): does joint generation remove the jumps
-  between hours, and does it change realism, identity or per-cell skill at 6 h?
+- The video model removes the jumps between hours but is a step behind the frame model per
+  frame at 7 h of training: train it longer, or initialise it from the frame model
+  (`28_train_video.py --init`), and see whether both can be had at once.

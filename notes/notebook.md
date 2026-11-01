@@ -592,3 +592,37 @@ smoke run falls to loss 0.20. Generation is slow on the Mac (8 cells x 8 clips i
 so 816 cells would be 4 h), so the Kaggle job samples after training. 29 writes clips plus the
 4-frame samples layout, so the whole scoring chain (20, 22, 26) and the new 30 run on it. Job
 staged in kaggle/video/, to push once the wide job frees the GPUs (about 18:30).
+
+Evening: both Kaggle jobs done (wide 18:12, video 18:40); gen kernel for the wide models'
+samples (8 per held-out cell, one model per T4) ran 18:20 to 21:45. Video clips were sampled
+inside the video job.
+
+Video model, temporal (30_temporal.py, tag _video): the jumps are gone. Nucleus area change
+per hour 98 / 96 / 105 px (survive / AnnexinV only / condensed) against real 102 / 119 / 114
+and frame model 153 / 187 / 176; reversals for condensing cells 0.74 against real 0.65 (CI
+0.56 to 0.83) and frame model 1.22. At 30 min steps too. Two misses: AnnexinV-only dying
+cells get the condensing cells' monotone shrink (0.79 reversals, real 1.07), and survivors
+move a bit less than real (0.117 vs 0.138 per pixel). The all-doses video model is too still
+(dying cells' nucleus changes 54 px per hour, half the real), presumably because at 78 and
+156 nM cells are dead before 3 h and the clips of dying cells are static.
+
+Per frame (chain 20 to 26 at 6 h): realism a step behind the frame model (DINOv2 distance to
+a random real cell 1.45 / 2.91 / 2.58 against 0.68 / 0.97 / 1.40), probe AUROC unchanged,
+identity at chance as before, per-cell skill for nucleus area in dying cells lower (0.18,
+0.22 against 0.35, 0.48; the all-doses model keeps 0.48, 0.34). The video run saw half the
+images of the frame run (28k steps of 16 clips in 7 h). Temporal consistency bought with some
+single-frame quality at this budget; a longer video run or a video run initialised from the
+frame model (--init) would show whether that is just budget.
+
+Figure fix in 30: example clips now one block per cell (rows sources, columns hours), so the
+images are not postage stamps.
+
+Wide models (tag _wide, samples from the gen kernel): nothing moves. Every score within the
+64-channel model's interval (DINOv2 vs random real cell 0.67 / 0.92 / 1.29 against 0.68 /
+0.97 / 1.40; probe 0.996; identity 0.44 / 0.43 / 0.49; nucleus-area skill 0.51 / 0.37 / 0.45).
+All doses: same, and AnnexinV-only dying cells worse (2.01). The telling number: from the same
+noise the 128-channel model's sample differs from the 64-channel model's by 0.030 per pixel
+(0.041 all doses), against 0.162 between two samples of one model. Different width, seed and
+training set, same image. The velocity field is set by the data; capacity is not the lever.
+Next lever is the representation (latent autoencoder), not the UNet. Fit check on the wide
+models and their 2 h snapshots running on the Mac (slow at ch 128), numbers to follow.

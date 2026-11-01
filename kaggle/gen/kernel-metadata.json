@@ -10,5 +10,5 @@
  "machine_shape": "NvidiaTeslaT4",
  "dataset_sources": ["USERNAME/static2fate-crops"],
  "competition_sources": [],
- "kernel_sources": ["USERNAME/static2fate-train"]
+ "kernel_sources": ["USERNAME/static2fate-wide"]
 }

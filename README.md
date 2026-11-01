@@ -26,7 +26,8 @@ its nucleus and dies. Frames every 30 min, AnnexinV at 6 h.*
 | When is fate readable from one frame? | Within 19.5 nM, leave-one-field-out AUROC 0.51 at 0 min, 0.60 at 2 h, 0.78 at 4 h, 0.84 at 6 h | [docs/results.md](docs/results.md#findings-so-far), fig 2 |
 | Do frozen foundation encoders see it earlier? | No. Eleven handcrafted nuclear measurements match or beat frozen DINOv2 at every informative dose; V-JEPA 2 on frames 1 to 8 is 0.045 worse than one frame of handcrafted features (95% CI -0.067 to -0.021) | `results/tables/vjepa_vs_frame.csv` |
 | Does the generated future follow the right cell? | For 72% of cells that die with a condensed nucleus, the model's 6 h prediction is closer to the real cell than its own 0 h frame is (95% CI 54 to 80%); per-cell nucleus-size predictions correlate with the real future as well as copying does (Spearman 0.50) and better for AnnexinV-only dying cells (0.48 against 0.23) | [docs/results.md](docs/results.md#starting-from-a-real-cell) |
-| Does more compute help? | Eight times the training steps or twice the resolution moves the readout scores by less than 0.1; the images do look more real (DINOv2 distance to a random real cell 0.7 to 1.4 against 3.0 to 5.4). Beyond that the loss is flat: 8 more hours, with or without a VGG16 perceptual term, changed nothing | fig 11, fig 12b, [docs/results.md](docs/results.md#training-for-realism) |
+| Does more compute help? | Eight times the training steps or twice the resolution moves the readout scores by less than 0.1; the images do look more real (DINOv2 distance to a random real cell 0.7 to 1.4 against 3.0 to 5.4). Beyond that nothing moves: 8 more hours, a VGG16 perceptual term, four times the parameters or three times the cells all give the same scores, and from the same noise the wide models draw nearly the same image as the small one (pixel difference 0.03 against 0.16 between two samples) | fig 11, fig 12b, [docs/results.md](docs/results.md#training-for-realism) |
+| Is the predicted future one trajectory? | Not frame by frame: independent draws make the nucleus jump 150 to 190 px between hours (real cells 100 to 120) and change direction at random. A video model that draws the 3 to 6 h clip jointly (temporal attention after every UNet stage) matches real cells on both (98 to 105 px; 0.74 reversals for condensing cells against 0.65 real), at some cost in single-frame realism at 7 h of training | fig 15, [docs/results.md](docs/results.md#the-future-as-one-clip-not-one-frame-at-a-time) |
 | What is still wrong | A linear probe tells generated from real with AUROC above 0.99; generated dying cytoplasm turns green where real dying cells end red and blue; the generated future is not recognisable as this cell's in DINOv2 space | fig 13 |
 
 Dose matters: both fates occur in one band, 9.8 to 39 nM. Static2Dynamic's ChromaLive model
@@ -78,7 +79,10 @@ Not a general cell tracker and not a production model: one plate, one cell line,
   nucleus (area halved, Hoechst doubled). Replicate wells agree within a few points.
 - Single-cell crops (13 frames x 3 channels x 128 px) and single-frame fate baselines.
 - Two flow-matching models (fate-conditioned; fate plus an earlier frame), their Kaggle runs at
-  8x the steps and 2x the resolution, and the paired and SDEdit-style variants that did not help.
+  8x the steps, 2x the resolution and 2x the width, and the paired and SDEdit-style variants
+  that did not help.
+- A video model (`src/static2fate/video.py`) that draws the 3 to 6 h course of a cell as one
+  clip, with the temporal consistency measurements that motivate it (`scripts/30_temporal.py`).
 
 ## Limitations
 
