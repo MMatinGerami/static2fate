@@ -1,0 +1,82 @@
+import importlib
+import sys
+from pathlib import Path
+
+import numpy as np
+import torch
+
+ROOT = Path(__file__).resolve().parents[1]
+sys.path.insert(0, str(ROOT / "scripts"))
+
+from static2fate.flow import UNet  # noqa: E402
+from static2fate.video import VideoUNet, sample_video, video_flow_loss  # noqa: E402
+
+
+def _inputs(b=2, t=4, size=32):
+    x = torch.randn(b, t, 3, size, size)
+    ctx = torch.randn(b, 3, size, size)
+    frame = torch.arange(6, 6 + t)[None].expand(b, -1)
+    return x, ctx, frame, torch.tensor([0, 1])[:b], torch.tensor([0, 3])[:b]
+
+
+def test_video_model_equals_frame_model_at_init():
+    torch.manual_seed(0)
+    m = VideoUNet(ch=16, cdim=32).eval()
+    x, ctx, frame, fate, cf = _inputs()
+    s = torch.tensor([0.3, 0.7])
+    with torch.no_grad():
+        v = m(x, s, frame, fate, ctx, cf)
+        ref = torch.stack([UNet.forward(m, x[:, i], s, frame[:, i], fate, ctx=ctx, ctx_frame=cf)
+                           for i in range(x.shape[1])], 1)
+    assert v.shape == x.shape
+    assert torch.allclose(v, ref, atol=1e-5)  # temporal layers start at zero
+
+
+def test_temporal_layers_mix_frames_after_training_step():
+    torch.manual_seed(0)
+    m = VideoUNet(ch=16, cdim=32)
+    x, ctx, frame, fate, cf = _inputs()
+    loss = video_flow_loss(m, x, frame, fate, ctx, cf)
+    assert torch.isfinite(loss)
+    loss.backward()
+    assert any(p.grad is not None and p.grad.abs().sum() > 0 for p in m.temporal.parameters())
+    with torch.no_grad():
+        for p in m.temporal.parameters():
+            p.add_(0.1 * torch.randn_like(p))
+    m.eval()
+    with torch.no_grad():
+        v = m(x, torch.tensor([0.5, 0.5]), frame, fate, ctx, cf)
+        x2 = x.clone()
+        x2[:, -1] += 1.0  # changing the last frame now changes the first frame's velocity
+        v2 = m(x2, torch.tensor([0.5, 0.5]), frame, fate, ctx, cf)
+    assert not torch.allclose(v[:, 0], v2[:, 0])
+
+
+def test_sample_video_shape_and_range():
+    torch.manual_seed(0)
+    m = VideoUNet(ch=16, cdim=32).eval()
+    x, ctx, frame, fate, cf = _inputs()
+    out = sample_video(m, frame, fate, ctx, cf, steps=2)
+    assert out.shape == x.shape and out.abs().max() <= 1
+
+
+def test_clip_frames_and_context_are_ordered():
+    train_video = importlib.import_module("28_train_video")
+    assert train_video.CLIP == list(range(6, 13))
+    gen = importlib.import_module("29_generate_clips")
+    assert all(f in train_video.CLIP for f in gen.FUTURE)
+
+
+def test_temporal_changes_on_smooth_and_jumping_clips():
+    temporal = importlib.import_module("30_temporal")
+    rng = np.random.default_rng(0)
+    frames = temporal.CLIP
+    base = rng.integers(0, 255, (3, 1, 1, 3, 64, 64), dtype=np.uint8).repeat(len(frames), 2)
+    smooth = base.copy()
+    jumping = base.copy()
+    jumping[:, :, 1::2] = 255 - jumping[:, :, 1::2]  # every other frame inverted
+    cs, cj = temporal.changes(smooth, frames, 1), temporal.changes(jumping, frames, 1)
+    assert np.allclose(cs["pixel"], 0) and (cj["pixel"] > 1).all()
+    c60 = temporal.changes(jumping, frames, 2)
+    assert np.allclose(c60["pixel"], 0)  # frames two apart are identical here
+    assert "area_reversals" in c60

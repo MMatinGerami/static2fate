@@ -574,3 +574,21 @@ unchanged). Snapshots every 2 h to plot held-out loss against steps, since 8 h a
 only about a third of the ch 64 steps. Loader now converts in chunks so all doses fit in RAM;
 it returns the same tensors as before (checked). Kaggle dataset re-exported with all doses
 (4.27 GB).
+
+## 2026-11-01
+
+Kaggle quota reset; wide-model job (ctx64_w128, ctx64_w128_all) pushed at 10:03, running.
+
+While it runs: the video model. Measured first what independent draws cost: on the held-out
+cells the frame model (ctx64_long) moves 0.16 to 0.18 per pixel per hour against 0.12 to 0.15
+for real cells, its nucleus area jumps 150 to 190 px per hour against 100 to 120, and over the
+three hour steps the area changes direction 1.2 to 1.3 times (2 possible) against 0.65 for real
+condensing cells. So the frame model's "futures" of one cell are not one future.
+
+Video model: context UNet on every frame plus temporal self-attention over the 7 frames (3 to 6 h)
+after each stage, zero-initialised output projections so it starts as the frame model (test
+checks the equality to 1e-5). 10.3 M parameters. Trains on MPS at 1.7 s per 16 clips; 6 min
+smoke run falls to loss 0.20. Generation is slow on the Mac (8 cells x 8 clips in about 3 min,
+so 816 cells would be 4 h), so the Kaggle job samples after training. 29 writes clips plus the
+4-frame samples layout, so the whole scoring chain (20, 22, 26) and the new 30 run on it. Job
+staged in kaggle/video/, to push once the wide job frees the GPUs (about 18:30).

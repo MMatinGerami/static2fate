@@ -385,6 +385,41 @@ but only about 1% of labelled cells do. Division breaks the track (the nucleus r
 splits), so dividing cells rarely end up with a complete track and a label. The labelled set,
 and every model trained on it, is mostly cells that did not divide during the movie.
 
+## The future as one clip, not one frame at a time
+
+Every model so far draws each future frame from its own noise: asked for 3, 4, 5 and 6 h of the
+same cell it returns four images that need not belong to one trajectory. Real cells change
+smoothly, and a condensing nucleus keeps shrinking. Measured on the 816 held-out cells with
+`scripts/30_temporal.py` (change from one hour to the next, true fate, context 0 h):
+
+| per 60 min, mean over cells | real cells | frame model (64 px, 8 h) |
+|---|---|---|
+| mean absolute pixel change, survives / AnnexinV only / condensed | 0.14 / 0.15 / 0.12 | 0.16 / 0.18 / 0.17 |
+| absolute nucleus area change (px) | 102 / 119 / 114 | 153 / 187 / 176 |
+| direction reversals of the nucleus area over three steps (0 to 2) | 1.10 / 1.07 / 0.65 | 1.30 / 1.24 / 1.22 |
+
+The frame model's futures move about half again as much between hours as real cells do, and the
+nucleus of a condensing cell, which in real cells shrinks in one direction (0.65 reversals),
+changes direction as often as a coin toss in the model's samples (1.22, where 1.0 is random).
+This is the cost of independent draws, and it is what a video model should remove.
+
+The video model (`src/static2fate/video.py`, `scripts/28_train_video.py`) generates the seven
+frames 6 to 12 (3 to 6 h, every 30 min) as one clip from one noise draw and one flow time. It is
+the context UNet applied to every frame, with a temporal self-attention layer after each of its
+seven stages that mixes the frames at every pixel (Ho et al., 2022, arXiv:2204.03458); the
+attention output projections start at zero, so at initialisation it is exactly the frame
+model (tested), and training can only add temporal coupling. Conditions as before: fate, the
+context image concatenated to every frame, its frame t_c (0 to 5), and a time-after-drug
+embedding per frame; 10.3 M parameters against 9.4 M. Classifier-free guidance on fate as
+before. `scripts/29_generate_clips.py` writes the clips and, from them, frames 6, 8, 10 and 12 in
+the layout of `19_generate_samples.py`, so the energy scores, identity ranks and per-cell skill
+of scripts 20, 22 and 26 apply unchanged, and `30_temporal.py` adds the table above and
+`fig15_temporal.png` (example clips, real against video against frame model).
+
+On the laptop the model trains at 1.7 s per batch of 16 clips (112 images) and the loss falls
+from 1.9 to 0.20 within 200 steps. The Kaggle job (`kaggle/video/`, 7 h per T4 then sampling)
+trains it on the two-fate doses and on all doses; results to come.
+
 ## Next
 
 - Invert the context frame under the context model, so it keeps the cell's identity and uses
@@ -399,5 +434,5 @@ and every model trained on it, is mostly cells that did not divide during the mo
   divide under drug die more or less often?
 - Get the colour of apoptosis right; check whether the ChromaLIVE channel scaling per field is
   part of the problem.
-- Video: generate the whole 3 to 6 h course at once, with temporal consistency, instead of
-  one frame at a time.
+- Score the video model (Kaggle job `kaggle/video/`): does joint generation remove the jumps
+  between hours, and does it change realism, identity or per-cell skill at 6 h?
