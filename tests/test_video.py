@@ -80,3 +80,19 @@ def test_temporal_changes_on_smooth_and_jumping_clips():
     c60 = temporal.changes(jumping, frames, 2)
     assert np.allclose(c60["pixel"], 0)  # frames two apart are identical here
     assert "area_reversals" in c60
+
+
+def test_video_model_loads_frame_model_weights():
+    torch.manual_seed(0)
+    frame = UNet(ch=16, cdim=32, context=True)
+    m = VideoUNet(ch=16, cdim=32)
+    missing, unexpected = m.load_state_dict(frame.state_dict(), strict=False)
+    assert not unexpected and missing and all(k.startswith("temporal.") for k in missing)
+    x, ctx, fr, fate, cf = _inputs()
+    s = torch.tensor([0.3, 0.7])
+    m.eval()
+    frame.eval()
+    with torch.no_grad():
+        v = m(x, s, fr, fate, ctx, cf)
+        ref = torch.stack([frame(x[:, i], s, fr[:, i], fate, ctx=ctx, ctx_frame=cf) for i in range(x.shape[1])], 1)
+    assert torch.allclose(v, ref, atol=1e-5)  # starts exactly as the frame model

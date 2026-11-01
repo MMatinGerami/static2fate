@@ -9,6 +9,7 @@ batch of the frame model times the seven frames it would take to cover the same 
 
 Usage: uv run scripts/28_train_video.py --minutes 60 [--device mps|cuda] [--size 64]
        [--ch 64] [--all-doses] [--snapshot-every 120] [--init model.pt]
+--init takes a video model or a frame model (its temporal layers then start at zero).
 Writes <out>/model.pt (EMA weights), <out>/train_log.csv and <out>/run.json ("clip" lists the
 frames generated). Float16 on CUDA with loss scaling, float32 elsewhere.
 """
@@ -56,8 +57,11 @@ def main() -> None:
     print(f"train cells {n}, size {args.size}, clip frames {CLIP}, dies {fate.float().mean():.2f}", flush=True)
     model = VideoUNet(ch=args.ch).to(args.device)
     if args.init:
-        model.load_state_dict(torch.load(args.init, map_location=args.device, weights_only=True))
-        print(f"continuing from {args.init}", flush=True)
+        state = torch.load(args.init, map_location=args.device, weights_only=True)
+        missing, unexpected = model.load_state_dict(state, strict=False)
+        if unexpected or any(not k.startswith("temporal.") for k in missing):
+            raise ValueError(f"{args.init} does not match: unexpected {unexpected}, missing {missing}")
+        print(f"continuing from {args.init}" + (" (frame model, temporal layers at zero)" if missing else ""), flush=True)
     print(f"parameters {sum(p.numel() for p in model.parameters()) / 1e6:.1f} M", flush=True)
     opt = torch.optim.AdamW(model.parameters(), lr=2e-4, weight_decay=0.0)
     ema = VideoUNet(ch=args.ch).to(args.device)

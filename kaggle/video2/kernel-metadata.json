@@ -1,0 +1,14 @@
+{
+ "id": "USERNAME/static2fate-video2",
+ "title": "static2fate video2",
+ "code_file": "video2_kaggle.py",
+ "language": "python",
+ "kernel_type": "script",
+ "is_private": "true",
+ "enable_gpu": "true",
+ "enable_internet": "true",
+ "machine_shape": "NvidiaTeslaT4",
+ "dataset_sources": ["USERNAME/static2fate-crops"],
+ "competition_sources": [],
+ "kernel_sources": ["USERNAME/static2fate-train", "USERNAME/static2fate-video"]
+}
