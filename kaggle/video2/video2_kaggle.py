@@ -1,4 +1,4 @@
-"""Kaggle job: second video round, one run per T4, 9 h training then sampling.
+"""Kaggle job: second video round, one run per T4, 8 h training then sampling.
 
 Is the video model's per-frame gap to the frame model only training budget? GPU 0
 ("video64_init"): the video model initialised from the frame model ctx64_long (its temporal
@@ -7,6 +7,9 @@ GPU 1 ("video64_cont"): the 7 h video model video64 continued, 16 h in all. Both
 two-fate doses, then 8 clips per held-out cell (29_generate_clips.py). Outputs in
 /kaggle/working/<name>/. Push with: kaggle kernels push -p kaggle/video2
 (after replacing USERNAME in kernel-metadata.json).
+
+Sampling 816 cells at 8 clips takes about 3.4 h on a T4 and a session ends at 12 h, so
+training must stay at 8 h or less: the first run (9 h) was cut during sampling.
 """
 
 import os
@@ -15,7 +18,7 @@ import threading
 import time
 from pathlib import Path
 
-HOURS = float(os.environ.get("HOURS", 9))
+HOURS = float(os.environ.get("HOURS", 8))
 WORK = Path("/kaggle/working")
 REPO = WORK / "static2fate"
 INPUT = Path("/kaggle/input")

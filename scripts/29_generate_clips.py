@@ -7,6 +7,12 @@ frames 6, 8, 10, 12 in the layout of 19_generate_samples.py, (cells, 4, M, 3, s,
 20_feature_score.py, 22_identity.py and 26_percell_skill.py. Same seed and cell order as 19.
 
 Usage: uv run scripts/29_generate_clips.py [model dir] [M, default 8] [cells: n or start:stop]
+
+Cells are drawn 4 at a time on CUDA and 1 at a time on the Mac, where the Apple GPU allocator
+is also capped at half the recommended working set and emptied after each batch (4 cells of
+8 clips, 448 images per guided step, grew to 16 GB of unified memory and swapped). The noise
+stream restarts at seed 0 for every invocation, so a part file's noise depends on its start
+cell and batch size, not on the other parts.
 """
 
 import contextlib
@@ -32,6 +38,9 @@ def main(mdir: Path, m: int, cells: str | None) -> None:
     run = json.loads((mdir / "run.json").read_text())
     clip = run["clip"]
     device = "mps" if torch.backends.mps.is_available() else "cuda" if torch.cuda.is_available() else "cpu"
+    per_batch = CELLS_PER_BATCH if device == "cuda" else 1
+    if device == "mps":
+        torch.mps.set_per_process_memory_fraction(0.5)
     model = VideoUNet(ch=run["ch"]).to(device)
     model.load_state_dict(torch.load(mdir / "model.pt", map_location=device, weights_only=True))
     model.eval()
@@ -52,8 +61,8 @@ def main(mdir: Path, m: int, cells: str | None) -> None:
     samples = np.lib.format.open_memmap(mdir / f"samples{suffix}.npy", mode="w+", dtype=np.uint8,
                                         shape=(n, len(FUTURE), m, 3, size, size))
     g = torch.Generator().manual_seed(0)
-    for b in range(0, n, CELLS_PER_BATCH):
-        sl = slice(b, min(b + CELLS_PER_BATCH, n))
+    for b in range(0, n, per_batch):
+        sl = slice(b, min(b + per_batch, n))
         k = sl.stop - sl.start
         ctx = x[sl, 0].repeat_interleave(m, 0).to(device)
         fk = fate[sl].repeat_interleave(m).to(device)
@@ -64,7 +73,10 @@ def main(mdir: Path, m: int, cells: str | None) -> None:
         u8 = ((out.float().cpu() + 1) * 127.5).round().clamp(0, 255).to(torch.uint8).view(k, m, t, 3, size, size)
         clips[sl] = u8.numpy()
         samples[sl] = u8[:, :, keep].transpose(1, 2).numpy()
-        print(f"cells {sl.stop}/{n}", flush=True)
+        if device == "mps":
+            torch.mps.empty_cache()
+        if sl.stop % 4 == 0 or sl.stop == n:
+            print(f"cells {sl.stop}/{n}", flush=True)
     clips.flush()
     samples.flush()
     np.save(mdir / f"samples{suffix}_tracks.npy", tracks)

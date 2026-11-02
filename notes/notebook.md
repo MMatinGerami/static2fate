@@ -626,3 +626,32 @@ noise the 128-channel model's sample differs from the 64-channel model's by 0.03
 training set, same image. The velocity field is set by the data; capacity is not the lever.
 Next lever is the representation (latent autoencoder), not the UNet. Fit check on the wide
 models and their 2 h snapshots running on the Mac (slow at ch 128), numbers to follow.
+
+22:50: second video round pushed (kaggle/video2/, 9 h per T4 then sampling): video64_init
+starts from ctx64_long with the temporal layers at zero (28 now accepts a frame model as
+--init; test checks it equals the frame model at step 0), video64_cont continues video64 to
+16 h in all. If the per-frame gap closes in either, it was budget; if not, the coupling costs
+something. Week's Kaggle quota after this: about 2 h.
+
+## 2026-11-02
+
+13:00: the second video round hit Kaggle's 12 h session limit. Both models trained the full
+9 h (video64_init 39429 steps, video64_cont 38700 steps on top of video64's 28265), but
+clip generation for 816 cells at 8 clips takes about 3.4 h on a T4, so it was cut at
+704 (init) and 692 (cont) cells with no track files written. Kept the written cells as
+clips_0_704.npy / samples_0_704.npy (and 0_692) with tracks from train.load("test"), in
+the file order 29_generate_clips.py would have used; the remaining cells are generated on
+the Mac as a second part. Lesson for kaggle/*: training time + 3.4 h sampling must stay
+under 12 h, so 8 h of training is the ceiling with sampling in the same session.
+Temporal comparison on the written cells (10 of 12 fields): both new models keep the
+smoothness of the 7 h video model (nucleus area change per 60 min in condensing cells
+109 / 94 px for 16 h / from frame model vs 105 video 7 h, 114 real, 176 frame model).
+
+18:00: the Mac was swapping (44 GB of swap on 24 GB of RAM): the fit check held 28 GB of
+unified memory and the clip generation 16 GB, both from the Apple GPU allocator caching
+blocks across models and batches, and neither had progressed for hours. Fixed both
+scripts: allocator capped at half the recommended working set
+(torch.mps.set_per_process_memory_fraction), emptied after each model / batch, batch 64 in
+the fit check and one cell per batch in the generation on the Mac. Capped, a wide model's
+fit check takes 6 min (allocator 4 GB) instead of over an hour, and clip generation about
+15 s per cell. Rule from now on: one GPU job at a time on the Mac.

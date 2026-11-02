@@ -10,6 +10,10 @@ is decided near s = 1 (fine detail), where the two can differ even if the mean a
 
 Usage: uv run scripts/27_fit_check.py name=dir [name=dir ...]
 Writes results/tables/fit_check.csv.
+
+On the Mac the batch is 64 and the Apple GPU allocator is capped at half the recommended
+working set and emptied after each model; an uncapped run at ch 128 grew to 28 GB of unified
+memory (cached blocks from eleven models) and swapped.
 """
 
 import importlib
@@ -60,6 +64,10 @@ def losses(model, x, fate, device, batch=256):
 def main(models: dict[str, Path]) -> None:
     train = importlib.import_module("09_train_flow")
     device = "mps" if torch.backends.mps.is_available() else "cpu"
+    batch = 256
+    if device == "mps":
+        torch.mps.set_per_process_memory_fraction(0.5)
+        batch = 64
     data = {split: train.load(split, 64)[:2] for split in ("train", "test")}
     rows = []
     for name, d in models.items():
@@ -68,7 +76,7 @@ def main(models: dict[str, Path]) -> None:
         model.load_state_dict(torch.load(d / "model.pt", map_location=device, weights_only=True))
         model.eval()
         for split, (x, fate) in data.items():
-            df = losses(model, x, fate, device)
+            df = losses(model, x, fate, device, batch)
             df["bin"] = pd.cut(df.s, S_BINS, include_lowest=True).astype(str)
             per_cell = df.groupby("cell").mse.mean()
             rows.append({"model": name, "split": split, "s": "all", "mse": per_cell.mean(),
@@ -77,7 +85,12 @@ def main(models: dict[str, Path]) -> None:
                 pc = g.groupby("cell").mse.mean()
                 rows.append({"model": name, "split": split, "s": b, "mse": pc.mean(),
                              "sem": pc.std() / np.sqrt(len(pc)), "cells": len(pc)})
-        print(f"done {name}", flush=True)
+        del model
+        if device == "mps":
+            torch.mps.empty_cache()
+            print(f"done {name}, GPU allocator {torch.mps.driver_allocated_memory() / 2**30:.1f} GB", flush=True)
+        else:
+            print(f"done {name}", flush=True)
     out = pd.DataFrame(rows)
     out.to_csv(ROOT / "results/tables/fit_check.csv", index=False)
     pd.set_option("display.width", 200)
