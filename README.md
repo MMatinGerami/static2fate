@@ -84,6 +84,10 @@ Not a general cell tracker and not a production model: one plate, one cell line,
 - A video model (`src/static2fate/video.py`) that draws the 3 to 6 h course of a cell as one
   clip, started from the frame model, with the temporal consistency measurements that
   motivate it (`scripts/30_temporal.py`).
+- An autoencoder for the 128 px crops (`src/static2fate/autoencoder.py`, factor 4, four latent
+  channels, L1 + perceptual + KL, optional PatchGAN) and a reconstruction check on held-out
+  cells (`scripts/32_reconstruct.py`) that bounds what generation in its latent can reach;
+  training runs on Kaggle (`kaggle/ae/`).
 
 ## Limitations
 

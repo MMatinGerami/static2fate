@@ -672,3 +672,15 @@ condensing cells, real 0.65, frame model 1.22). The 7 h model continued to 16 h 
 half the gap and its survivors get too still (83 px per hour, real CI 93 to 111). Recipe
 from now on: frame model first, then the video model from it. docs/results.md has the
 subsection "Is the per-frame gap only training budget?", README row updated.
+
+22:30: latent autoencoder started (src/static2fate/autoencoder.py, scripts/31_train_autoencoder.py,
+scripts/32_reconstruct.py, tests/test_autoencoder.py, kaggle/ae/). KL autoencoder, factor 4,
+4 latent channels (128 px -> 4 x 32 x 32), 7.1 M parameters, L1 + VGG16 perceptual + 1e-6 KL,
+optional PatchGAN hinge term; trains on every frame of every dose (76k images), held-out
+wells untouched. 32_reconstruct writes the held-out reconstruction in the samples layout so
+the probe can score it: that is the ceiling of latent generation. Smoke run on the Mac,
+3 min at batch 8 (681 steps): held-out PSNR 28.9 dB, L1 0.048, perceptual 0.22, Spearman
+between real and reconstructed readouts 0.97 (nucleus area), 0.97 / 0.97 / 0.98 (Hoechst,
+green, red), nucleus area ratio 1.00. Kaggle job kaggle/ae/ (5 h per T4: plain and with
+GAN from step 5,000) waits for the quota reset on Saturday 7 Nov. Then: the flow and video
+models on the latent (UNet with 4 + 4 input channels at 32 px, decode before scoring).

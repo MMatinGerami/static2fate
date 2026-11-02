@@ -69,6 +69,21 @@ def load(split: str, size: int = 64, frames: list[int] | None = None, doses: lis
     return x, fate, tracks[idx]
 
 
+def load_uint8(split: str, doses: list[float] | None = DOSES):
+    """Crops of one split as stored, (n, 13, 3, 128, 128) uint8, with their track ids.
+
+    For the autoencoder, which trains on every frame of every dose at 128 px: as uint8 the
+    5,860 training cells take 3.7 GB, as float they would take four times that. Convert a
+    batch with .float() / 127.5 - 1.
+    """
+    idx, tracks = split_index(split, doses)
+    crops = np.load(P / "crops.npy", mmap_mode="r")
+    x = torch.empty(len(idx), *crops.shape[1:], dtype=torch.uint8)
+    for b in range(0, len(idx), 256):
+        x[b:b + 256] = torch.from_numpy(np.ascontiguousarray(crops[idx[b:b + 256]]))
+    return x, tracks
+
+
 def augment(x):
     if torch.rand(1) < 0.5:
         x = x.flip(-1)
