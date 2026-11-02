@@ -384,6 +384,27 @@ either, and the AnnexinV-only dying cells get worse (DINOv2 2.01 against 1.40, d
 before 3 h). The training loss of the all-doses model is lower (0.078) only because its mix of
 cells is easier on average.
 
+The held-out loss says the same. The fit check of the section above, run on the wide models
+and on their snapshots every 2 h (same draws; the all-doses model is scored on the two-dose
+training cells, not on its own mix):
+
+| model | training cells | held-out cells | held-out, flow time 0.9 to 1 |
+|---|---|---|---|
+| 128 ch, 2 h | 0.087 | 0.083 | 0.308 |
+| 128 ch, 4 h | 0.086 | 0.082 | 0.306 |
+| 128 ch, 6 h | 0.085 | 0.081 | 0.305 |
+| 128 ch, 8 h | 0.085 | 0.081 | 0.304 |
+| 128 ch, all doses, 2 h | 0.088 | 0.083 | 0.309 |
+| 128 ch, all doses, 8 h | 0.085 | 0.081 | 0.304 |
+| 64 ch, 8 h (from above) | 0.084 | 0.081 | 0.304 |
+
+Four times the parameters end on the same held-out loss as the 64-channel model, to the
+third decimal, at every flow time, and the last 4 h of training move it by 0.002. Three times
+the training cells end there too. Held-out loss stays at or below training loss throughout,
+so none of these models memorises. The floor is set by the data, not the model: what the
+0 h image does not determine about the future is the same for 10 M and 35 M parameters and
+for 1,919 and 5,860 cells.
+
 The clearest sign is in the images themselves. The three models were sampled from the same
 noise (same seed and cell order in `19_generate_samples.py`), and the 128-channel model's
 sample differs from the 64-channel model's by a mean absolute pixel difference of 0.030
@@ -501,6 +522,55 @@ the per-cell skill for nucleus area in dying cells is lower (0.18 and 0.22 again
 0.48; the all-doses model keeps it at 0.48 and 0.34). So at this budget the clip model buys
 temporal consistency with some single-frame quality; the two are not yet had together.
 
+### Is the per-frame gap only training budget?
+
+Two more runs (`kaggle/video2/`, one T4 each, 9 h, batch 16 clips, seed 3, two-fate cells).
+One starts the video model from the 8 h frame model: `28_train_video.py --init` now accepts a
+frame model, copies its weights and leaves the temporal layers at zero, so the run begins as
+that model (tested) and only has to learn the coupling (39k steps). The other continues the
+7 h video model for 9 h more (16 h, 67k steps in all). Kaggle's 12 h session ended while the
+clips were being drawn (3.4 h for 816 cells on a T4), so the last 112 and 124 cells were drawn
+on the Mac with the same script as a second part file; the noise of those cells therefore
+differs from what one run would have drawn. Temporal consistency
+(`results/tables/temporal_video2.csv`):
+
+| per 60 min, survives / AnnexinV only / condensed | real cells | video 7 h | video from frame model, 9 h | video 16 h |
+|---|---|---|---|---|
+| mean absolute pixel change | 0.14 / 0.15 / 0.12 | 0.12 / 0.12 / 0.12 | 0.12 / 0.12 / 0.11 | 0.12 / 0.12 / 0.11 |
+| absolute nucleus area change (px) | 102 / 119 / 114 | 98 / 96 / 105 | 98 / 92 / 91 | 83 / 93 / 95 |
+| area direction reversals (0 to 2) | 1.10 / 1.07 / 0.65 | 1.08 / 0.79 / 0.74 | 1.10 / 0.84 / 0.76 | 1.09 / 0.79 / 0.72 |
+
+Both keep the smoothness of the first video model. The 16 h model's survivors are stiller
+than real ones (83 px per hour, real CI 93 to 111), a sign that longer training pulls the
+clips towards too little motion, as the all-doses model showed more strongly.
+
+![temporal](../results/figures/fig15_temporal_video2.png)
+
+Per frame, the same chain as above (tag `_video2`, 8 samples per cell, the frame model and
+the 7 h video model rescored alongside, so their numbers move slightly against the table
+above):
+
+| at 6 h, 64 px | frame model | video 7 h | video from frame model, 9 h | video 16 h |
+|---|---|---|---|---|
+| training steps (images seen) | 98k (6.3 M) | 28k (3.2 M) | 39k (4.4 M, after the frame model's 6.3 M) | 67k (7.5 M) |
+| probe real vs generated, AUROC (DINOv2 / handcrafted / readouts) | 0.997 / 0.58 / 0.54 | 0.998 / 0.57 / 0.53 | 0.997 / 0.59 / 0.55 | 0.996 / 0.59 / 0.54 |
+| DINOv2 energy score minus a random real cell (survive / condensed / AnnexinV only) | 0.68 / 0.97 / 1.40 | 1.45 / 2.91 / 2.58 | 0.81 / 1.01 / 1.55 | 1.10 / 1.86 / 2.03 |
+| dynamics, readouts minus "copy + typical change" (same order) | -0.10 / -0.17 / +0.03 | -0.05 / -0.20 / +0.07 | -0.09 / -0.23 / -0.01 | -0.07 / -0.31 / +0.06 |
+| identity, rank of own future in DINOv2 (same order) | 0.43 / 0.45 / 0.45 | 0.45 / 0.48 / 0.48 | 0.43 / 0.43 / 0.46 | 0.44 / 0.46 / 0.47 |
+| per-cell skill, nucleus area (same order) | 0.50 / 0.35 / 0.48 | 0.48 / 0.18 / 0.22 | 0.52 / 0.33 / 0.39 | 0.52 / 0.40 / 0.36 |
+
+It was budget. The video model started from the frame model matches the frame model on
+every per-frame score: DINOv2 distance to a random real cell 0.81 / 1.01 / 1.55 against
+0.68 / 0.97 / 1.40 (CIs about 0.4 wide and overlapping), nucleus-area skill in dying cells
+0.33 and 0.39 against 0.35 and 0.48 (CIs overlapping), dynamics and identity the same. The
+continued model closes about half the gap in 9 h more of training from scratch (DINOv2
+1.10 / 1.86 / 2.03). So the temporal coupling costs nothing per frame once the frame model
+is learned first; the first video model was simply short of training. Starting a video
+model from a trained frame model is the right recipe, and 9 h of it gives the frame model's
+images with real cells' motion between them.
+
+![examples](../results/figures/fig14b_examples_video2.png)
+
 ## Next
 
 - Invert the context frame under the context model, so it keeps the cell's identity and uses
@@ -516,6 +586,8 @@ temporal consistency with some single-frame quality; the two are not yet had tog
   divide under drug die more or less often?
 - Get the colour of apoptosis right; check whether the ChromaLIVE channel scaling per field is
   part of the problem.
-- The video model removes the jumps between hours but is a step behind the frame model per
-  frame at 7 h of training: train it longer, or initialise it from the frame model
-  (`28_train_video.py --init`), and see whether both can be had at once.
+- The video model started from the frame model has the frame model's images and real cells'
+  motion between them, so it is now the default generator. Two things to fix in it: it
+  treats AnnexinV-only dying cells like condensing ones (reversals 0.84 against 1.07), and
+  longer training makes the clips too still. The latent autoencoder above should be built
+  so the video model can be moved onto it.

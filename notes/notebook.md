@@ -625,7 +625,7 @@ noise the 128-channel model's sample differs from the 64-channel model's by 0.03
 (0.041 all doses), against 0.162 between two samples of one model. Different width, seed and
 training set, same image. The velocity field is set by the data; capacity is not the lever.
 Next lever is the representation (latent autoencoder), not the UNet. Fit check on the wide
-models and their 2 h snapshots running on the Mac (slow at ch 128), numbers to follow.
+models and their 2 h snapshots started on the Mac (numbers under 2 Nov).
 
 22:50: second video round pushed (kaggle/video2/, 9 h per T4 then sampling): video64_init
 starts from ctx64_long with the temporal layers at zero (28 now accepts a frame model as
@@ -655,3 +655,20 @@ scripts: allocator capped at half the recommended working set
 the fit check and one cell per batch in the generation on the Mac. Capped, a wide model's
 fit check takes 6 min (allocator 4 GB) instead of over an hour, and clip generation about
 15 s per cell. Rule from now on: one GPU job at a time on the Mac.
+
+19:40: fit check on the wide models, capped allocator, 39 min for 11 models. The 128-channel
+model ends on the same held-out loss as the 64-channel one (0.081 overall, 0.304 at flow time
+0.9 to 1, both to the third decimal) and moves by 0.002 over its last 4 h; the all-doses
+model lands on the same numbers (scored on the two-dose training cells). Held-out loss at
+or below training loss for every model and flow time. So the floor is the data's, not the
+model's: same floor from 10 M and 35 M parameters, 1,919 and 5,860 cells. Written into
+docs/results.md under "Twice the width changes nothing".
+
+20:10: second video round scored (tag _video2). It was budget: the video model started from
+the 8 h frame model (9 h) matches the frame model on every per-frame score (DINOv2 minus
+random cell 0.81 / 1.01 / 1.55 vs 0.68 / 0.97 / 1.40, nucleus-area skill in dying cells
+0.33 / 0.39 vs 0.35 / 0.48, CIs overlapping) and keeps the smooth clips (reversals 0.76 in
+condensing cells, real 0.65, frame model 1.22). The 7 h model continued to 16 h closes about
+half the gap and its survivors get too still (83 px per hour, real CI 93 to 111). Recipe
+from now on: frame model first, then the video model from it. docs/results.md has the
+subsection "Is the per-frame gap only training budget?", README row updated.
