@@ -9,6 +9,9 @@ moment, which is the simplest version of the two-future question.
 With context=True the model also sees one observed image of the same cell (concatenated as three
 extra input channels) and the frame it was taken at, and predicts the cell at a later frame.
 This lets the prediction depend on how far along that particular cell already is.
+
+in_ch sets the channels of what is generated: 3 for images, 4 for the latent of
+static2fate.autoencoder (the context then has the same channels, so the input has 2 x in_ch).
 """
 
 from __future__ import annotations
@@ -49,16 +52,17 @@ class UNet(nn.Module):
     """Three resolutions (64, 32, 16), two blocks each, conditioning added through FiLM."""
 
     def __init__(self, ch: int = 64, cdim: int = 256, n_frames: int = 13, n_fates: int = 2,
-                 context: bool = False):
+                 context: bool = False, in_ch: int = 3):
         super().__init__()
         self.context = context
+        self.in_ch = in_ch
         if context:
             self.ctx_frame = nn.Embedding(n_frames, cdim)
         self.s_mlp = nn.Sequential(nn.Linear(ch, cdim), nn.SiLU(), nn.Linear(cdim, cdim))
         self.frame = nn.Embedding(n_frames, cdim)
         self.fate = nn.Embedding(n_fates + 1, cdim)  # last index = no fate (classifier-free guidance)
         self.ch = ch
-        self.inp = nn.Conv2d(6 if context else 3, ch, 3, padding=1)
+        self.inp = nn.Conv2d(2 * in_ch if context else in_ch, ch, 3, padding=1)
         self.d1 = nn.ModuleList([ResBlock(ch, ch, cdim), ResBlock(ch, ch, cdim)])
         self.d2 = nn.ModuleList([ResBlock(ch, 2 * ch, cdim), ResBlock(2 * ch, 2 * ch, cdim)])
         self.d3 = nn.ModuleList([ResBlock(2 * ch, 4 * ch, cdim), ResBlock(4 * ch, 4 * ch, cdim)])
@@ -66,7 +70,7 @@ class UNet(nn.Module):
         self.u3 = nn.ModuleList([ResBlock(8 * ch, 4 * ch, cdim), ResBlock(4 * ch, 4 * ch, cdim)])
         self.u2 = nn.ModuleList([ResBlock(6 * ch, 2 * ch, cdim), ResBlock(2 * ch, 2 * ch, cdim)])
         self.u1 = nn.ModuleList([ResBlock(3 * ch, ch, cdim), ResBlock(ch, ch, cdim)])
-        self.out = nn.Sequential(nn.GroupNorm(8, ch), nn.SiLU(), nn.Conv2d(ch, 3, 3, padding=1))
+        self.out = nn.Sequential(nn.GroupNorm(8, ch), nn.SiLU(), nn.Conv2d(ch, in_ch, 3, padding=1))
 
     def forward(self, x, s, frame, fate, ctx=None, ctx_frame=None):
         c = self.s_mlp(sinusoidal(s * 1000, self.ch)) + self.frame(frame) + self.fate(fate)
@@ -146,15 +150,17 @@ def invert(model, x1, frame, steps: int = 50):
 
 @torch.no_grad()
 def sample(model, frame, fate, steps: int = 50, guidance: float = 2.0, generator=None, x0=None,
-           size: int = 64, x_start=None, s0: float = 0.0, **cond):
+           size: int = 64, x_start=None, s0: float = 0.0, clamp: bool = True, **cond):
     """Euler integration from noise; the same x0 can be reused to compare two fates.
 
     With x_start and s0 > 0 the integration starts part way along the path, from
     (1 - s0) * noise + s0 * x_start (as in SDEdit), so the result keeps the large-scale layout
     of x_start, more so for larger s0, while the model fills in what the condition asks for.
+    The result is clamped to [-1, 1] for images; pass clamp=False for latents.
     """
     device = frame.device
-    x = x0 if x0 is not None else torch.randn(len(frame), 3, size, size, device=device, generator=generator)
+    in_ch = getattr(model, "in_ch", 3)
+    x = x0 if x0 is not None else torch.randn(len(frame), in_ch, size, size, device=device, generator=generator)
     first = 0
     if x_start is not None:
         first = round(s0 * steps)
@@ -168,4 +174,4 @@ def sample(model, frame, fate, steps: int = 50, guidance: float = 2.0, generator
         v = model(torch.cat([x, x]), s, frame2, both_fates, **cond2)  # conditional and null in one pass
         v_c, v_u = v[:n], v[n:]
         x = x + (v_u + guidance * (v_c - v_u)) / steps
-    return x.clamp(-1, 1)
+    return x.clamp(-1, 1) if clamp else x

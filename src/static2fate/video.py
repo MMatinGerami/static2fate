@@ -47,13 +47,14 @@ class TemporalAttention(nn.Module):
 class VideoUNet(UNet):
     """The context UNet with a temporal attention layer after every stage."""
 
-    def __init__(self, ch: int = 64, cdim: int = 256, n_frames: int = 13, n_fates: int = 2, heads: int = 4):
-        super().__init__(ch, cdim, n_frames, n_fates, context=True)
+    def __init__(self, ch: int = 64, cdim: int = 256, n_frames: int = 13, n_fates: int = 2, heads: int = 4,
+                 in_ch: int = 3):
+        super().__init__(ch, cdim, n_frames, n_fates, context=True, in_ch=in_ch)
         widths = [ch, 2 * ch, 4 * ch, 4 * ch, 4 * ch, 2 * ch, ch]  # d1, d2, d3, mid, u3, u2, u1
         self.temporal = nn.ModuleList([TemporalAttention(w, n_frames, heads) for w in widths])
 
     def forward(self, x, s, frame, fate, ctx, ctx_frame):
-        """x (B, T, 3, H, W) clip at flow time s (B,); frame (B, T); fate, ctx_frame (B,); ctx (B, 3, H, W)."""
+        """x (B, T, C, H, W) clip at flow time s (B,); frame (B, T); fate, ctx_frame (B,); ctx (B, C, H, W)."""
         b, t = x.shape[:2]
         c = self.s_mlp(sinusoidal(s * 1000, self.ch)) + self.fate(fate) + self.ctx_frame(ctx_frame)
         fr = frame.reshape(-1)
@@ -79,7 +80,7 @@ class VideoUNet(UNet):
         u = tm[5](self.u2[1](self.u2[0](torch.cat([u, h2], 1), c), c), t, fr)
         u = F.interpolate(u, scale_factor=2)
         u = tm[6](self.u1[1](self.u1[0](torch.cat([u, h1], 1), c), c), t, fr)
-        return self.out(u).view(b, t, 3, *x.shape[-2:])
+        return self.out(u).view(b, t, self.in_ch, *x.shape[-2:])
 
 
 def video_flow_loss(model, clip, frame, fate, ctx, ctx_frame, p_drop: float = 0.1):
@@ -95,8 +96,11 @@ def video_flow_loss(model, clip, frame, fate, ctx, ctx_frame, p_drop: float = 0.
 
 @torch.no_grad()
 def sample_video(model, frame, fate, ctx, ctx_frame, steps: int = 50, guidance: float = 2.0,
-                 generator=None, x0=None):
-    """Euler integration from noise to a clip (B, T, 3, H, W); classifier-free guidance on fate."""
+                 generator=None, x0=None, clamp: bool = True):
+    """Euler integration from noise to a clip (B, T, C, H, W); classifier-free guidance on fate.
+
+    Clamped to [-1, 1] for images; clamp=False for latents.
+    """
     b, t = frame.shape
     device = frame.device
     x = x0 if x0 is not None else torch.randn(b, t, *ctx.shape[1:], device=device, generator=generator)
@@ -107,4 +111,4 @@ def sample_video(model, frame, fate, ctx, ctx_frame, steps: int = 50, guidance: 
         v = model(torch.cat([x, x]), s, frame2, both_fates, ctx2, cf2)
         v_c, v_u = v[:b], v[b:]
         x = x + (v_u + guidance * (v_c - v_u)) / steps
-    return x.clamp(-1, 1)
+    return x.clamp(-1, 1) if clamp else x

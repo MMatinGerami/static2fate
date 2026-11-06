@@ -88,6 +88,10 @@ Not a general cell tracker and not a production model: one plate, one cell line,
   channels, L1 + perceptual + KL, optional PatchGAN) and a reconstruction check on held-out
   cells (`scripts/32_reconstruct.py`) that bounds what generation in its latent can reach;
   training runs on Kaggle (`kaggle/ae/`).
+- The frame and video models in that latent (`scripts/33_encode_latents.py` to
+  `35_generate_latent.py`, `src/static2fate/latent.py`): the same UNets on 4 x 32 x 32 codes,
+  decoded to 128 px before scoring, so the scoring chain runs unchanged; Kaggle job
+  `kaggle/latent/`.
 
 ## Limitations
 

@@ -684,3 +684,21 @@ between real and reconstructed readouts 0.97 (nucleus area), 0.97 / 0.97 / 0.98 
 green, red), nucleus area ratio 1.00. Kaggle job kaggle/ae/ (5 h per T4: plain and with
 GAN from step 5,000) waits for the quota reset on Saturday 7 Nov. Then: the flow and video
 models on the latent (UNet with 4 + 4 input channels at 32 px, decode before scoring).
+
+## 2026-11-07
+
+00:10: Kaggle still refuses the autoencoder job ("Maximum weekly GPU quota of 30.00 hours
+reached" at 23:12 UTC Friday); a loop retries the push every 20 min until the reset. Meanwhile
+the latent flow models are written so both stages can run this Kaggle week:
+flow.UNet and video.VideoUNet take in_ch (4 for the code; the context has the same channels,
+so 8 input channels), sample and sample_video take clamp=False for latents;
+static2fate.latent loads an autoencoder and encodes and decodes in batches with latent_std;
+33_encode_latents.py writes train.npz and test.npz (cells, 13, 4, 32, 32) float16 plus an
+equivariance check (PSNR of decoding a rotated or flipped code against the rotated or
+flipped image, since augmentation happens on the code); 34_train_latent.py trains the frame
+or the video model on the codes (same pairs, clip, EMA and dropping as 13 and 28, copies the
+autoencoder next to the model); 35_generate_latent.py samples in the code and decodes to
+128 px in the samples and clips layout. 30_temporal.py now averages 128 px clips down to
+64 px before the readouts (they are defined at 64 px). Kaggle job kaggle/latent/: encode,
+then frame model on GPU 0 and video model from scratch on GPU 1, 6 h each, then 8 futures per
+held-out cell; takes the autoencoder from the static2fate-ae kernel (AE=ae128 or ae128_gan).

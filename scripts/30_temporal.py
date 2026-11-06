@@ -41,6 +41,18 @@ HOUR = [6, 8, 10, 12]
 MEASURES = ["pixel", *FEATURES]
 
 
+def to64(arr) -> np.ndarray:
+    """Average 128 px generated images down to the 64 px the readouts are defined at, in chunks."""
+    if arr.shape[-1] == 64:
+        return np.asarray(arr)
+    f = arr.shape[-1] // 64
+    out = np.empty((*arr.shape[:-2], 64, 64), np.uint8)
+    for i in range(0, len(arr), 32):
+        a = np.asarray(arr[i:i + 32]).astype(np.float32)
+        out[i:i + 32] = a.reshape(*a.shape[:-2], 64, f, 64, f).mean((-1, -3)).round().clip(0, 255)
+    return out
+
+
 def load_generated(d: Path):
     """(tracks, frames, array (cells, M, len(frames), 3, s, s)) for a video or a frame model.
 
@@ -49,7 +61,7 @@ def load_generated(d: Path):
     kind = "clips" if list(d.glob("clips*_tracks.npy")) else "samples"
     parts = sorted(d.glob(f"{kind}*_tracks.npy"))
     tracks = np.concatenate([np.load(p) for p in parts])
-    arr = np.concatenate([np.load(Path(str(p).replace("_tracks", ""))) for p in parts])
+    arr = np.concatenate([to64(np.load(Path(str(p).replace("_tracks", "")), mmap_mode="r")) for p in parts])
     if kind == "clips":
         return tracks, CLIP, arr
     return tracks, HOUR, arr.transpose(0, 2, 1, 3, 4, 5)  # (cells, 4, M, ...) -> (cells, M, 4, ...)

@@ -96,3 +96,13 @@ def test_video_model_loads_frame_model_weights():
         v = m(x, s, fr, fate, ctx, cf)
         ref = torch.stack([frame(x[:, i], s, fr[:, i], fate, ctx=ctx, ctx_frame=cf) for i in range(x.shape[1])], 1)
     assert torch.allclose(v, ref, atol=1e-5)  # starts exactly as the frame model
+
+
+def test_temporal_downsamples_128_px_clips_to_64():
+    temporal = importlib.import_module("30_temporal")
+    rng = np.random.default_rng(0)
+    x = rng.integers(0, 255, (2, 1, 3, 3, 128, 128), dtype=np.uint8)
+    y = temporal.to64(x)
+    assert y.shape == (2, 1, 3, 3, 64, 64) and y.dtype == np.uint8
+    assert abs(float(y[0, 0, 0, 0, 0, 0]) - x[0, 0, 0, 0, :2, :2].mean()) <= 0.5
+    assert temporal.to64(y) is not None and temporal.to64(y).shape[-1] == 64
