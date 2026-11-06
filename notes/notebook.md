@@ -702,3 +702,11 @@ autoencoder next to the model); 35_generate_latent.py samples in the code and de
 64 px before the readouts (they are defined at 64 px). Kaggle job kaggle/latent/: encode,
 then frame model on GPU 0 and video model from scratch on GPU 1, 6 h each, then 8 futures per
 held-out cell; takes the autoencoder from the static2fate-ae kernel (AE=ae128 or ae128_gan).
+
+00:50: movies (scripts/36_movies.py, results/movies/, now tracked): per fate group three clean
+held-out cells (track inside the field, no jump over 25 px; 57 / 15 / 8 candidates) with the
+real course at 128 and 64 px next to three clips of the video model started from the frame
+model, the generated columns showing the given 0 h frame until 3 h; a README strip with one
+cell per group and two clips (1.6 MB); and the central quarter of E-08_F0001 (19.53 nM) over
+13 frames with every labelled nucleus outlined by its fate (2.4 MB). GIFs from Pillow, 128
+colours, 400 ms per frame. To redo with another generator: uv run scripts/36_movies.py <dir>.

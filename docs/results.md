@@ -522,6 +522,10 @@ the per-cell skill for nucleus area in dying cells is lower (0.18 and 0.22 again
 0.48; the all-doses model keeps it at 0.48 and 0.34). So at this budget the clip model buys
 temporal consistency with some single-frame quality; the two are not yet had together.
 
+Movies of the real course next to the video model's clips, for three held-out cells per fate
+group, are in `results/movies/` (`scripts/36_movies.py`), with a whole held-out field at
+19.53 nM in which every tracked nucleus is outlined by its fate.
+
 ### Is the per-frame gap only training budget?
 
 Two more runs (`kaggle/video2/`, one T4 each, 9 h, batch 16 clips, seed 3, two-fate cells).

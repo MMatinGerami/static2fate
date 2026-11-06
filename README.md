@@ -14,6 +14,14 @@ known fate (S-BIAD2515, CC0); a fate-conditioned flow-matching model written fro
 generates both futures of the same cell; and a measured answer to "when": from a single frame,
 fate is not readable before about 2 h and largely readable by 4 h.
 
+![real course and generated futures](results/movies/strip.gif)
+
+*Held-out cells over 6 h (one per fate group, 128 px and the 64 px the generator works at)
+next to two futures drawn by the video model from the 0 h frame alone. Until 3 h the generated
+columns show the frame the model was given; from 3 h on they play its clip. More cells per
+group in `results/movies/`, and a whole field with every tracked nucleus outlined by its fate
+in `results/movies/field_E-08_F0001.gif` (`scripts/36_movies.py`).*
+
 ![two cells](results/figures/fig3_two_cells.png)
 
 *The same starting cells take two fates. Left: a cell that survives; right: a cell that condenses

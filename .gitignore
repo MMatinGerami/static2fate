@@ -6,6 +6,7 @@ results/*
 !results/figures/
 !results/qc/
 !results/tables/
+!results/movies/
 __pycache__/
 *.pyc
 .DS_Store

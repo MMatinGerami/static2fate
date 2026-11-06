@@ -106,3 +106,13 @@ def test_temporal_downsamples_128_px_clips_to_64():
     assert y.shape == (2, 1, 3, 3, 64, 64) and y.dtype == np.uint8
     assert abs(float(y[0, 0, 0, 0, 0, 0]) - x[0, 0, 0, 0, :2, :2].mean()) <= 0.5
     assert temporal.to64(y) is not None and temporal.to64(y).shape[-1] == 64
+
+
+def test_movie_helpers():
+    movies = importlib.import_module("36_movies")
+    assert movies.hhmm(0) == "0 h 00" and movies.hhmm(7) == "3 h 30" and movies.hhmm(12) == "6 h 00"
+    small = np.zeros((3, 64, 64), np.uint8)
+    assert movies.rgb(small).size == (movies.TILE, movies.TILE)
+    big = np.zeros((3, 128, 128), np.uint8)
+    big[0] = 255  # Hoechst goes to the blue channel
+    assert movies.rgb(big).getpixel((0, 0)) == (0, 0, 255)
