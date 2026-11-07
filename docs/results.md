@@ -608,24 +608,95 @@ dimmer Hoechst and a compressed range, and the "nucleus Hoechst" readout compare
 field-dependent scales. The fix is one pair of constants per channel for the whole plate (or
 from the control wells), which keeps the dose differences in intensity instead of removing
 them. It changes the crops and so everything trained or measured on them, so it is a rebuild
-rather than a patch and is left for the next round of models.
+rather than a patch; it is kept as a documented limitation, and the readouts that compare
+intensity across doses are read with it in mind.
+
+## What survives the autoencoder's latent, and what the probe reads
+
+Two autoencoders trained on Kaggle (`kaggle/ae/`, one T4 each, 5 h, batch 32, seed 3) on
+every frame of every training cell at all ten doses (5,860 cells, 76k images), held-out wells
+untouched. `ae128` has the L1 + VGG16 perceptual + KL loss (29.7k steps, 950k images seen);
+`ae128_gan` adds the PatchGAN hinge term (weight 0.1) from step 5,000 (25.6k steps). The
+training L1 of `ae128` flattened after 3 h (0.0275 at 3 h, 0.028 at 5 h) while the perceptual
+term kept falling slowly (0.112 to 0.102); the adversarial run never caught up with the plain
+one on either (0.033 and 0.136 at the end). The 816 held-out cells of the two-fate doses at
+frames 6, 8, 10 and 12, encoded with the posterior mean and decoded
+(`scripts/32_reconstruct.py`, `results/tables/autoencoder_*.csv`):
+
+| held-out frames 6 to 12 at 128 px (3,264 images) | ae128 | ae128 with GAN | 3 min smoke run |
+|---|---|---|---|
+| PSNR (dB) | 33.3 | 31.1 | 28.9 |
+| L1 | 0.028 | 0.035 | 0.048 |
+| VGG16 perceptual distance | 0.099 | 0.139 | 0.22 |
+| Spearman between real and reconstructed readouts (area / Hoechst / green / red) | 0.99 / 0.99 / 0.99 / 0.99 | 0.98 / 0.98 / 0.99 / 0.99 | 0.97 / 0.97 / 0.97 / 0.98 |
+| nucleus area, reconstructed over real (median) | 1.00 | 0.98 | 1.00 |
+
+Condensed nuclei reconstruct best (34.3 dB) and their area least precisely (Spearman 0.97
+against 0.99 for survivors): the smallest nuclei lose the most to the factor 4. The
+adversarial term bought nothing at this budget and cost fidelity on every row, so the latent
+models use `ae128`.
+
+![reconstruction](../results/figures/fig16_recon_ae128.png)
+
+The reconstruction scored as if it were a model (tag `_recon`, one "sample" per frame), next
+to the 8 h frame model from the sections above:
+
+| at 6 h | ae128 | ae128 with GAN | frame model, 64 px, 8 h |
+|---|---|---|---|
+| probe real vs generated at 64 px, AUROC (DINOv2 / handcrafted / readouts) | 0.995 / 0.55 / 0.54 | 0.983 / 0.57 / 0.56 | 0.997 / 0.58 / 0.54 |
+| at 128 px (DINOv2 / handcrafted) | 0.999 / 0.67 | 0.998 / 0.61 | 1.000 / 0.75 |
+| DINOv2 energy score minus a random real cell, 64 px (survive / condensed / AnnexinV only) | -27.6 / -28.6 / -28.2 | -27.0 / -28.3 / -28.7 | 0.68 / 0.97 / 1.40 |
+
+The DINOv2 probe tells a 33 dB reconstruction from the cell it came from with AUROC 0.995, as
+surely as it tells the generated futures (0.997). The energy score says the opposite about
+the two: the reconstruction is 28 units closer to the cell's own future than a random real
+cell is, the generated future about one unit further away. So the probe is not measuring how
+far a generated cell is from real cells; it is reading something every decoded image shares.
+`scripts/38_probe_sensitivity.py` writes the real held-out frames themselves under small,
+known changes, in the samples layout, and the chain scores them (tag `_probe`):
+
+| variant of the real held-out frame | DINOv2, 64 / 128 px | handcrafted, 64 / 128 px | readouts |
+|---|---|---|---|
+| the frame itself | 0.50 / 0.50 | 0.50 / 0.50 | 0.50 |
+| Gaussian blur, 0.5 px | 0.87 / 0.91 | 0.54 / 0.62 | 0.50 |
+| Gaussian blur, 1 px | 1.000 / 0.99 | 0.64 / 0.74 | 0.51 |
+| ae128 reconstruction | 0.995 / 0.999 | 0.55 / 0.67 | 0.54 |
+| ae128 reconstruction + noise at the residual's level (6.2 / 4.8 / 5.7 grey levels) | 0.995 / 0.998 | 0.55 / 0.57 | 0.53 |
+
+A half-pixel blur, invisible by eye, is detected at 0.87, a one-pixel blur without error, and
+putting the real image's noise energy back onto the reconstruction changes nothing: the probe
+reads the high-frequency texture pattern, not the noise level or anything a readout sees.
+Above about 0.99 it is saturated, so it cannot rank the generative models, the
+reconstruction or a 1 px blur against each other, and the "AUROC above 0.99" of every model
+in the sections above means "sharper than a one-pixel blur would be" rather than "far from
+real". The handcrafted probe at 128 px does rank them: the generated frames (0.75) sit where
+a 1 px blur of the real frame sits (0.74), the reconstruction (0.67) between that and a
+half-pixel blur (0.62). What the generative models lack in texture is therefore about one
+pixel of sharpness at 128 px; what they lack in content is the energy-score gap (a random
+real cell is as close to the cell's future as the generated one, while the reconstruction is
+28 units closer), which is the identity question of the earlier sections, not realism. From
+here on the DINOv2 probe is reported but read as saturated, and models are compared on the
+handcrafted probe at 128 px, the energy scores and the readout measures.
+
+The latent models (`kaggle/latent/`, frame model and video model from scratch on 4 x 32 x 32
+codes of `ae128`, 6 h each on one T4, 8 futures per held-out cell decoded to 128 px) are
+running; their ceiling under this chain is the `ae128` column above.
 
 ## Next
 
 - Invert the context frame under the context model, so it keeps the cell's identity and uses
   its state.
-- Realism is the bottleneck: a frozen encoder separates generated from real without error,
-  and texture, not the measurements, is what makes generated futures unrecognisable. Eight
-  more hours of training and a VGG16 perceptual term changed nothing (the loss had
-  flattened), and neither did four times the parameters or three times the cells (the wide
-  models produce nearly the same image from the same noise). Next is generation in the
-  latent space of an autoencoder trained on these cells, where texture is encoded rather
-  than regressed.
+- Realism: the DINOv2 probe is saturated (it tells a 33 dB reconstruction or a 1 px blur of
+  the real frame from the real frame without error), so the open gap is the one the
+  handcrafted probe at 128 px sees, about a pixel of sharpness, plus the identity gap of the
+  energy score. Eight more hours of training, a VGG16 perceptual term, four times the
+  parameters and three times the cells changed none of it; the latent models on `ae128` are
+  the next attempt, with the reconstruction's scores as their ceiling.
 - Link daughters to mothers in the tracker so dividing cells get a fate too; do cells that
   divide under drug die more or less often?
 - Get the colour of apoptosis right. The per-field scaling is part of it (Hoechst white point
-  1.38x higher at 39 nM than at 4.88 nM, fig 17): rebuild the crops with plate-wide constants
-  before the next round of models.
+  1.38x higher at 39 nM than at 4.88 nM, fig 17); it stays a documented limitation, and a
+  plate-wide scaling is the fix if the crops are ever rebuilt.
 - The video model started from the frame model has the frame model's images and real cells'
   motion between them, so it is now the default generator. Two things to fix in it: it
   treats AnnexinV-only dying cells like condensing ones (reversals 0.84 against 1.07), and

@@ -720,3 +720,25 @@ point varies 3.4x between fields but not with death; 561 falls slightly with dos
 in docs/results.md and the README limitations. The fix (plate-wide constants) means rebuilding
 the crops, re-exporting the Kaggle dataset and retraining; proposed for the next round, not
 done now, since the autoencoder job on the current crops is queued.
+
+10:30: the autoencoder kernel finished (5 h per T4, 06:43; the waiter matched a lower-case
+status and never downloaded, fetched by hand). ae128: 29.7k steps, held-out PSNR 33.3 dB, L1
+0.028, perceptual 0.099, readouts Spearman 0.99 all four, area ratio 1.00; ae128_gan (hinge
+term 0.1 from step 5,000): 31.1 dB, 0.035, 0.139, worse on every row, so ae128 goes
+downstream. Outputs in results/kaggle/ae128 and ae128_gan (model, two snapshots, train_log,
+recon/). Latent job pushed at 10:30 (static2fate-latent v1, AE=ae128, 6 h per model); a
+case-insensitive waiter downloads it to the scratchpad.
+
+11:10: reconstructions scored with the chain (tag _recon): the DINOv2 probe tells the 33 dB
+reconstruction from the real cell at 0.995 (0.999 at 128 px), the same as the generated
+futures (0.997), while the energy score puts the reconstruction 28 units closer to the cell's
+own future than a random real cell and the generated future one unit further. So the probe
+was not measuring distance from real. scripts/38_probe_sensitivity.py scores the real frames
+under known changes (tag _probe): the frame itself 0.50; Gaussian blur 0.5 px 0.87 / 0.91
+(64 / 128 px); blur 1 px 1.000 / 0.99; reconstruction + noise at the residual's level 0.995
+(the noise energy is not what it reads). Handcrafted probe at 128 px: blur 1 px 0.74,
+generated frames 0.75, reconstruction 0.67, blur 0.5 px 0.62. Conclusion written into
+docs/results.md and the README table: the DINOv2 AUROC is saturated above 0.99 on sub-pixel
+texture; models are compared from now on with the handcrafted probe at 128 px, the energy
+scores and the readouts. Decision (Matin): the per-field scaling stays a documented
+limitation; no crop rebuild.

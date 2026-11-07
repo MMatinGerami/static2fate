@@ -64,3 +64,18 @@ def test_reconstruct_keeps_layout_and_range():
     out = rec.reconstruct(ae, x, "cpu", batch=2)
     assert out.shape == x.shape and out.abs().max() <= 1
     assert rec.FUTURE == [6, 8, 10, 12]
+
+
+def test_probe_sensitivity_variants_keep_layout():
+    ps = importlib.import_module("38_probe_sensitivity")
+    rng = np.random.default_rng(0)
+    real = rng.integers(0, 255, (3, 4, 3, 16, 16), dtype=np.uint8)
+    recon = np.clip(real.astype(np.int16) + rng.integers(-6, 7, real.shape), 0, 255).astype(np.uint8)
+    v = ps.variants(real, recon)
+    assert set(v) == {"copy", "blur05", "blur1", "ae128_noise"}
+    assert all(a.shape == real.shape and a.dtype == np.uint8 for a in v.values())
+    assert (v["copy"] == real).all()
+    assert v["blur1"].astype(float).std() < v["blur05"].astype(float).std() < real.astype(float).std()
+    std = ps.residual_std(real, recon)
+    assert std.shape == (3,) and (std > 2).all() and (std < 6).all()
+    assert abs((v["ae128_noise"].astype(float) - recon).std() - std.mean()) < 1.5

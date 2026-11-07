@@ -36,7 +36,8 @@ its nucleus and dies. Frames every 30 min, AnnexinV at 6 h.*
 | Does the generated future follow the right cell? | For 72% of cells that die with a condensed nucleus, the model's 6 h prediction is closer to the real cell than its own 0 h frame is (95% CI 54 to 80%); per-cell nucleus-size predictions correlate with the real future as well as copying does (Spearman 0.50) and better for AnnexinV-only dying cells (0.48 against 0.23) | [docs/results.md](docs/results.md#starting-from-a-real-cell) |
 | Does more compute help? | Eight times the training steps or twice the resolution moves the readout scores by less than 0.1; the images do look more real (DINOv2 distance to a random real cell 0.7 to 1.4 against 3.0 to 5.4). Beyond that nothing moves: 8 more hours, a VGG16 perceptual term, four times the parameters or three times the cells all give the same scores, and from the same noise the wide models draw nearly the same image as the small one (pixel difference 0.03 against 0.16 between two samples) | fig 11, fig 12b, [docs/results.md](docs/results.md#training-for-realism) |
 | Is the predicted future one trajectory? | Not frame by frame: independent draws make the nucleus jump 150 to 190 px between hours (real cells 100 to 120) and change direction at random. A video model that draws the 3 to 6 h clip jointly (temporal attention after every UNet stage) matches real cells on both (98 to 105 px; 0.74 reversals for condensing cells against 0.65 real). Started from the trained frame model, it also matches the frame model on every per-frame score, so the two are had together | fig 15, [docs/results.md](docs/results.md#the-future-as-one-clip-not-one-frame-at-a-time) |
-| What is still wrong | A linear probe tells generated from real with AUROC above 0.99; generated dying cytoplasm turns green where real dying cells end red and blue; the generated future is not recognisable as this cell's in DINOv2 space | fig 13 |
+| What does the realism probe measure? | Less than it seemed. The DINOv2 probe also tells a 33 dB autoencoder reconstruction from the real cell (AUROC 0.995) and a 1 px Gaussian blur of the real frame from it (1.000), while a blur of half a pixel scores 0.87 and matched noise changes nothing: above 0.99 it is saturated on sub-pixel texture. The handcrafted probe at 128 px ranks them: generated frames 0.75, a 1 px blur 0.74, the reconstruction 0.67 | [docs/results.md](docs/results.md#what-survives-the-autoencoders-latent-and-what-the-probe-reads), fig 16 |
+| What is still wrong | Generated frames are about a pixel of sharpness short of real ones; generated dying cytoplasm turns green where real dying cells end red and blue; the generated future is not recognisable as this cell's in DINOv2 space (as far from it as a random real cell, where the reconstruction is 28 units closer) | fig 13 |
 
 Dose matters: both fates occur in one band, 9.8 to 39 nM. Static2Dynamic's ChromaLive model
 ([Boyer et al., 2026](https://doi.org/10.64898/2026.05.18.725860)) was trained at 78 and 156 nM,
@@ -93,9 +94,10 @@ Not a general cell tracker and not a production model: one plate, one cell line,
   clip, started from the frame model, with the temporal consistency measurements that
   motivate it (`scripts/30_temporal.py`).
 - An autoencoder for the 128 px crops (`src/static2fate/autoencoder.py`, factor 4, four latent
-  channels, L1 + perceptual + KL, optional PatchGAN) and a reconstruction check on held-out
-  cells (`scripts/32_reconstruct.py`) that bounds what generation in its latent can reach;
-  training runs on Kaggle (`kaggle/ae/`).
+  channels, L1 + perceptual + KL, optional PatchGAN), trained 5 h on Kaggle (`kaggle/ae/`):
+  held-out cells come back at 33 dB with readouts that correlate 0.99 with their own
+  (`scripts/32_reconstruct.py`), which bounds what generation in its latent can reach. The
+  check of what the real-vs-generated probe reacts to (`scripts/38_probe_sensitivity.py`).
 - The frame and video models in that latent (`scripts/33_encode_latents.py` to
   `35_generate_latent.py`, `src/static2fate/latent.py`): the same UNets on 4 x 32 x 32 codes,
   decoded to 128 px before scoring, so the scoring chain runs unchanged; Kaggle job
@@ -106,7 +108,7 @@ Not a general cell tracker and not a production model: one plate, one cell line,
 - One plate; the label fixes a 10% positive rate in controls.
 - The crops are scaled per field, and the Hoechst white point follows the death rate across
   doses (1.38x higher at 39 nM than at 4.88 nM), so intensity is on a field-dependent scale.
-  Within a dose the effect is weak; a plate-wide scaling is the fix for the next rebuild
+  Within a dose the effect is weak; a plate-wide scaling would be the fix if the crops were rebuilt
   ([docs/results.md](docs/results.md#does-the-per-field-scaling-of-the-crops-carry-the-dose)).
 - Tracking keeps a quarter to half of cells, fewer in dense regions, and almost none that divide,
   so every model is trained on cells that did not divide during the movie.
