@@ -116,3 +116,16 @@ def test_movie_helpers():
     big = np.zeros((3, 128, 128), np.uint8)
     big[0] = 255  # Hoechst goes to the blue channel
     assert movies.rgb(big).getpixel((0, 0)) == (0, 0, 255)
+
+
+def test_field_constants_from_tiffs(tmp_path, monkeypatch):
+    import tifffile
+
+    scaling = importlib.import_module("37_field_scaling")
+    rng = np.random.default_rng(0)
+    for t in range(1, 14):
+        tifffile.imwrite(tmp_path / f"W-01_F0001_T{t:04d}_Z0001_C01.tif", rng.integers(100, 1100, (64, 64), dtype=np.uint16))
+    monkeypatch.setattr(scaling, "IMAGES", tmp_path)
+    k = scaling.field_constants("W-01_F0001", {"hoechst": 1})
+    assert set(k) == {"hoechst_lo", "hoechst_hi"} and 100 <= k["hoechst_lo"] < 150 and 1050 < k["hoechst_hi"] <= 1100
+    assert scaling.field_constants("W-01_F0002", {"hoechst": 1}) == {}  # missing frames

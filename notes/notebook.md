@@ -710,3 +710,13 @@ model, the generated columns showing the given 0 h frame until 3 h; a README str
 cell per group and two clips (1.6 MB); and the central quarter of E-08_F0001 (19.53 nM) over
 13 frames with every labelled nucleus outlined by its fate (2.4 MB). GIFs from Pillow, 128
 colours, 400 ms per frame. To redo with another generator: uv run scripts/36_movies.py <dir>.
+
+01:05: per-field scaling check (scripts/37_field_scaling.py, 10 s for 89 fields on a pixel
+subsample). Hoechst white point 280 to 693 across fields, Spearman 0.73 with the field's death
+fraction and 0.72 with dose; within dose only 0.23. At the two-fate doses 357 (4.88 nM) to
+493 (39.06 nM): the same nucleus 28% dimmer at the high dose from the scaling alone, and
+field brightness correlated with fate through dose (0.68 over 35 fields). ChromaLIVE 488 white
+point varies 3.4x between fields but not with death; 561 falls slightly with dose. Written up
+in docs/results.md and the README limitations. The fix (plate-wide constants) means rebuilding
+the crops, re-exporting the Kaggle dataset and retraining; proposed for the next round, not
+done now, since the autoencoder job on the current crops is queued.

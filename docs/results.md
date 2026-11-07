@@ -575,6 +575,41 @@ images with real cells' motion between them.
 
 ![examples](../results/figures/fig14b_examples_video2.png)
 
+## Does the per-field scaling of the crops carry the dose?
+
+The crops are scaled to uint8 with one pair of percentiles (0.5 and 99.8) per field and
+channel over all 13 frames (`scripts/05_crops.py`), so a cell that brightens over time stays
+brighter in its patch. The open question was whether the white point of a field is set by its
+dying cells, so that a field with many of them is compressed and its survivors look dimmer
+than survivors in a quiet field. `scripts/37_field_scaling.py` recomputes the constants for
+the 89 labelled fields (`results/tables/field_scaling.csv`, fig 17).
+
+| Channel | White point, min to max over fields | Spearman with the field's death fraction, all fields | Within dose, mean over doses | With dose |
+|---|---|---|---|---|
+| Hoechst | 280 to 693 (2.5x) | 0.73 | 0.23 | 0.72 |
+| ChromaLIVE 488 | 696 to 2,379 (3.4x) | 0.39 | 0.15 | 0.41 |
+| ChromaLIVE 561 | 730 to 1,190 (1.6x) | -0.33 | -0.01 | -0.44 |
+
+For Hoechst the answer is yes, across doses: fields with under 40% of cells dying have white
+points of 340 to 370, fields above 70% have 460 to 690, because condensed nuclei are the
+brightest pixels of a field. At the two-fate doses the median white point goes from 357 at
+4.88 nM to 493 at 39.06 nM (1.38x), so the same normal nucleus is drawn 28% dimmer at the
+high dose by the scaling alone, and in the training set of the flow models (where the death
+rate goes from 0.19 to 0.74 across the four doses) field brightness is correlated with fate
+through dose (Spearman 0.68 over the 35 fields). The ChromaLIVE 488 white point varies more
+between fields but at random with respect to death, and the 561 white point falls slightly
+with dose.
+
+Within a dose the link is weak (Hoechst 0.23 on average, 0.38 at 19.53 nM over nine fields),
+which fits the earlier result that fate is not readable at 0 min within 19.53 nM with fields
+held out (AUROC 0.51): the field's scaling is not a usable fate cue there. What it does
+distort is the colour of apoptosis across doses: generated dying cells at high dose inherit a
+dimmer Hoechst and a compressed range, and the "nucleus Hoechst" readout compares cells on
+field-dependent scales. The fix is one pair of constants per channel for the whole plate (or
+from the control wells), which keeps the dose differences in intensity instead of removing
+them. It changes the crops and so everything trained or measured on them, so it is a rebuild
+rather than a patch and is left for the next round of models.
+
 ## Next
 
 - Invert the context frame under the context model, so it keeps the cell's identity and uses
@@ -588,8 +623,9 @@ images with real cells' motion between them.
   than regressed.
 - Link daughters to mothers in the tracker so dividing cells get a fate too; do cells that
   divide under drug die more or less often?
-- Get the colour of apoptosis right; check whether the ChromaLIVE channel scaling per field is
-  part of the problem.
+- Get the colour of apoptosis right. The per-field scaling is part of it (Hoechst white point
+  1.38x higher at 39 nM than at 4.88 nM, fig 17): rebuild the crops with plate-wide constants
+  before the next round of models.
 - The video model started from the frame model has the frame model's images and real cells'
   motion between them, so it is now the default generator. Two things to fix in it: it
   treats AnnexinV-only dying cells like condensing ones (reversals 0.84 against 1.07), and

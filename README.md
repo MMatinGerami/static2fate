@@ -104,6 +104,10 @@ Not a general cell tracker and not a production model: one plate, one cell line,
 ## Limitations
 
 - One plate; the label fixes a 10% positive rate in controls.
+- The crops are scaled per field, and the Hoechst white point follows the death rate across
+  doses (1.38x higher at 39 nM than at 4.88 nM), so intensity is on a field-dependent scale.
+  Within a dose the effect is weak; a plate-wide scaling is the fix for the next rebuild
+  ([docs/results.md](docs/results.md#does-the-per-field-scaling-of-the-crops-carry-the-dose)).
 - Tracking keeps a quarter to half of cells, fewer in dense regions, and almost none that divide,
   so every model is trained on cells that did not divide during the movie.
 - At most 2.1% of "dying" labels may be mitotic cells caught rounding up.
