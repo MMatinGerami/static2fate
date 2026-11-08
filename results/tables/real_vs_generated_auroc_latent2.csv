@@ -1,0 +1,36 @@
+model,space,res,auroc,n
+"64 px, 8 h",readouts,64,0.5358651119761629,6528
+"64 px, 8 h",handcrafted,64,0.57967770058391,6528
+"64 px, 8 h",dinov2,64,0.9965255250384468,6528
+"video, from frame model",readouts,64,0.5461368524125336,6528
+"video, from frame model",handcrafted,64,0.586747829110198,6528
+"video, from frame model",dinov2,64,0.9971623932201557,6528
+ae128,readouts,64,0.5367296006944444,6528
+ae128,handcrafted,64,0.5544607242406767,6528
+ae128,dinov2,64,0.995422903000048,6528
+latent frame,readouts,64,0.5494816071342753,6528
+latent frame,handcrafted,64,0.5680782519043157,6528
+latent frame,dinov2,64,0.998953227124183,6528
+latent video,readouts,64,0.5514522847282295,6528
+latent video,handcrafted,64,0.5805984139213283,6528
+latent video,dinov2,64,0.9989242231052959,6528
+"latent frame, 12 h",readouts,64,0.5746426404507882,6528
+"latent frame, 12 h",handcrafted,64,0.5861777921953094,6528
+"latent frame, 12 h",dinov2,64,0.9988237884767878,6528
+"latent video, from latent frame",readouts,64,0.5797641494557382,6528
+"latent video, from latent frame",handcrafted,64,0.5998594290657439,6528
+"latent video, from latent frame",dinov2,64,0.998759773134131,6528
+"64 px, 8 h",handcrafted,128,0.7480999082384179,6528
+"64 px, 8 h",dinov2,128,0.9999935233744233,6528
+"video, from frame model",handcrafted,128,0.7530799639862072,6528
+"video, from frame model",dinov2,128,0.9999980288530853,6528
+ae128,handcrafted,128,0.6739445165321032,6528
+ae128,dinov2,128,0.9991736201220683,6528
+latent frame,handcrafted,128,0.6396018808871587,6528
+latent frame,dinov2,128,0.999923876183439,6528
+latent video,handcrafted,128,0.6353243982182334,6528
+latent video,dinov2,128,0.9999136449923107,6528
+"latent frame, 12 h",handcrafted,128,0.660794901600346,6528
+"latent frame, 12 h",dinov2,128,0.9999168363730296,6528
+"latent video, from latent frame",handcrafted,128,0.684467531268022,6528
+"latent video, from latent frame",dinov2,128,0.9999528802023261,6528

@@ -124,7 +124,7 @@ def figure(tab: pd.DataFrame, models: list[str]) -> None:
     for ax, g in zip(axes, GROUPS):
         for k, name in enumerate(models):
             s = t[(t.model == name) & (t.group == g)].set_index("mask").loc[list(MASKS)]
-            x = np.arange(len(MASKS)) + (k - (len(models) - 1) / 2) * 0.15
+            x = np.arange(len(MASKS)) + (k - (len(models) - 1) / 2) * min(0.15, 0.8 / len(models))
             ax.errorbar(x, s.estimate, yerr=[s.estimate - s.ci_low, s.ci_high - s.estimate], fmt="o",
                         ms=4, capsize=2, label=name)
         ax.axhline(0, color="grey", lw=0.8)

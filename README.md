@@ -37,7 +37,7 @@ its nucleus and dies. Frames every 30 min, AnnexinV at 6 h.*
 | Does more compute help? | Eight times the training steps or twice the resolution moves the readout scores by less than 0.1; the images do look more real (DINOv2 distance to a random real cell 0.7 to 1.4 against 3.0 to 5.4). Beyond that nothing moves: 8 more hours, a VGG16 perceptual term, four times the parameters or three times the cells all give the same scores, and from the same noise the wide models draw nearly the same image as the small one (pixel difference 0.03 against 0.16 between two samples) | fig 11, fig 12b, [docs/results.md](docs/results.md#training-for-realism) |
 | Is the predicted future one trajectory? | Not frame by frame: independent draws make the nucleus jump 150 to 190 px between hours (real cells 100 to 120) and change direction at random. A video model that draws the 3 to 6 h clip jointly (temporal attention after every UNet stage) matches real cells on both (98 to 105 px; 0.74 reversals for condensing cells against 0.65 real). Started from the trained frame model, it also matches the frame model on every per-frame score, so the two are had together | fig 15, [docs/results.md](docs/results.md#the-future-as-one-clip-not-one-frame-at-a-time) |
 | What does the realism probe measure? | Less than it seemed. The DINOv2 probe also tells a 33 dB autoencoder reconstruction from the real cell (AUROC 0.995) and a 1 px Gaussian blur of the real frame from it (1.000), while a blur of half a pixel scores 0.87 and matched noise changes nothing: above 0.99 it is saturated on sub-pixel texture. The handcrafted probe at 128 px ranks them: generated frames 0.75, a 1 px blur 0.74, the reconstruction 0.67 | [docs/results.md](docs/results.md#what-survives-the-autoencoders-latent-and-what-the-probe-reads), fig 16 |
-| Does generating in a latent help? | For texture, yes: the frame and video models on the 4 x 32 x 32 codes of the autoencoder bring the handcrafted probe at 128 px from 0.75 to 0.64, past the reconstruction's own 0.67, where no pixel-space change had moved it. For content, no: the generated future is as far from the cell's own in DINOv2 space as before (identity rank 0.44), and the latent frame model's nucleus-area skill in condensing cells drops (0.17 against 0.35); the latent video model recovers it (0.38) and keeps real cells' smoothness. Masking the crops to the cell before DINOv2 reverses the order: the latent models get the cell right (at the nucleus, as close to its own future as a random same-fate cell) and invent the surroundings, the pixel model keeps the surroundings and blurs the cell | [docs/results.md](docs/results.md#generating-in-the-latent), fig 14b, fig 15, fig 18 |
+| Does generating in a latent help? | For texture, yes: the frame and video models on the 4 x 32 x 32 codes of the autoencoder bring the handcrafted probe at 128 px from 0.75 to 0.64, past the reconstruction's own 0.67, where no pixel-space change had moved it. For content, no: the generated future is as far from the cell's own in DINOv2 space as before (identity rank 0.44), and the latent frame model's nucleus-area skill in condensing cells drops (0.17 against 0.35); the latent video model recovers it (0.38) and keeps real cells' smoothness. Masking the crops to the cell before DINOv2 reverses the order: the latent models get the cell right (at the nucleus, as close to its own future as a random same-fate cell) and invent the surroundings, the pixel model keeps the surroundings and blurs the cell. Twice the steps for the latent frame model and a warm start of the latent video model from it change none of this, so the gap is not training budget | [docs/results.md](docs/results.md#generating-in-the-latent), fig 14b, fig 15, fig 18 |
 | What is still wrong | No model yet keeps the cell's surroundings and draws this cell in the middle: the latent models do the second, the pixel models the first (fig 18); generated dying cytoplasm turns green where real dying cells end red and blue; the generated future is not recognisable as this cell's in DINOv2 space (as far from it as a random real cell, where the reconstruction is 28 units closer) | fig 13 |
 
 Dose matters: both fates occur in one band, 9.8 to 39 nM. Static2Dynamic's ChromaLive model
@@ -54,7 +54,7 @@ One well is about 1.5 GB and runs on a laptop; all 30 wells are 45 GB.
 
 ```bash
 uv sync
-scripts/00_download_subset.sh C-06      # one well of S-BIAD2515 (CC0); no argument = all 30 wells
+scripts/00_download_subset.sh C-08      # one well of S-BIAD2515 (CC0), 19.53 nM, both fates; no argument = all 30 wells
 scripts/run_all.sh                       # segmentation, tracking, fate labels, single-frame baselines
 ```
 
@@ -66,8 +66,8 @@ uv run scripts/13_train_ctx.py --minutes 60      # same model given an earlier f
 uv run pytest
 ```
 
-On a GPU: `uv run scripts/export_kaggle.py <user>` writes the 2,735 cells the models use (1.7 GB);
-`kaggle/train_kaggle.py` trains from it on Kaggle.
+On a GPU: `uv run scripts/export_kaggle.py <user>` writes all 6,676 labelled cells at the ten doses
+(4.3 GB; the two-fate models select their 2,735 cells from it); the scripts in `kaggle/` train from it on Kaggle.
 
 ## When to use this
 
@@ -102,7 +102,8 @@ Not a general cell tracker and not a production model: one plate, one cell line,
 - The frame and video models in that latent (`scripts/33_encode_latents.py` to
   `35_generate_latent.py`, `src/static2fate/latent.py`): the same UNets on 4 x 32 x 32 codes,
   decoded to 128 px before scoring, so the scoring chain runs unchanged; trained 6 h each on
-  Kaggle (`kaggle/latent/`), scored against the pixel models and the reconstruction ceiling.
+  Kaggle (`kaggle/latent/`), scored against the pixel models and the reconstruction ceiling,
+  then continued and warm-started for 6 h more (`kaggle/latent2/`) to rule out training budget.
 
 ## Limitations
 

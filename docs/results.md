@@ -11,9 +11,11 @@ for 6 h and then stained for AnnexinV, so every cell has a video and a known fat
 ([S-BIAD2515](https://www.ebi.ac.uk/biostudies/BioImages/studies/S-BIAD2515), Lippincott et al.,
 Way lab, CC0).
 
-Status (October 2026): data pipeline, baselines, a fate-conditioned generative model, a
-version that also sees an earlier frame of the cell, and GPU runs showing that more training
-or resolution does not change the picture.
+Status (8 November 2026): data pipeline, baselines, a fate-conditioned generative model, a
+version that also sees an earlier frame of the cell, GPU runs showing that more training,
+resolution, width or cells do not change the readout scores, a video model with temporal
+attention, a KL autoencoder, and latent frame and video models scored on the whole crop and
+masked to the cell.
 
 ## Findings so far
 
@@ -726,9 +728,8 @@ hour in every group), nucleus-area change closer to real than the pixel video's 
 / 114) and the same reversal counts (1.11 / 0.89 / 0.78; real 1.11 / 1.07 / 0.65). It also has
 the best dynamics score of any model for condensing cells (-0.43, CI -0.57 to -0.16) and
 recovers the nucleus-area skill the latent frame model lost (0.38). Its DINOv2 distance is
-the highest of the four. The next run is the recipe that worked in pixel space, the latent
-video model started from the latent frame model (`kaggle/latent2/`, with the latent frame
-model continued for 6 h more on the other GPU as a direct test of whether steps buy content).
+the highest of the four. The two cheap explanations, too few steps and a cold start, are
+tested below ("Do more steps or a warm start buy content?"); neither holds.
 
 ![temporal](../results/figures/fig15_temporal_latent.png)
 
@@ -745,6 +746,8 @@ score (`results/tables/energy_masked.csv`, fig 18).
 | frame model, 64 px, 8 h | 0.73 / 0.70 / 1.26 | 1.32 / 2.09 / 2.81 | 2.10 / 0.57 / 2.76 |
 | latent frame | 1.42 / 1.28 / 1.61 | 0.69 / 1.33 / 1.61 | -0.07 / 1.03 / 0.72 |
 | latent video | 1.58 / 1.49 / 1.83 | 0.72 / 0.90 / 1.40 | -0.23 / -0.24 / 0.71 |
+| latent frame, 12 h | 1.61 / 1.56 / 1.62 | 0.93 / 1.93 / 2.03 | 0.11 / 2.21 / 1.17 |
+| latent video, from latent frame | 1.49 / 1.54 / 1.37 | 0.88 / 1.68 / 1.97 | 0.07 / 1.35 / 1.04 |
 | ae128 reconstruction | -27.6 / -28.7 / -28.3 | -26.2 / -29.5 / -28.9 | -24.3 / -31.0 / -29.6 |
 
 The order reverses. On the whole crop the pixel model is the closest to the cell's own
@@ -757,9 +760,48 @@ the neighbourhood, and DINOv2 on a whole crop counts the neighbourhood. The "ide
 earlier sections could not find in the generated future is partly there in the latent
 models, in the cell itself, hidden by what is around it. From here the masked score is
 reported next to the plain one, and the next model is judged on both: keeping the context's
-surroundings and drawing this cell in the middle.
+surroundings and drawing this cell in the middle. The second-round models in the last two
+rows are described next.
 
 ![masked](../results/figures/fig18_energy_masked.png)
+
+### Do more steps or a warm start buy content?
+
+The second latent round (`kaggle/latent2/`, one T4 each, 6 h, seed 4) tests the two cheap
+explanations of the content gap. The latent frame model was continued for 6 h more from its
+own weights (464k steps in all, 30 M images, the training loss flat at 1.31 over the second
+half), and the latent video model was started from the latent frame model's weights, the
+recipe that worked in pixel space, instead of from scratch (84k clip steps against 89k). Same
+chain (tag `_latent2`), same cells, next to the first-round models:
+
+| at 6 h | latent frame, 6 h | latent frame, 12 h | latent video, from scratch | latent video, from latent frame |
+|---|---|---|---|---|
+| probe real vs generated, handcrafted at 128 px (lower is better) | 0.64 | 0.66 | 0.64 | 0.68 |
+| handcrafted at 64 px / readouts | 0.57 / 0.55 | 0.59 / 0.58 | 0.58 / 0.55 | 0.60 / 0.58 |
+| DINOv2 energy score minus a random real cell (survive / condensed / AnnexinV only) | 1.40 / 1.75 / 1.68 | 1.51 / 1.75 / 1.59 | 1.60 / 1.76 / 1.77 | 1.42 / 1.57 / 1.48 |
+| the same, crops masked to the nucleus (same order) | -0.07 / 1.03 / 0.72 | 0.11 / 2.21 / 1.17 | -0.23 / -0.24 / 0.71 | 0.07 / 1.35 / 1.04 |
+| dynamics, readouts minus "copy + typical change" (same order) | -0.04 / -0.06 / +0.04 | -0.01 / +0.11 / +0.13 | -0.08 / -0.43 / -0.01 | 0.00 / -0.01 / +0.05 |
+| identity, rank of own future in DINOv2 (same order) | 0.44 / 0.42 / 0.44 | 0.44 / 0.42 / 0.44 | 0.45 / 0.43 / 0.47 | 0.43 / 0.42 / 0.43 |
+| per-cell skill, nucleus area (same order) | 0.50 / 0.17 / 0.38 | 0.52 / 0.21 / 0.39 | 0.53 / 0.38 / 0.34 | 0.50 / 0.20 / 0.35 |
+
+Neither buys content. Twice the steps leave the DINOv2 distance, the identity rank and the
+readout skills where they were (every interval overlaps) and move the realism probes the
+wrong way (handcrafted at 128 px 0.64 to 0.66, readouts 0.55 to 0.58); masked to the nucleus
+the continued model is further from the cell's own future in every group (condensed 2.21,
+CI 1.44 to 3.82, against 1.03, CI 0.46 to 2.12). The warm start, which in pixel space gave
+the video model the frame model's images and real cells' motion, does nothing of the kind
+here: the latent video model from scratch already had both, and the one started from the
+frame model inherits that model's weak nucleus-area skill in condensing cells (0.20, CI
+-0.10 to 0.42, against 0.38, CI 0.19 to 0.49) and loses the condensed dynamics score (-0.01
+against -0.43). Its clips are as smooth as before (pixel change 0.12 per hour), its
+nucleus-area change for AnnexinV-only cells overshoots (131 px per hour, CI 107 to 164; real
+119) and its reversal count for those cells is the closest to real of any video model (0.98,
+real 1.07; from scratch 0.89, pixel 0.84). So the distance from the cell's own future is not
+a training-budget problem in the latent any more than it was in pixel space ("Is the
+per-frame gap only training budget?"). What the model is given, and how it is made to use
+it, is the limit, and that is what the next step addresses.
+
+![examples](../results/figures/fig14b_examples_latent2.png)
 
 ## Next
 
@@ -771,9 +813,9 @@ surroundings and drawing this cell in the middle.
   own as a random real cell on the whole crop, but the masked score (fig 18) splits it: the
   latent models get the cell right (at the nucleus, as close as a random same-fate cell)
   and invent the surroundings, the pixel model keeps the surroundings and blurs the cell.
-  Next: the latent video model started from the latent frame model (running), judged on
-  both scores, and a way to keep the context's neighbourhood while drawing the cell in the
-  middle.
+  Twice the steps for the latent frame model and a warm start of the latent video model
+  from it change none of this, so the gap is not training budget. Next: a way to keep the
+  context's neighbourhood while drawing the cell in the middle, judged on both scores.
 - Link daughters to mothers in the tracker so dividing cells get a fate too; do cells that
   divide under drug die more or less often?
 - Get the colour of apoptosis right. The per-field scaling is part of it (Hoechst white point

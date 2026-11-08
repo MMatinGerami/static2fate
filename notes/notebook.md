@@ -209,7 +209,8 @@ results/tables/baseline_auroc.csv). Within 19.53 nM: AUROC 0.51 at 0 min, 0.60 a
 39.06 nM the curve is lower (0.79 at 6 h) because at 74% dying the "survivors" are partly label
 errors. At 78 and 156 nM, chance, as it should be when there is one fate. Handcrafted beats
 frozen DINOv2 from 2 h on at every informative dose. Pooled numbers are inflated by dose (dose
-alone gives 0.85) and should not be quoted.
+alone gives 0.79 on the 6,676 cells of all 30 wells, 0.84 in the four-well pilot) and should
+not be quoted.
 
 Reading of the curve: fate is not visible in a single frame before 1.5 to 2 h, and is largely
 readable by 4 h. The branching generative model therefore has a concrete target: its commitment
@@ -778,3 +779,21 @@ frame 1.42 / 1.28 / 1.61, latent video 1.58 / 1.49 / 1.83. Cell (r 40 px): pixel
 neighbourhood, the pixel model keeps the neighbourhood and blurs the cell. Written up as
 "Where the DINOv2 distance lives"; README rows updated. From now on the masked score is
 reported next to the plain one.
+
+17:20: second latent job downloaded (static2fate-latent-2, ran 09:36 to about 16:10, 6.6 h;
+week on Kaggle about 26.7 of 30 h). lat_frame_cont 228,822 more steps (464k in all, batch 64,
+loss 1.313 to 1.307, flat), lat_video_init 84,261 clip steps from the latent frame model's
+weights (loss 1.317 to 1.299, below the from-scratch 1.322). Chain on the Mac (tag _latent2,
+24 min, 7 models) and 39_energy_masked rerun with all six models (18 min; existing rows
+unchanged, point spacing in fig 18 now adapts to the model count). Neither run buys content:
+DINOv2 energy minus random 1.51 / 1.75 / 1.59 (12 h frame) and 1.42 / 1.57 / 1.48 (video
+from frame) against 1.40 / 1.75 / 1.68 and 1.60 / 1.76 / 1.77, all CIs overlapping; identity
+rank 0.42 to 0.44 for all four; handcrafted probe at 128 px worse (0.66 and 0.68 against
+0.64); masked to the nucleus the continued frame model is further in every group (condensed
+2.21 against 1.03). The warm-started video model inherits the frame model's weak condensed
+nucleus-area skill (0.20 against 0.38 from scratch) and loses the condensed dynamics score
+(-0.01 against -0.43); its AnnexinV reversals are the closest to real of any video model
+(0.98, real 1.07). Written up as "Do more steps or a warm start buy content?"; README row
+and bullet updated; Next bullet now points at conditioning (keep the neighbourhood, draw the
+cell). Mail: Aysan's README-only PR 5 on crc-singlecell-reference-mapping matches what was
+agreed; its CI run was approved (not merged); JMB review of JMB-D-26-01418 due 22 Nov.
