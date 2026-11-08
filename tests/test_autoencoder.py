@@ -79,3 +79,24 @@ def test_probe_sensitivity_variants_keep_layout():
     std = ps.residual_std(real, recon)
     assert std.shape == (3,) and (std > 2).all() and (std < 6).all()
     assert abs((v["ae128_noise"].astype(float) - recon).std() - std.mean()) < 1.5
+
+
+def test_disc_mask_and_masking_keep_shape_and_range():
+    em = importlib.import_module("39_energy_masked")
+    w = em.disc_mask(128, 40)
+    assert w.shape == (128, 128) and w[64, 64] == 1 and w[0, 0] == 0 and w[64, 64 + 39] > 0.5 > w[64, 64 + 42]
+    x = torch.rand(2, 3, 128, 128) * 2 - 1
+    y = (x + 1) * w - 1
+    assert y.min() >= -1 and y.max() <= 1 and torch.allclose(y[..., 0, 0], torch.full((2, 3), -1.0))
+    assert torch.allclose(y[..., 64, 64], x[..., 64, 64])
+
+
+def test_masked_features_scale_radius_and_resize_to_64(monkeypatch):
+    em = importlib.import_module("39_energy_masked")
+    seen = []
+    monkeypatch.setattr(em, "dinov2_features", lambda x: (seen.append(tuple(x.shape)), np.zeros((len(x), 2)))[1])
+    rng = np.random.default_rng(0)
+    em.masked_features(rng.integers(0, 255, (3, 3, 128, 128), dtype=np.uint8), 40)
+    em.masked_features(rng.integers(0, 255, (3, 3, 64, 64), dtype=np.uint8), 40)
+    assert seen == [(3, 3, 64, 64), (3, 3, 64, 64)]
+    assert em.disc_mask(64, 20)[32, 32 + 19] > 0.5 > em.disc_mask(64, 20)[32, 32 + 22]

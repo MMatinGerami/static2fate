@@ -726,12 +726,40 @@ hour in every group), nucleus-area change closer to real than the pixel video's 
 / 114) and the same reversal counts (1.11 / 0.89 / 0.78; real 1.11 / 1.07 / 0.65). It also has
 the best dynamics score of any model for condensing cells (-0.43, CI -0.57 to -0.16) and
 recovers the nucleus-area skill the latent frame model lost (0.38). Its DINOv2 distance is
-the highest of the four, so it is the sharpest and the least this cell. The obvious next
-run is the recipe that worked in pixel space, the latent video model started from the
-latent frame model, with the content question in view rather than texture: the energy-score
-gap is now the whole gap.
+the highest of the four. The next run is the recipe that worked in pixel space, the latent
+video model started from the latent frame model (`kaggle/latent2/`, with the latent frame
+model continued for 6 h more on the other GPU as a direct test of whether steps buy content).
 
 ![temporal](../results/figures/fig15_temporal_latent.png)
+
+### Where the DINOv2 distance lives
+
+Whether that distance is the cell or its neighbours can be measured: `scripts/39_energy_masked.py`
+masks the 6 h crop of the held-out cell, of its generated futures and of the random
+same-fate cells to a disc around the crop centre before DINOv2 (64 px), "cell" (radius 40 px
+at 128 px, the central cell and little else) and "nucleus" (24 px), and recomputes the same
+score (`results/tables/energy_masked.csv`, fig 18).
+
+| DINOv2 energy score minus a random real cell, 6 h (survive / condensed / AnnexinV only) | whole crop | cell (r = 40 px) | nucleus (r = 24 px) |
+|---|---|---|---|
+| frame model, 64 px, 8 h | 0.73 / 0.70 / 1.26 | 1.32 / 2.09 / 2.81 | 2.10 / 0.57 / 2.76 |
+| latent frame | 1.42 / 1.28 / 1.61 | 0.69 / 1.33 / 1.61 | -0.07 / 1.03 / 0.72 |
+| latent video | 1.58 / 1.49 / 1.83 | 0.72 / 0.90 / 1.40 | -0.23 / -0.24 / 0.71 |
+| ae128 reconstruction | -27.6 / -28.7 / -28.3 | -26.2 / -29.5 / -28.9 | -24.3 / -31.0 / -29.6 |
+
+The order reverses. On the whole crop the pixel model is the closest to the cell's own
+future; masked to the cell the latent models are, and masked to the nucleus the latent
+models' survivors are as close to their own future as a random same-fate cell is (-0.07 and
+-0.23, CIs -0.37 to 0.22 and -0.50 to 0.09) while the pixel model's are 2.1 further (CI 1.7
+to 2.4). So the two kinds of model fail differently: the pixel model keeps the
+neighbourhood it was given and blurs the cell, the latent models render the cell and invent
+the neighbourhood, and DINOv2 on a whole crop counts the neighbourhood. The "identity" the
+earlier sections could not find in the generated future is partly there in the latent
+models, in the cell itself, hidden by what is around it. From here the masked score is
+reported next to the plain one, and the next model is judged on both: keeping the context's
+surroundings and drawing this cell in the middle.
+
+![masked](../results/figures/fig18_energy_masked.png)
 
 ## Next
 
@@ -740,10 +768,12 @@ gap is now the whole gap.
 - Realism is no longer the texture: generating in the `ae128` latent closed the handcrafted
   probe's gap at 128 px (0.75 to 0.64, past the reconstruction's 0.67) and the DINOv2 probe is
   saturated anyway. What is left is content: the generated future is as far from the cell's
-  own as a random real cell, in pixel space and in the latent alike, and the latent models
-  add or move neighbouring cells. Next: the latent video model started from the latent frame
-  model (the recipe that worked in pixel space), and a look at what the energy score is
-  counting, neighbours or the cell.
+  own as a random real cell on the whole crop, but the masked score (fig 18) splits it: the
+  latent models get the cell right (at the nucleus, as close as a random same-fate cell)
+  and invent the surroundings, the pixel model keeps the surroundings and blurs the cell.
+  Next: the latent video model started from the latent frame model (running), judged on
+  both scores, and a way to keep the context's neighbourhood while drawing the cell in the
+  middle.
 - Link daughters to mothers in the tracker so dividing cells get a fate too; do cells that
   divide under drug die more or less often?
 - Get the colour of apoptosis right. The per-field scaling is part of it (Hoechst white point

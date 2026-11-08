@@ -763,3 +763,18 @@ nucleus-area change 101 / 107 / 102 px per hour (real 102 / 119 / 114), reversal
 In fig 14b the latent samples add or move neighbouring cells more often. Written up as
 "Generating in the latent"; README rows updated. Next run: latent video from the latent
 frame model, and a check of what the energy score counts.
+
+09:40: second latent job pushed (kaggle/latent2/: latent video from the latent frame model
+and the latent frame model continued, 6 h each, seed 4; Kaggle slug static2fate-latent-2,
+running since 09:36, waiter in place). Kaggle week used so far: 5.4 + 7.2 + about 7.5 h.
+
+10:30: masked energy score (scripts/39_energy_masked.py, 15 min on the Mac; first run had
+the 64 px pixel samples pooled to 32 px and a 128 px radius on them, fixed and rerun with a
+test). Whole crop: pixel frame 0.73 / 0.70 / 1.26 (survive / condensed / AnnexinV), latent
+frame 1.42 / 1.28 / 1.61, latent video 1.58 / 1.49 / 1.83. Cell (r 40 px): pixel
+1.32 / 2.09 / 2.81, latent frame 0.69 / 1.33 / 1.61, latent video 0.72 / 0.90 / 1.40. Nucleus
+(r 24 px): pixel 2.10 / 0.57 / 2.76, latent frame -0.07 / 1.03 / 0.72, latent video
+-0.23 / -0.24 / 0.71. The order reverses: the latent models get the cell and invent the
+neighbourhood, the pixel model keeps the neighbourhood and blurs the cell. Written up as
+"Where the DINOv2 distance lives"; README rows updated. From now on the masked score is
+reported next to the plain one.
