@@ -678,20 +678,72 @@ real cell is as close to the cell's future as the generated one, while the recon
 here on the DINOv2 probe is reported but read as saturated, and models are compared on the
 handcrafted probe at 128 px, the energy scores and the readout measures.
 
-The latent models (`kaggle/latent/`, frame model and video model from scratch on 4 x 32 x 32
-codes of `ae128`, 6 h each on one T4, 8 futures per held-out cell decoded to 128 px) are
-running; their ceiling under this chain is the `ae128` column above.
+The latent models' ceiling under this chain is the `ae128` column above; the next section
+scores them.
+
+## Generating in the latent
+
+The frame model and the video model on the 4 x 32 x 32 codes of `ae128` (`kaggle/latent/`,
+one T4 each, 6 h, seed 3, two-fate cells; `scripts/33_encode_latents.py` to
+`35_generate_latent.py`). Codes come out of the encoder already near unit scale
+(`latent_std` 1.03). Augmentation happens on the code, and the autoencoder is only roughly
+equivariant: decoding a rotated or flipped code gives the rotated image at 28.9 dB against
+33.3 dB for the plain code. Steps are cheap at 32 px: the latent frame model did 236k steps
+(15 M images, batch 64) where the 64 px pixel model did 98k in 8 h, and the latent video
+model, from scratch, 89k clip steps (batch 16) where the pixel one did 28k in 7 h. Eight
+futures per held-out cell, decoded to 128 px, scored with the full chain (tag `_latent`) next
+to the pixel models and the reconstruction ceiling:
+
+| at 6 h | frame model, 64 px, 8 h | video, from frame model | latent frame | latent video | ae128 reconstruction |
+|---|---|---|---|---|---|
+| probe real vs generated, handcrafted at 128 px (lower is better) | 0.75 | 0.75 | 0.64 | 0.64 | 0.67 |
+| handcrafted at 64 px / readouts / DINOv2 (saturated) | 0.58 / 0.54 / 0.997 | 0.59 / 0.55 / 0.997 | 0.57 / 0.55 / 0.999 | 0.58 / 0.55 / 0.999 | 0.55 / 0.54 / 0.995 |
+| DINOv2 energy score minus a random real cell (survive / condensed / AnnexinV only) | 0.68 / 0.97 / 1.40 | 0.90 / 1.07 / 1.39 | 1.40 / 1.75 / 1.68 | 1.60 / 1.76 / 1.77 | -27.7 / -28.0 / -29.2 |
+| dynamics, readouts minus "copy + typical change" (same order) | -0.10 / -0.17 / +0.03 | -0.08 / -0.23 / -0.07 | -0.04 / -0.06 / +0.04 | -0.08 / -0.43 / -0.01 | -1.89 / -3.23 / -3.05 |
+| identity, rank of own future in DINOv2 (same order) | 0.44 / 0.43 / 0.48 | 0.44 / 0.42 / 0.48 | 0.44 / 0.42 / 0.44 | 0.45 / 0.43 / 0.47 | 0.00 / 0.00 / 0.00 |
+| per-cell skill, nucleus area (same order) | 0.50 / 0.35 / 0.48 | 0.52 / 0.33 / 0.39 | 0.50 / 0.17 / 0.38 | 0.53 / 0.38 / 0.34 | 0.98 / 0.98 / 1.00 |
+
+The latent did what it was built for, and only that. The texture gap closes: the handcrafted
+probe at 128 px falls from 0.75 to 0.64 for both latent models, below the reconstruction's
+0.67 (a decoded sample is a little sharper than the decoded posterior mean), where every
+pixel-space change over the last weeks had left it at 0.75. The DINOv2 probe stays at its
+ceiling, as the previous section says it must. The content did not improve: in DINOv2 space
+the latent futures are further from the cell's own future than the pixel ones (survivors
+1.40 against 0.68, 95% CIs 1.12 to 1.71 and 0.47 to 0.88), the identity rank is the same
+0.44, and the latent frame model's nucleus-area skill in condensing cells is lower (0.17,
+CI -0.02 to 0.27, against 0.35, CI 0.09 to 0.49). In the examples (fig 14b) the latent samples
+more often add or move neighbouring cells, which is the kind of change DINOv2 distance would
+count and a readout would not; the other readouts (Hoechst, green, red) are within their
+intervals of the pixel models. So the generator in the latent had an easier texture problem
+and the same content problem, and more steps did not buy content.
+
+![examples](../results/figures/fig14b_examples_latent.png)
+
+The latent video model, trained from scratch, behaves like the pixel video model that was
+started from a trained frame model: clips as smooth as real ones (pixel change 0.12 per
+hour in every group), nucleus-area change closer to real than the pixel video's (101 / 107 /
+102 px per hour for survive / AnnexinV only / condensed against 98 / 92 / 91; real 102 / 119
+/ 114) and the same reversal counts (1.11 / 0.89 / 0.78; real 1.11 / 1.07 / 0.65). It also has
+the best dynamics score of any model for condensing cells (-0.43, CI -0.57 to -0.16) and
+recovers the nucleus-area skill the latent frame model lost (0.38). Its DINOv2 distance is
+the highest of the four, so it is the sharpest and the least this cell. The obvious next
+run is the recipe that worked in pixel space, the latent video model started from the
+latent frame model, with the content question in view rather than texture: the energy-score
+gap is now the whole gap.
+
+![temporal](../results/figures/fig15_temporal_latent.png)
 
 ## Next
 
 - Invert the context frame under the context model, so it keeps the cell's identity and uses
   its state.
-- Realism: the DINOv2 probe is saturated (it tells a 33 dB reconstruction or a 1 px blur of
-  the real frame from the real frame without error), so the open gap is the one the
-  handcrafted probe at 128 px sees, about a pixel of sharpness, plus the identity gap of the
-  energy score. Eight more hours of training, a VGG16 perceptual term, four times the
-  parameters and three times the cells changed none of it; the latent models on `ae128` are
-  the next attempt, with the reconstruction's scores as their ceiling.
+- Realism is no longer the texture: generating in the `ae128` latent closed the handcrafted
+  probe's gap at 128 px (0.75 to 0.64, past the reconstruction's 0.67) and the DINOv2 probe is
+  saturated anyway. What is left is content: the generated future is as far from the cell's
+  own as a random real cell, in pixel space and in the latent alike, and the latent models
+  add or move neighbouring cells. Next: the latent video model started from the latent frame
+  model (the recipe that worked in pixel space), and a look at what the energy score is
+  counting, neighbours or the cell.
 - Link daughters to mothers in the tracker so dividing cells get a fate too; do cells that
   divide under drug die more or less often?
 - Get the colour of apoptosis right. The per-field scaling is part of it (Hoechst white point
@@ -700,5 +752,5 @@ running; their ceiling under this chain is the `ae128` column above.
 - The video model started from the frame model has the frame model's images and real cells'
   motion between them, so it is now the default generator. Two things to fix in it: it
   treats AnnexinV-only dying cells like condensing ones (reversals 0.84 against 1.07), and
-  longer training makes the clips too still. The latent autoencoder above should be built
-  so the video model can be moved onto it.
+  longer training makes the clips too still. The latent video model has the same smoothness
+  with nucleus-area changes closer to real (0.89 reversals for AnnexinV-only cells).

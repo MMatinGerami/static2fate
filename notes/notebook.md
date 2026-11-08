@@ -742,3 +742,24 @@ docs/results.md and the README table: the DINOv2 AUROC is saturated above 0.99 o
 texture; models are compared from now on with the handcrafted probe at 128 px, the energy
 scores and the readouts. Decision (Matin): the per-field scaling stays a documented
 limitation; no crop rebuild.
+
+## 2026-11-08
+
+08:50: latent job downloaded (static2fate-latent v1, finished 17:57 on the 7th; waiter
+fetched it at 18:03). lat_frame 235,642 steps in 6 h (batch 64, loss 1.35 to 1.31),
+lat_video from scratch 89,037 steps (batch 16, loss flat at 1.31 to 1.34); 8 futures per
+held-out cell decoded to 128 px, clips (816, 8, 7, 3, 128, 128). Encoding: latent_std 1.03,
+equivariance PSNR plain 33.3 dB, rot90 28.9, flip 28.9 (augmentation on codes costs 4.4 dB).
+Outputs in results/kaggle/lat_frame, lat_video, latents/info.json. Chain run on the Mac
+(tag _latent, 25 min, after the Mac was back on mains): 20, 21, 22, 26, 24 with the pixel
+frame model, the pixel video from the frame model and the ae128 reconstruction alongside,
+30_temporal for the clips. Result: texture gap closed (handcrafted probe at 128 px 0.75 to
+0.64 for both latent models, reconstruction 0.67; DINOv2 0.999, saturated), content not
+(DINOv2 energy minus random cell 1.40 / 1.75 / 1.68 against 0.68 / 0.97 / 1.40, CIs apart for
+survivors; identity rank 0.44 unchanged; nucleus-area skill in condensing cells 0.17 for the
+latent frame model, 0.38 for the latent video). Latent video clips: pixel change 0.12,
+nucleus-area change 101 / 107 / 102 px per hour (real 102 / 119 / 114), reversals
+1.11 / 0.89 / 0.78 (real 1.11 / 1.07 / 0.65), best condensed dynamics of any model (-0.43).
+In fig 14b the latent samples add or move neighbouring cells more often. Written up as
+"Generating in the latent"; README rows updated. Next run: latent video from the latent
+frame model, and a check of what the energy score counts.
