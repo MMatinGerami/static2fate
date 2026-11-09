@@ -4,7 +4,8 @@ Images: every frame of every labelled cell at 4.88 to 39.06 nM, downsampled 128 
 scaled to [-1, 1]. Fields are split by well into train and held-out (one well per dose held out)
 so the evaluation script can test on unseen cells. Random flips and 90 degree rotations.
 
-Usage: uv run scripts/09_train_flow.py --minutes 30 [--device mps]
+Usage: uv run scripts/09_train_flow.py --minutes 30 [--device mps] [--fates 3]
+--fates 3 conditions on three classes (survives / dies AnnexinV only / dies condensed).
 Writes results/flow/model.pt, results/flow/train_log.csv and results/flow/run.json.
 """
 
@@ -51,7 +52,6 @@ def load(split: str, size: int = 64, frames: list[int] | None = None, doses: lis
     Converted in chunks of cells, so all doses at 64 px fit in memory (the float copy at 128 px
     of every cell would not).
     """
-    lab = pd.read_parquet(P / "fate_labels.parquet").set_index("track")
     tracks = np.load(P / "crops_tracks.npy")
     idx, _ = split_index(split, doses)
     crops = np.load(P / "crops.npy", mmap_mode="r")
@@ -65,8 +65,20 @@ def load(split: str, size: int = 64, frames: list[int] | None = None, doses: lis
         if size != 128:
             c = F.avg_pool2d(c.flatten(0, 1), 128 // size).view(len(c), nf, 3, size, size)
         x[b:b + 256] = c
-    fate = torch.from_numpy(lab.loc[tracks[idx], "apoptotic"].to_numpy().astype(np.int64))
-    return x, fate, tracks[idx]
+    return x, fate_classes(tracks[idx]), tracks[idx]
+
+
+def fate_classes(tracks, n: int = 2) -> torch.Tensor:
+    """Fate label per track, long: n=2 gives 0 survives / 1 dies (the default everywhere);
+    n=3 splits the dying cells by the nuclear call of 04_fate_labels.py into 1 AnnexinV only /
+    2 condensed. The null class of the flow models is the next index (static2fate.flow)."""
+    if n not in (2, 3):
+        raise ValueError(f"fate classes must be 2 or 3, not {n}")
+    lab = pd.read_parquet(P / "fate_labels.parquet").set_index("track").loc[np.asarray(tracks)]
+    fate = lab["apoptotic"].to_numpy().astype(np.int64)
+    if n == 3:
+        fate = fate + (fate * lab["condensed"].to_numpy().astype(np.int64))
+    return torch.from_numpy(fate)
 
 
 def load_uint8(split: str, doses: list[float] | None = DOSES):
@@ -98,17 +110,20 @@ def main() -> None:
     ap.add_argument("--device", default="mps")
     ap.add_argument("--batch", type=int, default=64)
     ap.add_argument("--seed", type=int, default=0)
+    ap.add_argument("--fates", type=int, default=2, choices=[2, 3], help="fate classes (3: split dying cells)")
     args = ap.parse_args()
     torch.manual_seed(args.seed)
     OUT.mkdir(parents=True, exist_ok=True)
 
-    x, fate, _ = load("train")
+    x, _, tracks = load("train")
+    fate = fate_classes(tracks, args.fates)
     n = len(x)
-    print(f"train cells {n}, images {n * 13}, dies {fate.float().mean():.2f}", flush=True)
-    model = UNet().to(args.device)
+    print(f"train cells {n}, images {n * 13}, dies {(fate > 0).float().mean():.2f}, {args.fates} fate classes",
+          flush=True)
+    model = UNet(n_fates=args.fates).to(args.device)
     print(f"parameters {sum(p.numel() for p in model.parameters()) / 1e6:.1f} M", flush=True)
     opt = torch.optim.AdamW(model.parameters(), lr=2e-4, weight_decay=0.0)
-    ema = UNet().to(args.device)
+    ema = UNet(n_fates=args.fates).to(args.device)
     ema.load_state_dict(model.state_dict())
 
     log, step, t0 = [], 0, time.time()
@@ -134,7 +149,7 @@ def main() -> None:
     torch.save(ema.state_dict(), OUT / "model.pt")
     pd.DataFrame(log).to_csv(OUT / "train_log.csv", index=False)
     (OUT / "run.json").write_text(json.dumps({
-        "device": args.device, "seed": args.seed, "steps": step, "batch": args.batch,
+        "device": args.device, "seed": args.seed, "steps": step, "batch": args.batch, "fates": args.fates,
         "minutes": round((time.time() - t0) / 60, 1), "train_cells": n, "heldout_wells": HELDOUT_WELLS,
         "torch": torch.__version__}, indent=1))
     print(f"done, {step} steps", flush=True)

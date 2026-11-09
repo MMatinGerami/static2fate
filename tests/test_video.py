@@ -141,3 +141,35 @@ def test_sample_video_project_hook_reaches_target():
                        project=lambda y, s: (1 - s) * z + s * x)
     assert torch.allclose(out, x)
 
+
+
+def test_video_model_with_three_fates():
+    from static2fate.flow import null_fate
+
+    torch.manual_seed(0)
+    m = VideoUNet(ch=16, cdim=32, n_fates=3).eval()
+    assert m.fate.weight.shape[0] == 4 and null_fate(m) == 3
+    x, ctx, frame, _, cf = _inputs()
+    fate = torch.tensor([1, 2])
+    assert torch.isfinite(video_flow_loss(m, x, frame, fate, ctx, cf))
+    z = torch.randn_like(x)
+    out = sample_video(m, frame, fate, ctx, cf, steps=2, x0=z.clone(), clamp=False)
+    with torch.no_grad():
+        y = z.clone()
+        for i in range(2):
+            s = torch.full((2,), i / 2)
+            vc, vu = m(y, s, frame, fate, ctx, cf), m(y, s, frame, torch.full_like(fate, 3), ctx, cf)
+            y = y + (vu + 2.0 * (vc - vu)) / 2
+    assert torch.allclose(out, y, atol=1e-4)
+    train_latent = importlib.import_module("34_train_latent")
+    assert train_latent.build("video", 16, 4, 3).n_fates == 3 and train_latent.build("frame", 16, 4).n_fates == 2
+
+
+def test_two_class_video_checkpoint_loads_unchanged(tmp_path):
+    torch.save(VideoUNet(ch=16, cdim=32).state_dict(), tmp_path / "model.pt")
+    state = torch.load(tmp_path / "model.pt", weights_only=True)
+    assert state["fate.weight"].shape == (3, 32)
+    m = VideoUNet(ch=16, cdim=32)
+    m.load_state_dict(state)
+    x, ctx, frame, fate, cf = _inputs()
+    assert sample_video(m.eval(), frame, fate, ctx, cf, steps=2).shape == x.shape

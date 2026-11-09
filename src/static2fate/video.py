@@ -18,7 +18,7 @@ import torch
 from torch import nn
 import torch.nn.functional as F
 
-from .flow import UNet, sinusoidal
+from .flow import UNet, null_fate, sinusoidal
 
 
 class TemporalAttention(nn.Module):
@@ -45,7 +45,7 @@ class TemporalAttention(nn.Module):
 
 
 class VideoUNet(UNet):
-    """The context UNet with a temporal attention layer after every stage."""
+    """The context UNet with a temporal attention layer after every stage; n_fates as in UNet."""
 
     def __init__(self, ch: int = 64, cdim: int = 256, n_frames: int = 13, n_fates: int = 2, heads: int = 4,
                  in_ch: int = 3):
@@ -90,7 +90,7 @@ def video_flow_loss(model, clip, frame, fate, ctx, ctx_frame, p_drop: float = 0.
     s5 = s[:, None, None, None, None]
     xs = (1 - s5) * x0 + s5 * clip
     drop = torch.rand(clip.shape[0], device=clip.device) < p_drop
-    fate = torch.where(drop, torch.full_like(fate, 2), fate)
+    fate = torch.where(drop, torch.full_like(fate, null_fate(model)), fate)
     return F.mse_loss(model(xs, s, frame, fate, ctx, ctx_frame), clip - x0)
 
 
@@ -105,7 +105,7 @@ def sample_video(model, frame, fate, ctx, ctx_frame, steps: int = 50, guidance: 
     b, t = frame.shape
     device = frame.device
     x = x0 if x0 is not None else torch.randn(b, t, *ctx.shape[1:], device=device, generator=generator)
-    both_fates = torch.cat([fate, torch.full_like(fate, 2)])
+    both_fates = torch.cat([fate, torch.full_like(fate, null_fate(model))])
     frame2, ctx2, cf2 = torch.cat([frame, frame]), torch.cat([ctx, ctx]), torch.cat([ctx_frame, ctx_frame])
     for i in range(steps):
         s = torch.full((2 * b,), i / steps, device=device)

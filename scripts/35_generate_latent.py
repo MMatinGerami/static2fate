@@ -1,6 +1,7 @@
 """Generate M futures per held-out cell from a latent model (34) and decode them to 128 px.
 
-Context is the cell's 0 h frame encoded with the model's own copy of the autoencoder; the
+Context is the cell's 0 h frame encoded with the model's own copy of the autoencoder, the
+fate the cell's own (two or three classes, as the model was trained, run.json "fates"); the
 flow runs in the 4 x 32 x 32 code (frame model: each of frames 6, 8, 10, 12 from its own noise
 draw; video model: the clip 6 to 12 jointly) and every code is decoded to a 128 px image.
 Files are those of 19_generate_samples.py and 29_generate_clips.py, so the scoring chain
@@ -38,10 +39,13 @@ def main(mdir: Path, m: int, cells: str | None) -> None:
     if device == "mps":
         torch.mps.set_per_process_memory_fraction(0.5)
     ae, std, _ = load_autoencoder(mdir / "ae", device)
-    model = (VideoUNet(ch=run["ch"], in_ch=run["z"]) if video else UNet(ch=run["ch"], context=True, in_ch=run["z"]))
+    fates = int(run.get("fates", 2))
+    model = (VideoUNet(ch=run["ch"], in_ch=run["z"], n_fates=fates) if video
+             else UNet(ch=run["ch"], context=True, in_ch=run["z"], n_fates=fates))
     model.load_state_dict(torch.load(mdir / "model.pt", map_location=device, weights_only=True))
     model = model.to(device).eval()
-    x, fate, tracks = train.load("test", run["size"], frames=[0])
+    x, _, tracks = train.load("test", run["size"], frames=[0])
+    fate = train.fate_classes(tracks, fates)
     suffix = ""
     if cells:
         a, _, b = cells.partition(":")
@@ -52,7 +56,7 @@ def main(mdir: Path, m: int, cells: str | None) -> None:
     clip = run["clip"] if video else FUTURE
     t = len(clip)
     print(f"cells {n}, {m} {'clips' if video else 'samples'} each, latent {run['z']}x{ls}x{ls}, "
-          f"decoded to {size} px, device {device}", flush=True)
+          f"decoded to {size} px, {fates} fate classes, device {device}", flush=True)
     amp = torch.autocast("cuda", dtype=torch.float16) if device == "cuda" else contextlib.nullcontext()
     z0 = encode(ae, x[:, 0], std)  # (n, z, ls, ls) context codes
 

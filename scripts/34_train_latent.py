@@ -11,7 +11,9 @@ to the model so 35_generate_latent.py can decode without the training machine's 
 
 Usage: uv run scripts/34_train_latent.py --ae results/kaggle/ae128 --model frame|video
        --minutes 60 [--device mps|cuda] [--batch 64 (frame) | 16 (video)] [--ch 64]
-       [--init model.pt] [--snapshot-every 120] [--no-augment] [--out results/latent_frame]
+       [--init model.pt] [--snapshot-every 120] [--no-augment] [--fates 3] [--out results/latent_frame]
+--fates 3 conditions on three classes (survives / dies AnnexinV only / dies condensed, from
+fate_labels.parquet through the tracks of the latents) instead of survives / dies.
 Writes <out>/model.pt (EMA), <out>/ae/, <out>/train_log.csv and <out>/run.json.
 """
 
@@ -44,8 +46,10 @@ def load_latents(path: Path):
     return torch.from_numpy(d["z"].astype(np.float32)), torch.from_numpy(d["fate"]), d["tracks"]
 
 
-def build(model: str, ch: int, z: int):
-    return VideoUNet(ch=ch, in_ch=z) if model == "video" else UNet(ch=ch, context=True, in_ch=z)
+def build(model: str, ch: int, z: int, fates: int = 2):
+    if model == "video":
+        return VideoUNet(ch=ch, in_ch=z, n_fates=fates)
+    return UNet(ch=ch, context=True, in_ch=z, n_fates=fates)
 
 
 def main() -> None:
@@ -62,6 +66,7 @@ def main() -> None:
     ap.add_argument("--snapshot-every", type=float, default=0, help="minutes between kept snapshots")
     ap.add_argument("--init", default=None, help="model.pt to continue from (video: a frame model also works)")
     ap.add_argument("--no-augment", action="store_true", help="no flips or rotations of the code")
+    ap.add_argument("--fates", type=int, default=2, choices=[2, 3], help="fate classes (3: split dying cells)")
     ap.add_argument("--out", default=None)
     args = ap.parse_args()
     batch = args.batch or (16 if args.model == "video" else 64)
@@ -74,10 +79,13 @@ def main() -> None:
 
     ldir = Path(args.latents or Path(args.ae) / "latents")
     info = json.loads((ldir / "info.json").read_text())
-    z, fate, _ = load_latents(ldir / "train.npz")
+    z, fate, tracks = load_latents(ldir / "train.npz")
+    if args.fates != 2:
+        fate = train.fate_classes(tracks, args.fates)
     n, nf = z.shape[:2]
-    print(f"train cells {n}, latent {tuple(z.shape[2:])}, dies {fate.float().mean():.2f}", flush=True)
-    model = build(args.model, args.ch, info["z"]).to(args.device)
+    print(f"train cells {n}, latent {tuple(z.shape[2:])}, dies {(fate > 0).float().mean():.2f}, "
+          f"{args.fates} fate classes {torch.bincount(fate, minlength=args.fates).tolist()}", flush=True)
+    model = build(args.model, args.ch, info["z"], args.fates).to(args.device)
     if args.init:
         state = torch.load(args.init, map_location=args.device, weights_only=True)
         missing, unexpected = model.load_state_dict(state, strict=False)
@@ -86,7 +94,7 @@ def main() -> None:
         print(f"continuing from {args.init}" + (" (temporal layers at zero)" if missing else ""), flush=True)
     print(f"parameters {sum(p.numel() for p in model.parameters()) / 1e6:.1f} M", flush=True)
     opt = torch.optim.AdamW(model.parameters(), lr=2e-4, weight_decay=0.0)
-    ema = build(args.model, args.ch, info["z"]).to(args.device)
+    ema = build(args.model, args.ch, info["z"], args.fates).to(args.device)
     ema.load_state_dict(model.state_dict())
     (out / "ae").mkdir(exist_ok=True)
     for f in ["model.pt", "run.json"]:
@@ -102,7 +110,7 @@ def main() -> None:
         (out / "run.json").write_text(json.dumps({
             "model": args.model, "device": args.device, "seed": args.seed, "steps": step, "batch": batch,
             "size": info["size"], "z": info["z"], "latent_size": info["latent_size"],
-            "latent_std": info["latent_std"], "ae": str(args.ae), "ch": args.ch,
+            "latent_std": info["latent_std"], "ae": str(args.ae), "ch": args.ch, "fates": args.fates,
             "clip": CLIP if args.model == "video" else None,
             "max_ctx_frame": CLIP[0] - 1 if args.model == "video" else MAX_CTX,
             "float16": amp, "init": args.init, "augment": not args.no_augment,

@@ -3,8 +3,11 @@
 The model learns a velocity field v(x_s, s | frame, fate) that moves Gaussian noise (s = 0) to a
 cell image (s = 1) along straight paths (rectified flow / conditional flow matching). The
 condition is the time after drug (frame 0..12) and the fate observed at 6 h (0 survives,
-1 dies). Asking for both fates at the same frame gives two counterfactual images of the same
-moment, which is the simplest version of the two-future question.
+1 dies; with n_fates=3 the dying cells are split into 1 AnnexinV only and 2 condensed). The
+null class for classifier-free guidance is the last embedding index, n_fates, so a two-class
+checkpoint has the same shapes as before. Asking for both fates at the same frame gives two
+counterfactual images of the same moment, which is the simplest version of the two-future
+question.
 
 With context=True the model also sees one observed image of the same cell (concatenated as three
 extra input channels) and the frame it was taken at, and predicts the cell at a later frame.
@@ -56,11 +59,12 @@ class UNet(nn.Module):
         super().__init__()
         self.context = context
         self.in_ch = in_ch
+        self.n_fates = n_fates
         if context:
             self.ctx_frame = nn.Embedding(n_frames, cdim)
         self.s_mlp = nn.Sequential(nn.Linear(ch, cdim), nn.SiLU(), nn.Linear(cdim, cdim))
         self.frame = nn.Embedding(n_frames, cdim)
-        self.fate = nn.Embedding(n_fates + 1, cdim)  # last index = no fate (classifier-free guidance)
+        self.fate = nn.Embedding(n_fates + 1, cdim)  # index n_fates = no fate (classifier-free guidance)
         self.ch = ch
         self.inp = nn.Conv2d(2 * in_ch if context else in_ch, ch, 3, padding=1)
         self.d1 = nn.ModuleList([ResBlock(ch, ch, cdim), ResBlock(ch, ch, cdim)])
@@ -96,6 +100,11 @@ class UNet(nn.Module):
         return self.out(u)
 
 
+def null_fate(model) -> int:
+    """The index of the no-fate class of a model: its number of fate classes (2 for old checkpoints)."""
+    return int(getattr(model, "n_fates", 2))
+
+
 def flow_matching_loss(model, x1, frame, fate, p_drop: float = 0.1, source=None, **cond):
     """Straight-path conditional flow matching; fate is dropped 10% of the time for guidance.
 
@@ -107,7 +116,7 @@ def flow_matching_loss(model, x1, frame, fate, p_drop: float = 0.1, source=None,
     s = torch.rand(x1.shape[0], device=x1.device)
     xs = (1 - s[:, None, None, None]) * x0 + s[:, None, None, None] * x1
     drop = torch.rand(x1.shape[0], device=x1.device) < p_drop
-    fate = torch.where(drop, torch.full_like(fate, 2), fate)
+    fate = torch.where(drop, torch.full_like(fate, null_fate(model)), fate)
     return F.mse_loss(model(xs, s, frame, fate, **cond), x1 - x0)
 
 
@@ -124,7 +133,7 @@ def flow_matching_losses(model, x1, frame, fate, p_drop: float = 0.1, source=Non
     s4 = s[:, None, None, None]
     xs = (1 - s4) * x0 + s4 * x1
     drop = torch.rand(x1.shape[0], device=x1.device) < p_drop
-    fate = torch.where(drop, torch.full_like(fate, 2), fate)
+    fate = torch.where(drop, torch.full_like(fate, null_fate(model)), fate)
     v = model(xs, s, frame, fate, **cond)
     out = {"mse": F.mse_loss(v, x1 - x0), "perceptual": torch.zeros((), device=x1.device)}
     if perceptual is not None:
@@ -141,7 +150,7 @@ def invert(model, x1, frame, steps: int = 50):
     same cell, and can then be pushed forward under either fate.
     """
     x = x1.clone()
-    null = torch.full((len(x1),), 2, device=x1.device, dtype=torch.long)
+    null = torch.full((len(x1),), null_fate(model), device=x1.device, dtype=torch.long)
     for i in reversed(range(steps)):
         s = torch.full((len(x1),), (i + 1) / steps, device=x1.device)
         x = x - model(x, s, frame, null) / steps
@@ -168,7 +177,7 @@ def sample(model, frame, fate, steps: int = 50, guidance: float = 2.0, generator
         first = round(s0 * steps)
         x = (1 - first / steps) * x + (first / steps) * x_start
     n = len(frame)
-    both_fates = torch.cat([fate, torch.full_like(fate, 2)])
+    both_fates = torch.cat([fate, torch.full_like(fate, null_fate(model))])
     frame2 = torch.cat([frame, frame])
     cond2 = {k: torch.cat([v, v]) for k, v in cond.items()}
     for i in range(first, steps):

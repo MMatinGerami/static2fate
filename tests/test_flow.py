@@ -183,3 +183,54 @@ def test_energy_terms_split_the_energy_score():
     assert d == (0 + 4 + 3) / 3 and s == (4 + 3 + 5) * 2 / 6  # mean over the 6 ordered pairs
     assert np.isclose(energy_score(x, y), d - 0.5 * s)
     assert energy_terms(x[:1], y) == (0.0, 0.0)  # one sample: no spread term
+
+
+def test_three_fate_classes_put_the_null_class_last():
+    from static2fate.flow import null_fate
+
+    torch.manual_seed(0)
+    m = UNet(ch=16, cdim=32, n_fates=3).eval()
+    assert m.fate.weight.shape[0] == 4 and null_fate(m) == 3 and null_fate(UNet(ch=16, cdim=32)) == 2
+    frame, fate = torch.tensor([3, 9, 12]), torch.tensor([0, 1, 2])
+    x = torch.randn(3, 3, 64, 64)
+    assert torch.isfinite(flow_matching_loss(m, x, frame, fate))
+    z = torch.randn(3, 3, 64, 64)
+    out = sample(m, frame, fate, steps=2, x0=z.clone())
+    with torch.no_grad():  # the guided mix uses index 3 as the null class, not 2
+        y = z.clone()
+        for i in range(2):
+            s = torch.full((3,), i / 2)
+            vc, vu = m(y, s, frame, fate), m(y, s, frame, torch.full_like(fate, 3))
+            y = y + (vu + 2.0 * (vc - vu)) / 2
+    assert torch.allclose(out, y.clamp(-1, 1), atol=1e-4)
+    assert torch.isfinite(invert(m, x, frame, steps=2)).all()
+
+
+def test_two_class_checkpoint_loads_unchanged(tmp_path):
+    old = UNet(ch=16, cdim=32, context=True)
+    torch.save(old.state_dict(), tmp_path / "model.pt")
+    state = torch.load(tmp_path / "model.pt", weights_only=True)
+    assert state["fate.weight"].shape == (3, 32)
+    new = UNet(ch=16, cdim=32, context=True)
+    new.load_state_dict(state)  # strict: same keys and shapes as before n_fates was stored
+    x = torch.randn(2, 3, 64, 64)
+    cond = {"ctx": x, "ctx_frame": torch.zeros(2, dtype=torch.long)}
+    assert sample(new, torch.tensor([6, 12]), torch.tensor([0, 1]), steps=2, x0=x.clone(), **cond).shape == x.shape
+    import pytest
+    with pytest.raises(RuntimeError):
+        UNet(ch=16, cdim=32, context=True, n_fates=3).load_state_dict(state)
+
+
+def test_fate_classes_split_dying_cells_by_condensation(tmp_path, monkeypatch):
+    train = importlib.import_module("09_train_flow")
+    lab = pd.DataFrame({"track": ["a", "b", "c", "d"], "apoptotic": [False, True, True, False],
+                        "condensed": [False, False, True, True]})  # d: condensed call without apoptosis
+    lab.to_parquet(tmp_path / "fate_labels.parquet")
+    monkeypatch.setattr(train, "P", tmp_path)
+    tracks = np.array(["c", "a", "b", "d"])
+    assert train.fate_classes(tracks).tolist() == [1, 0, 1, 0]
+    assert train.fate_classes(tracks, 3).tolist() == [2, 0, 1, 0]
+    assert train.fate_classes(tracks, 3).dtype == torch.long
+    import pytest
+    with pytest.raises(ValueError):
+        train.fate_classes(tracks, 4)
