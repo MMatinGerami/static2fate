@@ -797,3 +797,38 @@ nucleus-area skill (0.20 against 0.38 from scratch) and loses the condensed dyna
 and bullet updated; Next bullet now points at conditioning (keep the neighbourhood, draw the
 cell). Mail: Aysan's README-only PR 5 on crc-singlecell-reference-mapping matches what was
 agreed; its CI run was approved (not merged); JMB review of JMB-D-26-01418 due 22 Nov.
+
+## 2026-11-09
+
+03:45: anchored sampling started (scripts/40_anchor_neighbourhood.py). The samplers in
+static2fate.flow and static2fate.video take a `project(x, s)` hook applied after every Euler
+step; the anchored sampler resets the latent outside a disc around the crop centre to
+(1 - s) x noise + s x context code, so at s = 1 the neighbourhood is the 0 h neighbourhood and
+only the cell is drawn (radius 40 px as in the masked score, 10 code px, 31% of the code free;
+also 56 px for the video model; edge softened over one code pixel). On 8 cells the output
+holds the neighbours with no visible seam. Running on the Mac (0.6 min per 8 cells, about
+1 h per model and radius): latent video r40 and r56, latent frame r40, M = 8, the same noise
+as 35. 39_energy_masked.py now takes STATIC2FATE_TAG. Scoring to follow with tag _anchor.
+
+09:10: anchored round scored (generation 03:44 to 06:22: latent video r40 and r56 about 65 min
+each, latent frame r40 27 min; chain with tag _anchor 06:22 to 07:20, rerun with the composite
+controls 07:23 to 08:55). The rim is held (anchored sample against the autoencoder's
+reconstruction of the 0 h crop: 0.24 grey levels outside the disc). Whole-crop DINOv2 energy
+minus random: anchored r40 7.9 / 8.6 / 6.9 against 1.6 / 1.5 / 1.8 free; masked to the nucleus
+0.12 / 0.68 / 0.67 against -0.23 / -0.24 / 0.71 (CIs overlap); identity rank 0.39 / 0.44 / 0.39
+(free 0.45 / 0.43 / 0.47, copy 0.35 / 0.50 / 0.33); handcrafted probe at 128 px 0.68 (0.64);
+clips too still (pixel change 0.03 per hour, real 0.14). Controls (41_composite_control.py):
+the real 6 h cell pasted into the 0 h rim is still no closer than a random cell on the whole
+crop except for survivors (-1.4 / 3.3 / 1.3), so the neighbourhood must be predicted; the free
+samples pasted into the rim are worse than the anchored sampler (7.7 / 12.6 / 11.9, hard seam).
+Then split the energy score into its two terms (static2fate.evaluate.energy_terms,
+42_energy_terms.py, and 39 now writes them): the distance to the real 6 h frame is 36 to 38
+for every model since the 8 h one, 2 below a random cell and equal to the 0 h copy's for
+survivors and AnnexinV-only cells; every between-model difference in "model minus random" so
+far was spread (pixel 32.9, latent 31.0, anchored 18.1; random 38.3). The masked advantage of
+the latent models at the nucleus is a distance (31.7 against 35.3 random and 34.7 pixel for
+survivors). Against the 0 h copy the models win only for condensing cells (38.0 against 44.5
+at the nucleus); AnnexinV-only nuclei are further than the copy for every model. Written up as
+"Keeping the neighbourhood by hand" and "What the energy score was counting"; README rows
+updated; Next points at the two terms as the measure and at AnnexinV-only cells (three fate
+classes) as the model step. Mac on battery from 08:56 (at university), no further compute.

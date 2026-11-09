@@ -129,3 +129,15 @@ def test_field_constants_from_tiffs(tmp_path, monkeypatch):
     k = scaling.field_constants("W-01_F0001", {"hoechst": 1})
     assert set(k) == {"hoechst_lo", "hoechst_hi"} and 100 <= k["hoechst_lo"] < 150 and 1050 < k["hoechst_hi"] <= 1100
     assert scaling.field_constants("W-01_F0002", {"hoechst": 1}) == {}  # missing frames
+
+
+def test_sample_video_project_hook_reaches_target():
+    m = VideoUNet(ch=16, cdim=32).eval()
+    for p in m.out.parameters():
+        torch.nn.init.zeros_(p)
+    x, ctx, frame, fate, cf = _inputs()
+    z = torch.randn_like(x)
+    out = sample_video(m, frame, fate, ctx, cf, steps=3, x0=z.clone(), clamp=False,
+                       project=lambda y, s: (1 - s) * z + s * x)
+    assert torch.allclose(out, x)
+

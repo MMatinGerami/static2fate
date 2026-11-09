@@ -96,9 +96,10 @@ def video_flow_loss(model, clip, frame, fate, ctx, ctx_frame, p_drop: float = 0.
 
 @torch.no_grad()
 def sample_video(model, frame, fate, ctx, ctx_frame, steps: int = 50, guidance: float = 2.0,
-                 generator=None, x0=None, clamp: bool = True):
+                 generator=None, x0=None, clamp: bool = True, project=None):
     """Euler integration from noise to a clip (B, T, C, H, W); classifier-free guidance on fate.
 
+    `project(x, s)`, if given, is applied to the state after every step (s is the time reached).
     Clamped to [-1, 1] for images; clamp=False for latents.
     """
     b, t = frame.shape
@@ -111,4 +112,6 @@ def sample_video(model, frame, fate, ctx, ctx_frame, steps: int = 50, guidance: 
         v = model(torch.cat([x, x]), s, frame2, both_fates, ctx2, cf2)
         v_c, v_u = v[:b], v[b:]
         x = x + (v_u + guidance * (v_c - v_u)) / steps
+        if project is not None:
+            x = project(x, (i + 1) / steps)
     return x.clamp(-1, 1) if clamp else x

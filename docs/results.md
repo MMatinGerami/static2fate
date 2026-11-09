@@ -761,7 +761,9 @@ earlier sections could not find in the generated future is partly there in the l
 models, in the cell itself, hidden by what is around it. From here the masked score is
 reported next to the plain one, and the next model is judged on both: keeping the context's
 surroundings and drawing this cell in the middle. The second-round models in the last two
-rows are described next.
+rows are described next. (The energy score has two terms, and splitting them, two sections
+down, changes what this table says: the latent models' advantage at the nucleus is a
+distance, the pixel model's on the whole crop is spread.)
 
 ![masked](../results/figures/fig18_energy_masked.png)
 
@@ -802,6 +804,104 @@ per-frame gap only training budget?"). What the model is given, and how it is ma
 it, is the limit, and that is what the next step addresses.
 
 ![examples](../results/figures/fig14b_examples_latent2.png)
+### Keeping the neighbourhood by hand
+
+The plan was a sampler that keeps the context's surroundings and draws the cell in the
+middle. `scripts/40_anchor_neighbourhood.py` does it at sampling time, with no training:
+after every Euler step the latent outside a disc around the crop centre is reset to the
+straight path from the sampler's own noise to the context's code, so at the end the
+neighbourhood is the 0 h neighbourhood (decoded by the autoencoder) and only the disc is
+generated, conditioned on the whole context and seeing the fixed rim at every step (the
+samplers in `static2fate.flow` and `static2fate.video` take a `project(x, s)` hook). Disc
+radius 40 px, the "cell" disc of the masked score, 10 code pixels, 31% of the code free; also
+56 px (60% free) for the video model. Latent video and latent frame models, 816 held-out
+cells, 8 samples each, same noise as the free samplers; about 1 h per model and radius on the
+Mac. Two pixel-space composites made with the same disc are the controls
+(`scripts/41_composite_control.py`): the cell's real 6 h frame pasted into its 0 h crop (the
+ceiling for anything that holds the rim; one image per cell, so its energy score is a plain
+distance like the copy's) and the free latent video samples pasted into the same rim (the
+free model's cells with a 0 h neighbourhood instead of an invented one). Same chain, tag
+`_anchor`:
+
+| at 6 h | latent video | anchored, r = 40 px | anchored, r = 56 px | real 6 h in the disc, 0 h rim | free samples in the disc, 0 h rim |
+|---|---|---|---|---|---|
+| DINOv2 energy score minus a random real cell, whole crop (survive / condensed / AnnexinV only) | 1.58 / 1.49 / 1.83 | 7.89 / 8.61 / 6.90 | 5.00 / 5.79 / 5.08 | -1.4 / 3.3 / 1.3 | 7.7 / 12.6 / 11.9 |
+| the same, masked to the cell (r = 40 px) | 0.72 / 0.90 / 1.40 | 2.34 / 3.53 / 2.57 | 0.90 / 1.24 / 1.35 | -27.8 / -28.8 / -30.0 | 1.7 / 2.0 / 2.2 |
+| the same, masked to the nucleus (r = 24 px) | -0.23 / -0.24 / 0.71 | 0.12 / 0.68 / 0.67 | -0.12 / 0.09 / 0.74 | -35.1 / -41.2 / -39.9 | -0.23 / -0.24 / 0.71 |
+| identity, rank of own future in DINOv2 (same order; copy 0.35 / 0.50 / 0.33) | 0.45 / 0.43 / 0.47 | 0.39 / 0.44 / 0.39 | 0.42 / 0.43 / 0.43 | 0.21 / 0.30 / 0.20 | 0.40 / 0.44 / 0.41 |
+| probe real vs generated, handcrafted at 128 px / readouts | 0.64 / 0.55 | 0.68 / 0.60 | 0.66 / 0.58 | 0.57 / 0.56 | 0.64 / 0.58 |
+| per-cell skill, nucleus area (same order) | 0.53 / 0.38 / 0.34 | 0.52 / 0.40 / 0.30 | 0.54 / 0.41 / 0.30 | | |
+| clips: pixel change per hour (real 0.14) / nucleus-area change, AnnexinV only (real 119 px per hour) | 0.12 / 107 | 0.03 / 79 | 0.06 / 88 | | |
+
+The sampler does what it was built to do: outside the disc the output is the autoencoder's
+reconstruction of the 0 h crop to 0.2 grey levels, there is no seam, and the identity rank
+moves towards the copy's (0.39 against 0.45 for survivors). Everything else gets worse. On
+the whole crop the anchored futures are 7 to 9 energy-score units further from the real
+frame than a random same-fate cell, against 1.5 to 1.8 for the free sampler, and even the
+control with the real 6 h cell in the disc is closer than a random cell only for survivors
+(-1.4, CI -2.2 to -0.4) and further for condensing cells (3.3, CI 1.7 to 4.6): a 6 h old
+neighbourhood is simply not the 6 h neighbourhood, whatever is in the middle. Masked to the nucleus, the anchored futures are
+where the free ones were (CIs overlap everywhere), so holding the rim buys nothing for the
+cell either, and the clips go nearly still (pixel change 0.03 per hour against 0.12 free and
+0.14 real; nucleus-area change in AnnexinV-only cells 79 px per hour against 107 and 119),
+the SDEdit trade-off of "Starting from the cell" in another form: a cell whose cytoplasm is
+pinned to its 0 h outline cannot move or shrink. Pasting the free samples into the 0 h rim
+after the fact is worse again on the whole crop (7.7 / 12.6 / 11.9): a hard seam, and the
+sampler at least blends the two. So the neighbourhood has to be predicted, not kept, and the
+first row of this table turned out to be measuring something else, which the next section
+takes apart.
+
+![examples](../results/figures/fig14b_examples_anchor.png)
+
+![masked, anchored](../results/figures/fig18_energy_masked_anchor.png)
+
+## What the energy score was counting
+
+The energy score of M samples is a mean distance to the real frame minus half the mean
+distance between the samples, ES = d - s / 2 (`static2fate.evaluate.energy_terms`). "Model
+minus random" is the difference of two such scores, and the two terms can be read apart from
+the cached features (`scripts/42_energy_terms.py`, tables `energy_terms_*.csv`; the masked
+table now carries them too). DINOv2 at 64 px, held-out cells at 6 h, survive / condensed /
+AnnexinV only:
+
+| | distance d to the real 6 h frame | spread s between the samples |
+|---|---|---|
+| random same-fate real cells | 38.1 / 38.4 / 38.8 | 38.3 / 37.4 / 37.3 |
+| 0 h copy | 36.2 / 39.7 / 37.4 | 0 |
+| frame model, 64 px, 1 h | 36.8 / 39.3 / 39.3 | 29.5 / 28.9 / 28.7 |
+| frame model, 64 px, 8 h | 36.2 / 36.6 / 37.6 | 32.9 / 32.3 / 32.5 |
+| video, from frame model | 36.4 / 36.6 / 37.8 | 32.9 / 32.0 / 32.4 |
+| latent frame | 35.8 / 36.5 / 37.0 | 30.8 / 30.9 / 30.6 |
+| latent video | 36.1 / 36.9 / 37.5 | 31.0 / 31.3 / 31.1 |
+| latent video, anchored r = 40 px | 36.0 / 37.9 / 36.9 | 18.1 / 19.0 / 19.8 |
+| masked to the nucleus: 0 h copy | 32.2 / 44.5 / 37.3 | 0 |
+| masked to the nucleus: random real cells | 35.3 / 40.8 / 40.5 | 35.3 / 40.4 / 40.1 |
+| masked to the nucleus: frame model, 64 px, 8 h | 34.7 / 39.0 / 40.9 | 29.9 / 35.6 / 35.4 |
+| masked to the nucleus: latent frame | 31.8 / 38.7 / 38.1 | 28.5 / 34.1 / 34.1 |
+| masked to the nucleus: latent video | 31.7 / 38.0 / 38.6 | 28.7 / 35.2 / 35.0 |
+| masked to the nucleus: latent video, anchored r = 40 px | 31.6 / 38.3 / 38.1 | 27.7 / 34.0 / 34.0 |
+
+Three things follow. First, on the whole crop every trained model since the 8 h one has the
+same distance to the cell's own future, 36 to 38, about 2 closer than a random same-fate cell
+and no closer than the 0 h copy (36.2 for survivors, against 35.8 to 36.4 for the models);
+all the differences between models that the earlier sections read off "model minus random"
+(pixel 0.7 against latent 1.6, the anchored sampler's 7.8, and the 0.7 against 3.0 to 5.4 of
+"Training for realism", of which about half is distance, the 1 h model being 2 to 3 further
+in dying cells) are spread. The pixel model is more diverse than the latent ones, the
+anchored sampler half as diverse as either by construction, and the score is proper, so a
+sharper ensemble at the same accuracy is rightly penalised, but it is not the content gap
+it was taken for. Second, the masked finding survives the split: at the nucleus the latent
+models are 3 to 4 closer than a random cell for survivors (31.7, CI 31.1 to 32.6,
+against 35.3) where the pixel model is 0.6 closer, and their spread is the same, so that
+advantage is a distance. Third, against the one reference that matters for a forecast, the
+0 h copy, the models are closer only for condensing cells (38.0 against 44.5 at the nucleus,
+36.7 against 39.5 on the whole crop); for survivors they match it (31.7 against 32.2) and
+for AnnexinV-only dying cells they are further (38.6 against 37.3 at the nucleus, every
+model, the pixel one most at 40.9): the models redraw those nuclei as if they were
+condensing, which the per-cell skills and the reversal counts had already shown from other
+angles. Condensation is the one change these models predict better than "nothing changes".
+From here the two terms are reported, not their difference, and "model minus random" is
+read as the spread it mostly is.
 
 ## Next
 
@@ -814,8 +914,15 @@ it, is the limit, and that is what the next step addresses.
   latent models get the cell right (at the nucleus, as close as a random same-fate cell)
   and invent the surroundings, the pixel model keeps the surroundings and blurs the cell.
   Twice the steps for the latent frame model and a warm start of the latent video model
-  from it change none of this, so the gap is not training budget. Next: a way to keep the
-  context's neighbourhood while drawing the cell in the middle, judged on both scores.
+  from it change none of this, so the gap is not training budget. Keeping the 0 h
+  neighbourhood by anchoring the sampler does not help either: a 6 h old neighbourhood is
+  further from the real frame than a random cell's even with the real cell in the middle, so
+  the neighbours' futures have to be predicted too. Splitting the energy score shows every
+  model at the same distance from the cell's own future as the 0 h copy, except for
+  condensing cells; the next measure of progress is that distance, at the nucleus and on the
+  whole crop, against the copy. The next model step is a target the copy does not already
+  give: the AnnexinV-only cells, which every model redraws as condensing (fate conditioning
+  with three classes instead of two, since "dies" lumps the two ways of dying together).
 - Link daughters to mothers in the tracker so dividing cells get a fate too; do cells that
   divide under drug die more or less often?
 - Get the colour of apoptosis right. The per-field scaling is part of it (Hoechst white point

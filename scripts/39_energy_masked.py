@@ -8,14 +8,16 @@ compared with, is masked to a disc around the crop centre before the features ar
 "cell" (radius 40 px at 128 px, the central cell and little else) and "nucleus" (radius
 24 px), next to the unmasked crop. Outside the disc the image is black; the edge is softened
 over 3 px. Same energy score, same baselines and field bootstrap as 20_feature_score.py,
-DINOv2 at 64 px only.
+DINOv2 at 64 px only; the table also carries the score's two terms (mean distance to the real
+frame, mean distance between samples) for the model and the random cells.
 
-Usage: uv run scripts/39_energy_masked.py [name=dir ...]   (default: pixel frame, latent
-frame, latent video, ae128 reconstruction)
-Writes results/tables/energy_masked.csv and results/figures/fig18_energy_masked.png.
+Usage: [STATIC2FATE_TAG=<tag>] uv run scripts/39_energy_masked.py [name=dir ...]   (default:
+pixel frame, latent frame, latent video, ae128 reconstruction)
+Writes results/tables/energy_masked<tag>.csv and results/figures/fig18_energy_masked<tag>.png.
 """
 
 import importlib
+import os
 import sys
 from pathlib import Path
 
@@ -30,10 +32,11 @@ import torch.nn.functional as F
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "src"))
 sys.path.insert(0, str(Path(__file__).resolve().parent))
-from static2fate.evaluate import energy_score, field_bootstrap, group_of  # noqa: E402
+from static2fate.evaluate import energy_score, energy_terms, field_bootstrap, group_of  # noqa: E402
 from static2fate.features import dinov2_features  # noqa: E402
 
 ROOT = Path(__file__).resolve().parents[1]
+TAG = os.environ.get("STATIC2FATE_TAG", "")  # suffix for the output table and figure
 FRAME = 12  # 6 h
 MASKS = {"none": None, "cell": 40, "nucleus": 24}
 MODELS = {
@@ -102,16 +105,22 @@ def main(models: dict[str, Path]) -> None:
                 i = pos[t]
                 pool = rng.choice(np.flatnonzero(fate_t == fate_s[i]), m, replace=False)
                 y = z(fts[i])
+                d_model, s_model = energy_terms(z(fg[gi]), y)
+                d_random, s_random = energy_terms(z(ft[pool]), y)
                 rows.append({"mask": mask, "model": name, "track": t, "field": t[:10],
                              "group": group_of(int(fate_s[i]), bool(lab.loc[t, "condensed"])),
-                             "es_model": energy_score(z(fg[gi]), y), "es_random": energy_score(z(ft[pool]), y)})
+                             "es_model": energy_score(z(fg[gi]), y), "es_random": energy_score(z(ft[pool]), y),
+                             "d_model": d_model, "s_model": s_model, "d_random": d_random, "s_random": s_random})
             print(f"  scored {name}", flush=True)
     d = pd.DataFrame(rows)
     d["model_minus_random"] = d.es_model - d.es_random
+    d["d_model_minus_random"] = d.d_model - d.d_random  # the distance term of that difference
+    d["s_model_minus_random"] = d.s_model - d.s_random  # and the spread term (ES = d - 0.5 s)
     tab = pd.concat([field_bootstrap(d, c, ["mask", "model", "group"]).assign(measure=c)
-                     for c in ["model_minus_random", "es_model", "es_random"]])
+                     for c in ["model_minus_random", "d_model_minus_random", "s_model_minus_random",
+                               "es_model", "es_random", "d_model", "s_model", "d_random", "s_random"]])
     (ROOT / "results/tables").mkdir(parents=True, exist_ok=True)
-    tab.to_csv(ROOT / "results/tables/energy_masked.csv", index=False)
+    tab.to_csv(ROOT / f"results/tables/energy_masked{TAG}.csv", index=False)
     pd.set_option("display.width", 200)
     print(tab[tab.measure == "model_minus_random"].pivot_table(
         index=["model", "group"], columns="mask", values="estimate").round(2).to_string())
@@ -136,7 +145,7 @@ def figure(tab: pd.DataFrame, models: list[str]) -> None:
     fig.suptitle("Held-out cells at 6 h, crops masked to a disc around the cell before DINOv2 (64 px)", fontsize=10)
     fig.tight_layout()
     (ROOT / "results/figures").mkdir(parents=True, exist_ok=True)
-    fig.savefig(ROOT / "results/figures/fig18_energy_masked.png", dpi=130)
+    fig.savefig(ROOT / f"results/figures/fig18_energy_masked{TAG}.png", dpi=130)
 
 
 if __name__ == "__main__":

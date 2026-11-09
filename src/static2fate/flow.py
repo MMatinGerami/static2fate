@@ -150,13 +150,15 @@ def invert(model, x1, frame, steps: int = 50):
 
 @torch.no_grad()
 def sample(model, frame, fate, steps: int = 50, guidance: float = 2.0, generator=None, x0=None,
-           size: int = 64, x_start=None, s0: float = 0.0, clamp: bool = True, **cond):
+           size: int = 64, x_start=None, s0: float = 0.0, clamp: bool = True, project=None, **cond):
     """Euler integration from noise; the same x0 can be reused to compare two fates.
 
     With x_start and s0 > 0 the integration starts part way along the path, from
     (1 - s0) * noise + s0 * x_start (as in SDEdit), so the result keeps the large-scale layout
     of x_start, more so for larger s0, while the model fills in what the condition asks for.
-    The result is clamped to [-1, 1] for images; pass clamp=False for latents.
+    `project(x, s)`, if given, is applied to the state after every step (s is the time reached),
+    for samplers that hold part of the image on a known path. The result is clamped to [-1, 1]
+    for images; pass clamp=False for latents.
     """
     device = frame.device
     in_ch = getattr(model, "in_ch", 3)
@@ -174,4 +176,6 @@ def sample(model, frame, fate, steps: int = 50, guidance: float = 2.0, generator
         v = model(torch.cat([x, x]), s, frame2, both_fates, **cond2)  # conditional and null in one pass
         v_c, v_u = v[:n], v[n:]
         x = x + (v_u + guidance * (v_c - v_u)) / steps
+        if project is not None:
+            x = project(x, (i + 1) / steps)
     return x.clamp(-1, 1) if clamp else x

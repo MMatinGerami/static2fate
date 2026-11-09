@@ -153,3 +153,33 @@ def test_losses_match_and_perceptual_is_zero_for_identical_images():
 
     out = flow_matching_losses(m, x1, torch.tensor([6, 12]), torch.tensor([0, 1]), perceptual=Same(), **cond)
     assert out["perceptual"] > 0
+
+
+def test_project_hook_is_applied_after_every_step():
+    m = UNet(ch=16, cdim=32, context=True).eval()
+    for p in m.out.parameters():
+        torch.nn.init.zeros_(p)  # zero velocity: without the hook the state stays at the noise
+    z = torch.randn(2, 3, 64, 64)
+    target = torch.rand(2, 3, 64, 64) * 2 - 1
+    frame, fate = torch.tensor([6, 12]), torch.tensor([0, 1])
+    cond = {"ctx": target, "ctx_frame": torch.zeros(2, dtype=torch.long)}
+    seen = []
+
+    def project(x, s):
+        seen.append(s)
+        return (1 - s) * z + s * target
+
+    out = sample(m, frame, fate, steps=4, x0=z.clone(), clamp=False, project=project, **cond)
+    assert seen == [0.25, 0.5, 0.75, 1.0]
+    assert torch.allclose(out, target)  # at s = 1 the hook has moved the state to the target
+
+
+
+def test_energy_terms_split_the_energy_score():
+    from static2fate.evaluate import energy_score, energy_terms
+    x = np.array([[0.0, 0.0], [4.0, 0.0], [0.0, 3.0]])
+    y = np.array([0.0, 0.0])
+    d, s = energy_terms(x, y)
+    assert d == (0 + 4 + 3) / 3 and s == (4 + 3 + 5) * 2 / 6  # mean over the 6 ordered pairs
+    assert np.isclose(energy_score(x, y), d - 0.5 * s)
+    assert energy_terms(x[:1], y) == (0.0, 0.0)  # one sample: no spread term

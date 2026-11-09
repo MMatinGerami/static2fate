@@ -1,0 +1,649 @@
+mask,model,group,estimate,ci_low,ci_high,n,measure
+cell,"frame model, 64 px, 8 h","dies, AnnexinV only",2.8141249656677245,2.431637099072318,3.1981051647381826,150,model_minus_random
+cell,"frame model, 64 px, 8 h","dies, condensed",2.089859360142758,1.6198604177201916,2.888172553342894,95,model_minus_random
+cell,"frame model, 64 px, 8 h",survives,1.3220946350364886,0.9846221156655995,1.6203897304961292,571,model_minus_random
+cell,"free samples in the disc, 0 h rim, r40","dies, AnnexinV only",2.183006846110026,1.730728843558548,2.6227764348470193,150,model_minus_random
+cell,"free samples in the disc, 0 h rim, r40","dies, condensed",1.9991857127139443,1.4660082132455075,2.6788341762838246,95,model_minus_random
+cell,"free samples in the disc, 0 h rim, r40",survives,1.6610859237911404,1.2630103844774654,2.1996643189653113,571,model_minus_random
+cell,latent frame,"dies, AnnexinV only",1.6055574226379394,1.0908266594468417,2.243028286838075,150,model_minus_random
+cell,latent frame,"dies, condensed",1.331763448213276,0.8283527542718745,2.3774435314379234,95,model_minus_random
+cell,latent frame,survives,0.6934415012232685,0.4455856270180507,0.9437392452264156,571,model_minus_random
+cell,"latent frame, anchored r40","dies, AnnexinV only",2.309030984242757,1.8280640866707916,2.928014341622883,150,model_minus_random
+cell,"latent frame, anchored r40","dies, condensed",3.0170196633589894,2.538454507127568,3.787454901082175,95,model_minus_random
+cell,"latent frame, anchored r40",survives,1.7337983276714586,1.457123998951927,1.9951790711146014,571,model_minus_random
+cell,latent video,"dies, AnnexinV only",1.400083065032959,0.9361097421314254,1.8238969084015466,150,model_minus_random
+cell,latent video,"dies, condensed",0.8992006703426964,0.3996135207429555,1.4238367667670409,95,model_minus_random
+cell,latent video,survives,0.7205326327509304,0.3864752423940375,1.1710140804248212,571,model_minus_random
+cell,"latent video, anchored r40","dies, AnnexinV only",2.5681218020121257,1.8741405382904914,3.200461672807357,150,model_minus_random
+cell,"latent video, anchored r40","dies, condensed",3.533110819364849,2.570072138583523,4.255160311893174,95,model_minus_random
+cell,"latent video, anchored r40",survives,2.3370572355707973,2.018401546726597,2.744666814833632,571,model_minus_random
+cell,"latent video, anchored r56","dies, AnnexinV only",1.346778875986735,0.9461630930918906,1.786918454939115,150,model_minus_random
+cell,"latent video, anchored r56","dies, condensed",1.2387171895880449,0.46359983116983045,1.8821463089058363,95,model_minus_random
+cell,"latent video, anchored r56",survives,0.8977206993437064,0.5593900794704395,1.3057051754757198,571,model_minus_random
+cell,"real 6 h in the disc, 0 h rim, r40","dies, AnnexinV only",-30.017639010747274,-31.715233498969013,-28.446711231110633,150,model_minus_random
+cell,"real 6 h in the disc, 0 h rim, r40","dies, condensed",-28.847232316669665,-30.93922578165782,-26.64997691063816,95,model_minus_random
+cell,"real 6 h in the disc, 0 h rim, r40",survives,-27.783003300167426,-28.35077481316654,-27.29204649076348,571,model_minus_random
+none,"frame model, 64 px, 8 h","dies, AnnexinV only",1.2618302536010741,0.9409972470441311,1.564623234898478,150,model_minus_random
+none,"frame model, 64 px, 8 h","dies, condensed",0.7016857347990337,0.19595566935009429,1.1970450637294041,95,model_minus_random
+none,"frame model, 64 px, 8 h",survives,0.729160198605833,0.4794933266420986,0.961398265985876,571,model_minus_random
+none,"free samples in the disc, 0 h rim, r40","dies, AnnexinV only",11.855294589996339,10.884470877761952,12.684962366969495,150,model_minus_random
+none,"free samples in the disc, 0 h rim, r40","dies, condensed",12.562327254445929,11.273211378794844,13.197543967317268,95,model_minus_random
+none,"free samples in the disc, 0 h rim, r40",survives,7.650091931197773,7.2468419588598465,8.158442805868518,571,model_minus_random
+none,latent frame,"dies, AnnexinV only",1.6073297055562337,1.3573354640547113,1.8832552669531357,150,model_minus_random
+none,latent frame,"dies, condensed",1.2754967037000153,1.0157323470314124,1.6494169679785018,95,model_minus_random
+none,latent frame,survives,1.416297319682801,1.0754924475748227,1.728741499994176,571,model_minus_random
+none,"latent frame, anchored r40","dies, AnnexinV only",6.826908804575602,6.022186931142359,7.642409678968073,150,model_minus_random
+none,"latent frame, anchored r40","dies, condensed",8.232562009911788,7.391423074792071,8.74458659029189,95,model_minus_random
+none,"latent frame, anchored r40",survives,7.462306294883821,7.09711660982877,7.815249856205802,571,model_minus_random
+none,latent video,"dies, AnnexinV only",1.8308091926574708,1.5264440293795822,2.1381926547566534,150,model_minus_random
+none,latent video,"dies, condensed",1.49375470813952,0.9398657656310241,1.8147958039737537,95,model_minus_random
+none,latent video,survives,1.5797446429625075,1.2696387622651835,1.885637240456013,571,model_minus_random
+none,"latent video, anchored r40","dies, AnnexinV only",6.904556550979614,5.9704651917496765,7.812251066135352,150,model_minus_random
+none,"latent video, anchored r40","dies, condensed",8.613639194086979,7.286170621607818,9.284805928811888,95,model_minus_random
+none,"latent video, anchored r40",survives,7.8895301785444,7.57226969916925,8.20629058828948,571,model_minus_random
+none,"latent video, anchored r56","dies, AnnexinV only",5.080729223887126,4.228141369035868,5.903355332093284,150,model_minus_random
+none,"latent video, anchored r56","dies, condensed",5.788600811205412,4.257981873298783,6.567197570524682,95,model_minus_random
+none,"latent video, anchored r56",survives,4.999343539703957,4.6537981227019305,5.367264608108607,571,model_minus_random
+none,"real 6 h in the disc, 0 h rim, r40","dies, AnnexinV only",1.2697893142700196,-0.35008919489920304,2.6273670298814604,150,model_minus_random
+none,"real 6 h in the disc, 0 h rim, r40","dies, condensed",3.298340466147975,1.7130874122357835,4.62696809701865,95,model_minus_random
+none,"real 6 h in the disc, 0 h rim, r40",survives,-1.3849250940433109,-2.1945432461110888,-0.37224482697651845,571,model_minus_random
+nucleus,"frame model, 64 px, 8 h","dies, AnnexinV only",2.7580675443013507,2.070192085038608,3.530903618618593,150,model_minus_random
+nucleus,"frame model, 64 px, 8 h","dies, condensed",0.567865000273052,-0.18117818053747187,2.25244878385106,95,model_minus_random
+nucleus,"frame model, 64 px, 8 h",survives,2.100580581224111,1.7608260056109932,2.3716684180778396,571,model_minus_random
+nucleus,"free samples in the disc, 0 h rim, r40","dies, AnnexinV only",0.7059665807088216,0.1599065390049754,1.2671972476102116,150,model_minus_random
+nucleus,"free samples in the disc, 0 h rim, r40","dies, condensed",-0.23847876097026624,-0.9094423614306884,0.4969562810055811,95,model_minus_random
+nucleus,"free samples in the disc, 0 h rim, r40",survives,-0.230250385304466,-0.49405938062870625,0.07665845811486245,571,model_minus_random
+nucleus,latent frame,"dies, AnnexinV only",0.7175657526652018,0.057623227635068754,1.406864282949065,150,model_minus_random
+nucleus,latent frame,"dies, condensed",1.030972611276727,0.4734622608531605,2.0324310041987705,95,model_minus_random
+nucleus,latent frame,survives,-0.07385769157610089,-0.358935876579884,0.21997506341814627,571,model_minus_random
+nucleus,"latent frame, anchored r40","dies, AnnexinV only",0.6502088737487793,0.14600220967610963,1.247913737242758,150,model_minus_random
+nucleus,"latent frame, anchored r40","dies, condensed",1.2545897433632298,0.7204041422512124,1.9699686422917506,95,model_minus_random
+nucleus,"latent frame, anchored r40",survives,0.024910826607886214,-0.2251079796554889,0.32403986845354665,571,model_minus_random
+nucleus,latent video,"dies, AnnexinV only",0.7059665807088216,0.18747881276873243,1.2511619368049636,150,model_minus_random
+nucleus,latent video,"dies, condensed",-0.23847876097026624,-0.9025138197439736,0.5228559162173148,95,model_minus_random
+nucleus,latent video,survives,-0.230250385304466,-0.49686760485808135,0.07517419283017568,571,model_minus_random
+nucleus,"latent video, anchored r40","dies, AnnexinV only",0.6737912114461263,0.12224396561184069,1.1783887572542375,150,model_minus_random
+nucleus,"latent video, anchored r40","dies, condensed",0.6809524034198962,-0.6307016531604003,1.4765158476343574,95,model_minus_random
+nucleus,"latent video, anchored r40",survives,0.12228245242464564,-0.2630714546862133,0.5592898420160685,571,model_minus_random
+nucleus,"latent video, anchored r56","dies, AnnexinV only",0.7374743016560873,0.1895640524320824,1.2489764242358017,150,model_minus_random
+nucleus,"latent video, anchored r56","dies, condensed",0.09436581260279606,-0.8303884596370515,0.7971527259797544,95,model_minus_random
+nucleus,"latent video, anchored r56",survives,-0.11658072262845816,-0.4515543067759735,0.25603595190281647,571,model_minus_random
+nucleus,"real 6 h in the disc, 0 h rim, r40","dies, AnnexinV only",-39.88206329345703,-41.04009260469013,-38.75327291792061,150,model_minus_random
+nucleus,"real 6 h in the disc, 0 h rim, r40","dies, condensed",-41.17449965226023,-42.77200754904279,-39.607029642460326,95,model_minus_random
+nucleus,"real 6 h in the disc, 0 h rim, r40",survives,-35.09763602074725,-36.02403815489701,-34.40835907566757,571,model_minus_random
+cell,"frame model, 64 px, 8 h","dies, AnnexinV only",0.6768519719441731,0.24222699923352453,1.1310438287741658,150,d_model_minus_random
+cell,"frame model, 64 px, 8 h","dies, condensed",0.20110598112407482,-0.45350016560241657,1.0155517567979526,95,d_model_minus_random
+cell,"frame model, 64 px, 8 h",survives,-1.0695407653648257,-1.4558563484189728,-0.6216477072938827,571,d_model_minus_random
+cell,"free samples in the disc, 0 h rim, r40","dies, AnnexinV only",-1.2998892847696941,-1.7637060165405274,-0.8507109594345097,150,d_model_minus_random
+cell,"free samples in the disc, 0 h rim, r40","dies, condensed",-1.5880498785721628,-2.234006964490161,-0.8477975645272628,95,d_model_minus_random
+cell,"free samples in the disc, 0 h rim, r40",survives,-2.0030531106604794,-2.4597867135280325,-1.4472778958602674,571,d_model_minus_random
+cell,latent frame,"dies, AnnexinV only",-1.7442080561319988,-2.2933533989653294,-1.0508489417924902,150,d_model_minus_random
+cell,latent frame,"dies, condensed",-1.8254264831542968,-2.343073114297828,-0.7645183293246502,95,d_model_minus_random
+cell,latent frame,survives,-2.613973731126134,-3.0166007461345443,-2.161107495687824,571,d_model_minus_random
+cell,"latent frame, anchored r40","dies, AnnexinV only",-2.6587548955281575,-3.2567394565526686,-1.818498470772196,150,d_model_minus_random
+cell,"latent frame, anchored r40","dies, condensed",-2.2542506569310237,-2.9066857534442527,-1.3658464458729722,95,d_model_minus_random
+cell,"latent frame, anchored r40",survives,-3.349820415944435,-3.733319130746353,-2.944681551008221,571,d_model_minus_random
+cell,latent video,"dies, AnnexinV only",-1.6374354553222656,-2.0756259790197147,-1.1805052987717963,150,d_model_minus_random
+cell,latent video,"dies, condensed",-2.1234548267565274,-2.766750471022277,-1.4345106189292776,95,d_model_minus_random
+cell,latent video,survives,-2.6615850378460726,-3.0264348165108257,-2.207699308202501,571,d_model_minus_random
+cell,"latent video, anchored r40","dies, AnnexinV only",-2.507043393452962,-3.1060019764741114,-1.8610933588278924,150,d_model_minus_random
+cell,"latent video, anchored r40","dies, condensed",-1.8791147934763055,-2.9102249267613067,-1.0323264875474025,95,d_model_minus_random
+cell,"latent video, anchored r40",survives,-3.101370515840066,-3.4451283995581545,-2.62864634832037,571,d_model_minus_random
+cell,"latent video, anchored r56","dies, AnnexinV only",-2.015128224690755,-2.4272325321279036,-1.514648687998937,150,d_model_minus_random
+cell,"latent video, anchored r56","dies, condensed",-2.227628828349866,-3.111621006270171,-1.4506858255181998,95,d_model_minus_random
+cell,"latent video, anchored r56",survives,-2.798869054497019,-3.183890998944065,-2.3681063053566356,571,d_model_minus_random
+cell,"real 6 h in the disc, 0 h rim, r40","dies, AnnexinV only",-30.017639010747274,-31.715233498969013,-28.446711231110633,150,d_model_minus_random
+cell,"real 6 h in the disc, 0 h rim, r40","dies, condensed",-28.847232316669665,-30.93922578165782,-26.64997691063816,95,d_model_minus_random
+cell,"real 6 h in the disc, 0 h rim, r40",survives,-27.783003300167426,-28.35077481316654,-27.29204649076348,571,d_model_minus_random
+none,"frame model, 64 px, 8 h","dies, AnnexinV only",-1.1274418767293295,-1.3943484236816766,-0.854886666097754,150,d_model_minus_random
+none,"frame model, 64 px, 8 h","dies, condensed",-1.8126437337774979,-2.282502228579979,-1.4019400068960695,95,d_model_minus_random
+none,"frame model, 64 px, 8 h",survives,-1.915305814058267,-2.240942932890951,-1.539215409044634,571,d_model_minus_random
+none,"free samples in the disc, 0 h rim, r40","dies, AnnexinV only",6.445007069905599,5.586299370666594,7.3029209298861995,150,d_model_minus_random
+none,"free samples in the disc, 0 h rim, r40","dies, condensed",6.962887292159231,5.981965120362756,7.568093598176401,95,d_model_minus_random
+none,"free samples in the disc, 0 h rim, r40",survives,1.3321609697492236,0.8615027101689148,1.9765471583867993,571,d_model_minus_random
+none,latent frame,"dies, AnnexinV only",-1.7168673706054687,-2.0341300962119737,-1.3776539678680284,150,d_model_minus_random
+none,latent frame,"dies, condensed",-1.9368575045936987,-2.317517276897765,-1.4721890519826843,95,d_model_minus_random
+none,latent frame,survives,-2.278390967908549,-2.5912987152036266,-1.9498964682215827,571,d_model_minus_random
+none,"latent frame, anchored r40","dies, AnnexinV only",-1.7515480295817056,-2.564781056166998,-0.9145015566689632,150,d_model_minus_random
+none,"latent frame, anchored r40","dies, condensed",-0.6013734315571032,-1.3091569223355806,-0.15486016139555522,95,d_model_minus_random
+none,"latent frame, anchored r40",survives,-2.1720412332832084,-2.5413531709950723,-1.693442188132999,571,d_model_minus_random
+none,latent video,"dies, AnnexinV only",-1.2503641764322917,-1.516301439773855,-0.9193926647970687,150,d_model_minus_random
+none,latent video,"dies, condensed",-1.542534597296464,-2.168557996772534,-1.1300391528786733,95,d_model_minus_random
+none,latent video,survives,-2.0209223685456656,-2.3509292940260504,-1.677473654650043,571,d_model_minus_random
+none,"latent video, anchored r40","dies, AnnexinV only",-1.8156905237833658,-2.6571039889557193,-0.947265728512501,150,d_model_minus_random
+none,"latent video, anchored r40","dies, condensed",-0.5350811004638671,-1.6159252350877764,-0.00043126141622770687,95,d_model_minus_random
+none,"latent video, anchored r40",survives,-2.1473561635994454,-2.498983228406346,-1.688818875667423,571,d_model_minus_random
+none,"latent video, anchored r56","dies, AnnexinV only",-1.194077008565267,-1.8857400978436931,-0.4319601005486083,150,d_model_minus_random
+none,"latent video, anchored r56","dies, condensed",-0.8619782297234786,-2.090354901006105,-0.20857183536500423,95,d_model_minus_random
+none,"latent video, anchored r56",survives,-1.855413607248283,-2.2526830941985807,-1.4021893231790004,571,d_model_minus_random
+none,"real 6 h in the disc, 0 h rim, r40","dies, AnnexinV only",1.2697893142700196,-0.35008919489920304,2.6273670298814604,150,d_model_minus_random
+none,"real 6 h in the disc, 0 h rim, r40","dies, condensed",3.298340466147975,1.7130874122357835,4.62696809701865,95,d_model_minus_random
+none,"real 6 h in the disc, 0 h rim, r40",survives,-1.3849250940433109,-2.1945432461110888,-0.37224482697651845,571,d_model_minus_random
+nucleus,"frame model, 64 px, 8 h","dies, AnnexinV only",0.41602603912353514,-0.27113239703500736,1.2715854146809924,150,d_model_minus_random
+nucleus,"frame model, 64 px, 8 h","dies, condensed",-1.8678171258223684,-2.595573992173572,-0.17515070227584792,95,d_model_minus_random
+nucleus,"frame model, 64 px, 8 h",survives,-0.612242496577328,-0.8874444836322037,-0.3461948156687025,571,d_model_minus_random
+nucleus,"free samples in the disc, 0 h rim, r40","dies, AnnexinV only",-1.8463560485839843,-2.5333457070783263,-1.1021587264063508,150,d_model_minus_random
+nucleus,"free samples in the disc, 0 h rim, r40","dies, condensed",-2.8449811835038035,-3.4028584777534783,-1.889970893419707,95,d_model_minus_random
+nucleus,"free samples in the disc, 0 h rim, r40",survives,-3.5653894862026343,-3.9148159562145777,-3.0913563826919246,571,d_model_minus_random
+nucleus,latent frame,"dies, AnnexinV only",-2.30174067179362,-3.106753400931999,-1.4268185558606277,150,d_model_minus_random
+nucleus,latent frame,"dies, condensed",-2.1321186065673827,-2.580882234332252,-1.2372318764038297,95,d_model_minus_random
+nucleus,latent frame,survives,-3.485000212848082,-3.888188530367839,-3.0003271390814534,571,d_model_minus_random
+nucleus,"latent frame, anchored r40","dies, AnnexinV only",-2.7966699600219727,-3.6452616519507215,-1.917025013738447,150,d_model_minus_random
+nucleus,"latent frame, anchored r40","dies, condensed",-2.2903600592362254,-2.8336772267239763,-1.5979241544342975,95,d_model_minus_random
+nucleus,"latent frame, anchored r40",survives,-3.5945938497833945,-3.9819999248452724,-3.099115609395569,571,d_model_minus_random
+nucleus,latent video,"dies, AnnexinV only",-1.8463560485839843,-2.4937441724473874,-1.1247077925221909,150,d_model_minus_random
+nucleus,latent video,"dies, condensed",-2.8449811835038035,-3.3960114144143607,-1.898272407212626,95,d_model_minus_random
+nucleus,latent video,survives,-3.5653894862026343,-3.89621788456133,-3.0900353068453508,571,d_model_minus_random
+nucleus,"latent video, anchored r40","dies, AnnexinV only",-2.375219955444336,-3.107695044717528,-1.6339384726487876,150,d_model_minus_random
+nucleus,"latent video, anchored r40","dies, condensed",-2.5258419639185856,-3.627435540821463,-1.6391854453731234,95,d_model_minus_random
+nucleus,"latent video, anchored r40",survives,-3.711477576955605,-4.173230822783275,-3.104581534506857,571,d_model_minus_random
+nucleus,"latent video, anchored r56","dies, AnnexinV only",-1.9033912913004558,-2.585549301472486,-1.1961974270274833,150,d_model_minus_random
+nucleus,"latent video, anchored r56","dies, condensed",-2.737478236148232,-3.5529377801700157,-1.7719998647949917,95,d_model_minus_random
+nucleus,"latent video, anchored r56",survives,-3.668576322378503,-4.0650276453977225,-3.151994423967272,571,d_model_minus_random
+nucleus,"real 6 h in the disc, 0 h rim, r40","dies, AnnexinV only",-39.88206329345703,-41.04009260469013,-38.75327291792061,150,d_model_minus_random
+nucleus,"real 6 h in the disc, 0 h rim, r40","dies, condensed",-41.17449965226023,-42.77200754904279,-39.607029642460326,95,d_model_minus_random
+nucleus,"real 6 h in the disc, 0 h rim, r40",survives,-35.09763602074725,-36.02403815489701,-34.40835907566757,571,d_model_minus_random
+cell,"frame model, 64 px, 8 h","dies, AnnexinV only",-4.274545987447103,-4.795628060663533,-3.713854476201291,150,s_model_minus_random
+cell,"frame model, 64 px, 8 h","dies, condensed",-3.7775067580373665,-4.5095958940157,-3.3570261716196366,95,s_model_minus_random
+cell,"frame model, 64 px, 8 h",survives,-4.783270800802629,-5.2717412454457815,-4.27862489569863,571,s_model_minus_random
+cell,"free samples in the disc, 0 h rim, r40","dies, AnnexinV only",-6.96579226175944,-7.63997150178847,-6.23912854969308,150,s_model_minus_random
+cell,"free samples in the disc, 0 h rim, r40","dies, condensed",-7.174471182572214,-7.662888475117393,-6.706905441201399,95,s_model_minus_random
+cell,"free samples in the disc, 0 h rim, r40",survives,-7.32827806890324,-7.6316690694567475,-7.009743125000793,571,s_model_minus_random
+cell,latent frame,"dies, AnnexinV only",-6.699530957539876,-7.113866210098011,-6.18273125829439,150,s_model_minus_random
+cell,latent frame,"dies, condensed",-6.314379862735146,-7.049803048806172,-5.80736945244304,95,s_model_minus_random
+cell,latent frame,survives,-6.614830464698805,-7.0733852667069,-6.112752960144594,571,s_model_minus_random
+cell,"latent frame, anchored r40","dies, AnnexinV only",-9.93557175954183,-10.485460683224249,-9.308901860585083,150,s_model_minus_random
+cell,"latent frame, anchored r40","dies, condensed",-10.542540640580027,-11.099951352425856,-10.061665869258727,95,s_model_minus_random
+cell,"latent frame, anchored r40",survives,-10.167237487231787,-10.646891782624953,-9.698638747508147,571,s_model_minus_random
+cell,latent video,"dies, AnnexinV only",-6.075037040710449,-6.7887735421953606,-5.296314288396488,150,s_model_minus_random
+cell,latent video,"dies, condensed",-6.045310994198448,-6.4643119147937735,-5.423491001376004,95,s_model_minus_random
+cell,latent video,survives,-6.764235341194006,-7.063705069414506,-6.446428829321208,571,s_model_minus_random
+cell,"latent video, anchored r40","dies, AnnexinV only",-10.150330390930176,-10.758969753295817,-9.47700023469112,150,s_model_minus_random
+cell,"latent video, anchored r40","dies, condensed",-10.824451225682308,-11.425312463582822,-9.787273148608913,95,s_model_minus_random
+cell,"latent video, anchored r40",survives,-10.876855502821726,-11.158772445518212,-10.56694027668298,571,s_model_minus_random
+cell,"latent video, anchored r56","dies, AnnexinV only",-6.723814201354981,-7.3334297271691025,-6.009632330599447,150,s_model_minus_random
+cell,"latent video, anchored r56","dies, condensed",-6.932692035875823,-7.361017782266448,-6.178272817263733,95,s_model_minus_random
+cell,"latent video, anchored r56",survives,-7.393179507681451,-7.72147904207901,-7.078454604372492,571,s_model_minus_random
+cell,"real 6 h in the disc, 0 h rim, r40","dies, AnnexinV only",0.0,0.0,0.0,150,s_model_minus_random
+cell,"real 6 h in the disc, 0 h rim, r40","dies, condensed",0.0,0.0,0.0,95,s_model_minus_random
+cell,"real 6 h in the disc, 0 h rim, r40",survives,0.0,0.0,0.0,571,s_model_minus_random
+none,"frame model, 64 px, 8 h","dies, AnnexinV only",-4.778544260660808,-5.2090867829963905,-4.3563876631433045,150,s_model_minus_random
+none,"frame model, 64 px, 8 h","dies, condensed",-5.028658937153064,-5.436549664907485,-4.542630921266159,95,s_model_minus_random
+none,"frame model, 64 px, 8 h",survives,-5.2889320253282,-5.834566381205013,-4.669688565362688,571,s_model_minus_random
+none,"free samples in the disc, 0 h rim, r40","dies, AnnexinV only",-10.820575040181478,-11.439309567742939,-10.162106188188668,150,s_model_minus_random
+none,"free samples in the disc, 0 h rim, r40","dies, condensed",-11.198879924573397,-12.121859557535743,-9.813788800993008,95,s_model_minus_random
+none,"free samples in the disc, 0 h rim, r40",survives,-12.635861922897098,-13.16927301064798,-12.102266430637112,571,s_model_minus_random
+none,latent frame,"dies, AnnexinV only",-6.648394152323405,-7.091638717327947,-6.210585198862599,150,s_model_minus_random
+none,latent frame,"dies, condensed",-6.424708416587428,-6.978432068649658,-5.76262123675904,95,s_model_minus_random
+none,latent frame,survives,-7.389376575182699,-7.656630432347174,-7.068147217569308,571,s_model_minus_random
+none,"latent frame, anchored r40","dies, AnnexinV only",-17.156913668314616,-17.78516428111495,-16.452599405493096,150,s_model_minus_random
+none,"latent frame, anchored r40","dies, condensed",-17.667870882937784,-18.15771979660284,-16.93216812316059,95,s_model_minus_random
+none,"latent frame, anchored r40",survives,-19.26869505633406,-19.816083199219115,-18.640489599158453,571,s_model_minus_random
+none,latent video,"dies, AnnexinV only",-6.162346738179525,-6.569131267594358,-5.775626810902043,150,s_model_minus_random
+none,latent video,"dies, condensed",-6.072578610871967,-6.595509440006108,-5.565914299787381,95,s_model_minus_random
+none,latent video,survives,-7.201334023016347,-7.4180523925465724,-6.921384914499899,571,s_model_minus_random
+none,"latent video, anchored r40","dies, AnnexinV only",-17.44049414952596,-17.963325539248594,-16.884938435690152,150,s_model_minus_random
+none,"latent video, anchored r40","dies, condensed",-18.29744058910169,-18.64865460734162,-17.67255852915283,95,s_model_minus_random
+none,"latent video, anchored r40",survives,-20.07377268428769,-20.49193768977673,-19.5638302169899,571,s_model_minus_random
+none,"latent video, anchored r56","dies, AnnexinV only",-12.549612464904785,-13.011972262454847,-12.029405225159335,150,s_model_minus_random
+none,"latent video, anchored r56","dies, condensed",-13.301158081857782,-13.642772973256234,-12.569280563051603,95,s_model_minus_random
+none,"latent video, anchored r56",survives,-13.70951429390448,-14.064295961894603,-13.301858282736987,571,s_model_minus_random
+none,"real 6 h in the disc, 0 h rim, r40","dies, AnnexinV only",0.0,0.0,0.0,150,s_model_minus_random
+none,"real 6 h in the disc, 0 h rim, r40","dies, condensed",0.0,0.0,0.0,95,s_model_minus_random
+none,"real 6 h in the disc, 0 h rim, r40",survives,0.0,0.0,0.0,571,s_model_minus_random
+nucleus,"frame model, 64 px, 8 h","dies, AnnexinV only",-4.684083010355631,-5.472201425291411,-3.8848321370144827,150,s_model_minus_random
+nucleus,"frame model, 64 px, 8 h","dies, condensed",-4.8713642521908405,-5.499331180825814,-4.333376858773633,95,s_model_minus_random
+nucleus,"frame model, 64 px, 8 h",survives,-5.425646155602878,-5.8618446574887875,-4.898548358291877,571,s_model_minus_random
+nucleus,"free samples in the disc, 0 h rim, r40","dies, AnnexinV only",-5.104645258585612,-5.930639492926545,-4.2594559307057205,150,s_model_minus_random
+nucleus,"free samples in the disc, 0 h rim, r40","dies, condensed",-5.213004845067075,-5.799285104931808,-4.17859856983284,95,s_model_minus_random
+nucleus,"free samples in the disc, 0 h rim, r40",survives,-6.670278201796337,-7.013375112504063,-6.193146400791308,571,s_model_minus_random
+nucleus,latent frame,"dies, AnnexinV only",-6.038612848917643,-6.848706230249708,-5.28035662403542,150,s_model_minus_random
+nucleus,latent frame,"dies, condensed",-6.32618243568822,-6.932932967406053,-5.754553198970605,95,s_model_minus_random
+nucleus,latent frame,survives,-6.822285042543962,-7.3327241684101905,-6.198093343040662,571,s_model_minus_random
+nucleus,"latent frame, anchored r40","dies, AnnexinV only",-6.893757667541504,-7.744901463775321,-6.025344950805109,150,s_model_minus_random
+nucleus,"latent frame, anchored r40","dies, condensed",-7.0898996051989105,-7.626432240155834,-6.671726098675881,95,s_model_minus_random
+nucleus,"latent frame, anchored r40",survives,-7.239009352782562,-7.780936396806979,-6.6556189996872055,571,s_model_minus_random
+nucleus,latent video,"dies, AnnexinV only",-5.104645258585612,-5.923094162393172,-4.235640681420997,150,s_model_minus_random
+nucleus,latent video,"dies, condensed",-5.213004845067075,-5.815142555563567,-4.125634004152743,95,s_model_minus_random
+nucleus,latent video,survives,-6.670278201796337,-7.027584175714543,-6.198298100053013,571,s_model_minus_random
+nucleus,"latent video, anchored r40","dies, AnnexinV only",-6.098022333780924,-7.031862654571228,-5.158287507450835,150,s_model_minus_random
+nucleus,"latent video, anchored r40","dies, condensed",-6.4135887346769636,-7.098311948776245,-5.288804416635295,95,s_model_minus_random
+nucleus,"latent video, anchored r40",survives,-7.667520058760501,-8.102243842334941,-7.136065963535883,571,s_model_minus_random
+nucleus,"latent video, anchored r56","dies, AnnexinV only",-5.2817311859130855,-6.041310169126676,-4.463027225884595,150,s_model_minus_random
+nucleus,"latent video, anchored r56","dies, condensed",-5.663688097502056,-6.331416474082253,-4.449926999807358,95,s_model_minus_random
+nucleus,"latent video, anchored r56",survives,-7.103991199500089,-7.49682979165573,-6.630346711067792,571,s_model_minus_random
+nucleus,"real 6 h in the disc, 0 h rim, r40","dies, AnnexinV only",0.0,0.0,0.0,150,s_model_minus_random
+nucleus,"real 6 h in the disc, 0 h rim, r40","dies, condensed",0.0,0.0,0.0,95,s_model_minus_random
+nucleus,"real 6 h in the disc, 0 h rim, r40",survives,0.0,0.0,0.0,571,s_model_minus_random
+cell,"frame model, 64 px, 8 h","dies, AnnexinV only",22.656614074707033,22.100085811529528,23.140683394720412,150,es_model
+cell,"frame model, 64 px, 8 h","dies, condensed",22.387071157756605,21.50695505972298,22.873089525685998,95,es_model
+cell,"frame model, 64 px, 8 h",survives,19.709891142235538,19.216329801156917,20.341171385998212,571,es_model
+cell,"free samples in the disc, 0 h rim, r40","dies, AnnexinV only",22.02549595514933,21.362996755579246,22.62827818635222,150,es_model
+cell,"free samples in the disc, 0 h rim, r40","dies, condensed",22.29639751032779,21.09878533833971,23.02957299001491,95,es_model
+cell,"free samples in the disc, 0 h rim, r40",survives,20.04888243099019,19.410357985760903,20.9426616882839,571,es_model
+cell,latent frame,"dies, AnnexinV only",21.448046531677246,20.695322042994093,22.14353207025085,150,es_model
+cell,latent frame,"dies, condensed",21.628975245827124,21.021662653195655,22.045518034063484,95,es_model
+cell,latent frame,survives,19.081238008422318,18.583685472745834,19.69824252798394,571,es_model
+cell,"latent frame, anchored r40","dies, AnnexinV only",22.151520093282063,21.322348683384355,23.03258061482038,150,es_model
+cell,"latent frame, anchored r40","dies, condensed",23.314231460972834,22.335855580252105,23.92845923176518,95,es_model
+cell,"latent frame, anchored r40",survives,20.121594834870507,19.63978785197093,20.78573296870271,571,es_model
+cell,latent video,"dies, AnnexinV only",21.242572174072265,20.55200535456746,21.89665204621539,150,es_model
+cell,latent video,"dies, condensed",21.19641246795654,19.895892274600488,21.958204496789286,95,es_model
+cell,latent video,survives,19.10832913994998,18.535242966385532,19.91418026147131,571,es_model
+cell,"latent video, anchored r40","dies, AnnexinV only",22.41061091105143,21.578001643976073,23.18910230842238,150,es_model
+cell,"latent video, anchored r40","dies, condensed",23.830322616978695,21.816165153893383,24.952502034427404,95,es_model
+cell,"latent video, anchored r40",survives,20.724853742769845,20.129766966105564,21.499689820004757,571,es_model
+cell,"latent video, anchored r56","dies, AnnexinV only",21.189267985026042,20.536457121279504,21.784418060704446,150,es_model
+cell,"latent video, anchored r56","dies, condensed",21.535928987201892,20.014403679860784,22.409036932634834,95,es_model
+cell,"latent video, anchored r56",survives,19.285517206542757,18.720902747437165,20.061998521126817,571,es_model
+cell,"real 6 h in the disc, 0 h rim, r40","dies, AnnexinV only",9.241327358881632,8.539095547677032,9.997246449807882,150,es_model
+cell,"real 6 h in the disc, 0 h rim, r40","dies, condensed",11.064960359272204,9.41313084975189,12.525857209117387,95,es_model
+cell,"real 6 h in the disc, 0 h rim, r40",survives,8.813543681296702,8.290289800036593,9.40485302684775,571,es_model
+none,"frame model, 64 px, 8 h","dies, AnnexinV only",21.268735275268554,20.630073183641247,22.075385771610065,150,es_model
+none,"frame model, 64 px, 8 h","dies, condensed",20.35072415000514,19.654251903005548,20.923100846532563,95,es_model
+none,"frame model, 64 px, 8 h",survives,19.640128830477153,19.218735022233524,20.18978272521089,571,es_model
+none,"free samples in the disc, 0 h rim, r40","dies, AnnexinV only",31.86219961166382,31.459946501151375,32.42867188311747,150,es_model
+none,"free samples in the disc, 0 h rim, r40","dies, condensed",32.21136566965203,30.896911539696532,32.94788224449564,95,es_model
+none,"free samples in the disc, 0 h rim, r40",survives,26.56106056306909,25.969569298284966,27.38422655159608,571,es_model
+none,latent frame,"dies, AnnexinV only",21.614234727223714,20.963457152923926,22.40035281603624,150,es_model
+none,latent frame,"dies, condensed",20.92453511890612,20.50543519623774,21.493414573669433,95,es_model
+none,latent frame,survives,20.32726595155412,19.789838675313224,20.937897120295524,571,es_model
+none,"latent frame, anchored r40","dies, AnnexinV only",26.833813826243084,26.13823745710035,27.593476735440134,150,es_model
+none,"latent frame, anchored r40","dies, condensed",27.881600425117895,26.934114258666167,28.541030743556423,95,es_model
+none,"latent frame, anchored r40",survives,26.37327492675514,25.85055518810358,26.988894862965402,571,es_model
+none,latent video,"dies, AnnexinV only",21.83771421432495,21.302864108385545,22.46819662568999,150,es_model
+none,latent video,"dies, condensed",21.142793123345626,20.570079144977388,21.554879349790518,95,es_model
+none,latent video,survives,20.490713274833826,20.019555104547454,21.10752069607953,571,es_model
+none,"latent video, anchored r40","dies, AnnexinV only",26.911461572647095,26.306675637487988,27.604472375203276,150,es_model
+none,"latent video, anchored r40","dies, condensed",28.262677609293085,26.81028249830335,29.020962530585795,95,es_model
+none,"latent video, anchored r40",survives,26.800498810415718,26.326434054308717,27.461139681758233,571,es_model
+none,"latent video, anchored r56","dies, AnnexinV only",25.087634245554607,24.445589519615847,25.779667831059577,150,es_model
+none,"latent video, anchored r56","dies, condensed",25.43763922641152,23.82882718998881,26.345737375418345,95,es_model
+none,"latent video, anchored r56",survives,23.910312171575274,23.38255751279926,24.553011177488596,571,es_model
+none,"real 6 h in the disc, 0 h rim, r40","dies, AnnexinV only",39.50387214660645,38.62894232021708,40.45658729957885,150,es_model
+none,"real 6 h in the disc, 0 h rim, r40","dies, condensed",41.958963835866825,39.995779552232655,43.46405914554318,95,es_model
+none,"real 6 h in the disc, 0 h rim, r40",survives,36.85146172785717,36.05055167954297,37.99045264475609,571,es_model
+nucleus,"frame model, 64 px, 8 h","dies, AnnexinV only",23.154516048431397,22.31413371430503,24.130617111100307,150,es_model
+nucleus,"frame model, 64 px, 8 h","dies, condensed",21.175512143185266,20.366010921829037,22.837087226941527,95,es_model
+nucleus,"frame model, 64 px, 8 h",survives,19.74696366799483,19.38354946110854,20.18438510094963,571,es_model
+nucleus,"free samples in the disc, 0 h rim, r40","dies, AnnexinV only",21.102415084838867,20.40626033262194,21.91837823171894,150,es_model
+nucleus,"free samples in the disc, 0 h rim, r40","dies, condensed",20.369168381941947,19.127171156967385,21.457027109507603,95,es_model
+nucleus,"free samples in the disc, 0 h rim, r40",survives,17.416132701466253,16.84338844786842,18.141703975833913,571,es_model
+nucleus,latent frame,"dies, AnnexinV only",21.114014256795247,20.34970999367473,22.007500593823796,150,es_model
+nucleus,latent frame,"dies, condensed",21.63861975418894,20.781366267178086,22.667890318194214,95,es_model
+nucleus,latent frame,survives,17.57252539519462,17.065584769617963,18.222927647799676,571,es_model
+nucleus,"latent frame, anchored r40","dies, AnnexinV only",21.046657377878827,20.423809742991875,21.902319322793517,150,es_model
+nucleus,"latent frame, anchored r40","dies, condensed",21.862236886275443,20.860712192203685,22.638435111072628,95,es_model
+nucleus,"latent frame, anchored r40",survives,17.67129391337861,17.175513034267517,18.295351952521493,571,es_model
+nucleus,latent video,"dies, AnnexinV only",21.102415084838867,20.444669140194286,21.920650359703618,150,es_model
+nucleus,latent video,"dies, condensed",20.369168381941947,19.11196908806329,21.448638561675228,95,es_model
+nucleus,latent video,survives,17.416132701466253,16.863268307217904,18.118200373570673,571,es_model
+nucleus,"latent video, anchored r40","dies, AnnexinV only",21.07023971557617,20.45400628104602,21.751927798791474,150,es_model
+nucleus,"latent video, anchored r40","dies, condensed",21.288599546332108,19.261788412040765,22.52119991770668,95,es_model
+nucleus,"latent video, anchored r40",survives,17.768665539195368,17.17265302886498,18.569267708431873,571,es_model
+nucleus,"latent video, anchored r56","dies, AnnexinV only",21.13392280578613,20.46126200186063,21.91972581465714,150,es_model
+nucleus,"latent video, anchored r56","dies, condensed",20.70201295551501,19.11239286770632,21.759578232561783,95,es_model
+nucleus,"latent video, anchored r56",survives,17.529802364142263,16.920277666934208,18.290247557108962,571,es_model
+nucleus,"real 6 h in the disc, 0 h rim, r40","dies, AnnexinV only",0.0,0.0,0.0,150,es_model
+nucleus,"real 6 h in the disc, 0 h rim, r40","dies, condensed",0.0,0.0,0.0,95,es_model
+nucleus,"real 6 h in the disc, 0 h rim, r40",survives,0.0,0.0,0.0,571,es_model
+cell,"frame model, 64 px, 8 h","dies, AnnexinV only",19.842489109039306,19.107152547814714,20.55219368871053,150,es_random
+cell,"frame model, 64 px, 8 h","dies, condensed",20.297211797613848,19.01691977590625,20.976857465887967,95,es_random
+cell,"frame model, 64 px, 8 h",survives,18.38779650719905,18.026782711289272,18.93837809046517,571,es_random
+cell,"free samples in the disc, 0 h rim, r40","dies, AnnexinV only",19.842489109039306,19.138041557995088,20.573395949714715,150,es_random
+cell,"free samples in the disc, 0 h rim, r40","dies, condensed",20.297211797613848,18.98499182513471,20.966025958797147,95,es_random
+cell,"free samples in the disc, 0 h rim, r40",survives,18.38779650719905,18.022190963056545,18.920178507546048,571,es_random
+cell,latent frame,"dies, AnnexinV only",19.842489109039306,19.12271640338004,20.535594078908886,150,es_random
+cell,latent frame,"dies, condensed",20.297211797613848,18.95510249078274,20.961037283606306,95,es_random
+cell,latent frame,survives,18.38779650719905,18.00979449846185,18.91575707229148,571,es_random
+cell,"latent frame, anchored r40","dies, AnnexinV only",19.842489109039306,19.09399108732507,20.560090906391945,150,es_random
+cell,"latent frame, anchored r40","dies, condensed",20.297211797613848,19.00647906475472,20.985128814992166,95,es_random
+cell,"latent frame, anchored r40",survives,18.38779650719905,18.030348749718275,18.9379337518748,571,es_random
+cell,latent video,"dies, AnnexinV only",19.842489109039306,19.118834566681453,20.598565318036766,150,es_random
+cell,latent video,"dies, condensed",20.297211797613848,19.00689315126653,20.95551249239625,95,es_random
+cell,latent video,survives,18.38779650719905,18.023995781574033,18.91735880445437,571,es_random
+cell,"latent video, anchored r40","dies, AnnexinV only",19.842489109039306,19.110914130798115,20.584667183545587,150,es_random
+cell,"latent video, anchored r40","dies, condensed",20.297211797613848,18.99816031923284,20.979298828140134,95,es_random
+cell,"latent video, anchored r40",survives,18.38779650719905,18.01657465445221,18.908878514124883,571,es_random
+cell,"latent video, anchored r56","dies, AnnexinV only",19.842489109039306,19.131557586770064,20.557398823543235,150,es_random
+cell,"latent video, anchored r56","dies, condensed",20.297211797613848,19.030427411082503,20.966722548319815,95,es_random
+cell,"latent video, anchored r56",survives,18.38779650719905,18.026956869810522,18.911689143589015,571,es_random
+cell,"real 6 h in the disc, 0 h rim, r40","dies, AnnexinV only",39.25896636962891,38.13818252369406,40.422674045671585,150,es_random
+cell,"real 6 h in the disc, 0 h rim, r40","dies, condensed",39.91219267594187,38.642976109756646,41.140670364204496,95,es_random
+cell,"real 6 h in the disc, 0 h rim, r40",survives,36.59654698146412,36.11136794241283,37.27427791590692,571,es_random
+none,"frame model, 64 px, 8 h","dies, AnnexinV only",20.00690502166748,19.4640937722301,20.727228461456228,150,es_random
+none,"frame model, 64 px, 8 h","dies, condensed",19.649038415206107,19.197982646999908,20.16126120614283,95,es_random
+none,"frame model, 64 px, 8 h",survives,18.91096863187132,18.58049569017683,19.338233939182597,571,es_random
+none,"free samples in the disc, 0 h rim, r40","dies, AnnexinV only",20.00690502166748,19.41774354257046,20.76725871342745,150,es_random
+none,"free samples in the disc, 0 h rim, r40","dies, condensed",19.649038415206107,19.205526008363645,20.1408576144299,95,es_random
+none,"free samples in the disc, 0 h rim, r40",survives,18.91096863187132,18.57884299073194,19.370431901106407,571,es_random
+none,latent frame,"dies, AnnexinV only",20.00690502166748,19.4310882519057,20.719487757404316,150,es_random
+none,latent frame,"dies, condensed",19.649038415206107,19.192296032852575,20.1371224230411,95,es_random
+none,latent frame,survives,18.91096863187132,18.576477487295747,19.31937282384003,571,es_random
+none,"latent frame, anchored r40","dies, AnnexinV only",20.00690502166748,19.413604649215937,20.769375793988374,150,es_random
+none,"latent frame, anchored r40","dies, condensed",19.649038415206107,19.1810371383836,20.17330490898049,95,es_random
+none,"latent frame, anchored r40",survives,18.91096863187132,18.54913080417255,19.317162687454605,571,es_random
+none,latent video,"dies, AnnexinV only",20.00690502166748,19.41577394629073,20.715632474308162,150,es_random
+none,latent video,"dies, condensed",19.649038415206107,19.175693835692833,20.16312609047048,95,es_random
+none,latent video,survives,18.91096863187132,18.57811936464327,19.341498608500615,571,es_random
+none,"latent video, anchored r40","dies, AnnexinV only",20.00690502166748,19.443377938418145,20.738391570446133,150,es_random
+none,"latent video, anchored r40","dies, condensed",19.649038415206107,19.205188166166888,20.139198314862327,95,es_random
+none,"latent video, anchored r40",survives,18.91096863187132,18.55492391116553,19.356259697320816,571,es_random
+none,"latent video, anchored r56","dies, AnnexinV only",20.00690502166748,19.410456500964617,20.6862142702493,150,es_random
+none,"latent video, anchored r56","dies, condensed",19.649038415206107,19.164414738177527,20.178726876055794,95,es_random
+none,"latent video, anchored r56",survives,18.91096863187132,18.574309193573043,19.342700602013366,571,es_random
+none,"real 6 h in the disc, 0 h rim, r40","dies, AnnexinV only",38.234082832336426,37.10389240321349,39.594457817211875,150,es_random
+none,"real 6 h in the disc, 0 h rim, r40","dies, condensed",38.660623369718856,37.73758539442596,39.40331650757325,95,es_random
+none,"real 6 h in the disc, 0 h rim, r40",survives,38.23638682190048,37.835833967996074,38.72372493530714,571,es_random
+nucleus,"frame model, 64 px, 8 h","dies, AnnexinV only",20.396448504130046,19.868560680305492,20.92945953697349,150,es_random
+nucleus,"frame model, 64 px, 8 h","dies, condensed",20.607647142912214,19.65187545041531,21.203409573374334,95,es_random
+nucleus,"frame model, 64 px, 8 h",survives,17.646383086770722,17.15610980940396,18.293844519849497,571,es_random
+nucleus,"free samples in the disc, 0 h rim, r40","dies, AnnexinV only",20.396448504130046,19.853984636891724,20.923319230079652,150,es_random
+nucleus,"free samples in the disc, 0 h rim, r40","dies, condensed",20.607647142912214,19.704221095631205,21.184458503524464,95,es_random
+nucleus,"free samples in the disc, 0 h rim, r40",survives,17.646383086770722,17.161143915539935,18.31507669002042,571,es_random
+nucleus,latent frame,"dies, AnnexinV only",20.396448504130046,19.870396857948062,20.939629873994733,150,es_random
+nucleus,latent frame,"dies, condensed",20.607647142912214,19.650564688757843,21.204614363881674,95,es_random
+nucleus,latent frame,survives,17.646383086770722,17.15590942306592,18.315195598774647,571,es_random
+nucleus,"latent frame, anchored r40","dies, AnnexinV only",20.396448504130046,19.915012782061698,20.935907888352617,150,es_random
+nucleus,"latent frame, anchored r40","dies, condensed",20.607647142912214,19.707426938414574,21.209689900635457,95,es_random
+nucleus,"latent frame, anchored r40",survives,17.646383086770722,17.145557880865734,18.31207111243181,571,es_random
+nucleus,latent video,"dies, AnnexinV only",20.396448504130046,19.864199672103084,20.90659576209752,150,es_random
+nucleus,latent video,"dies, condensed",20.607647142912214,19.63077178831525,21.21904770815943,95,es_random
+nucleus,latent video,survives,17.646383086770722,17.16891057308239,18.316426568765774,571,es_random
+nucleus,"latent video, anchored r40","dies, AnnexinV only",20.396448504130046,19.857544024103145,20.931459492893083,150,es_random
+nucleus,"latent video, anchored r40","dies, condensed",20.607647142912214,19.692723186490312,21.180756464764727,95,es_random
+nucleus,"latent video, anchored r40",survives,17.646383086770722,17.178661152403873,18.33229986016704,571,es_random
+nucleus,"latent video, anchored r56","dies, AnnexinV only",20.396448504130046,19.886130866498657,20.911749787477845,150,es_random
+nucleus,"latent video, anchored r56","dies, condensed",20.607647142912214,19.676420394738518,21.19533530693512,95,es_random
+nucleus,"latent video, anchored r56",survives,17.646383086770722,17.15404391482779,18.307779756451804,571,es_random
+nucleus,"real 6 h in the disc, 0 h rim, r40","dies, AnnexinV only",39.88206329345703,38.75327291792061,41.04009260469013,150,es_random
+nucleus,"real 6 h in the disc, 0 h rim, r40","dies, condensed",41.17449965226023,39.60702964246032,42.77200754904279,95,es_random
+nucleus,"real 6 h in the disc, 0 h rim, r40",survives,35.09763602074725,34.40835907566757,36.02403815489701,571,es_random
+cell,"frame model, 64 px, 8 h","dies, AnnexinV only",39.74053274790446,39.016175193105425,40.40204807310854,150,d_model
+cell,"frame model, 64 px, 8 h","dies, condensed",39.75667646307694,38.77305342283896,40.2910991725878,95,d_model
+cell,"frame model, 64 px, 8 h",survives,35.32767064350082,34.672297027320354,36.15280213955458,571,d_model
+cell,"free samples in the disc, 0 h rim, r40","dies, AnnexinV only",37.763791491190595,37.15710910491149,38.33228874453228,150,d_model
+cell,"free samples in the disc, 0 h rim, r40","dies, condensed",37.967520603380706,36.730811852397345,38.6984194703924,95,d_model
+cell,"free samples in the disc, 0 h rim, r40",survives,34.39415829820516,33.66843779432986,35.31614903069116,571,d_model
+cell,latent frame,"dies, AnnexinV only",37.31947271982829,36.63429402556725,37.96974914371925,150,d_model
+cell,latent frame,"dies, condensed",37.730143998798575,36.937747447645506,38.20878398688152,95,d_model
+cell,latent frame,survives,33.78323767773951,33.08650335097512,34.6042957458489,571,d_model
+cell,"latent frame, anchored r40","dies, AnnexinV only",36.40492588043213,35.56042756893133,37.305367175962765,150,d_model
+cell,"latent frame, anchored r40","dies, condensed",37.30131982502184,36.29530440604074,37.95913582308152,95,d_model
+cell,"latent frame, anchored r40",survives,33.0473909929212,32.40612018043852,33.862463586668824,571,d_model
+cell,latent video,"dies, AnnexinV only",37.426245320638024,36.818039449768875,38.04996511797803,150,d_model
+cell,latent video,"dies, condensed",37.43211565519634,36.13323548362769,38.15080175992956,95,d_model
+cell,latent video,survives,33.73562637101957,33.10105346187988,34.60725628334917,571,d_model
+cell,"latent video, anchored r40","dies, AnnexinV only",36.556637382507326,35.80850605012434,37.24130653901534,150,d_model
+cell,"latent video, anchored r40","dies, condensed",37.676455688476565,35.82599057346582,38.72173485056665,95,d_model
+cell,"latent video, anchored r40",survives,33.29584089302558,32.63233515908102,34.12018324177323,571,d_model
+cell,"latent video, anchored r56","dies, AnnexinV only",37.04855255126953,36.41920743043186,37.68715791174161,150,d_model
+cell,"latent video, anchored r56","dies, condensed",37.327941653603,35.850468945930075,38.17907868743944,95,d_model
+cell,"latent video, anchored r56",survives,33.59834235436862,32.970516406977545,34.41808247789616,571,d_model
+cell,"real 6 h in the disc, 0 h rim, r40","dies, AnnexinV only",9.241327358881632,8.539095547677032,9.997246449807882,150,d_model
+cell,"real 6 h in the disc, 0 h rim, r40","dies, condensed",11.064960359272204,9.41313084975189,12.525857209117387,95,d_model
+cell,"real 6 h in the disc, 0 h rim, r40",survives,8.813543681296702,8.290289800036593,9.40485302684775,571,d_model
+none,"frame model, 64 px, 8 h","dies, AnnexinV only",37.45094554901123,36.818461446370094,38.2625233297722,150,d_model
+none,"frame model, 64 px, 8 h","dies, condensed",36.45081234982139,35.76631097263485,36.961835465349004,95,d_model
+none,"frame model, 64 px, 8 h",survives,36.05143789234596,35.52234415762098,36.747074492053464,571,d_model
+none,"free samples in the disc, 0 h rim, r40","dies, AnnexinV only",45.02339449564616,44.609033345881805,45.58579549010235,150,d_model
+none,"free samples in the disc, 0 h rim, r40","dies, condensed",45.22634337575812,44.14925393125158,45.92397035501474,95,d_model
+none,"free samples in the disc, 0 h rim, r40",survives,39.29890467615345,38.633286756667324,40.1968121466548,571,d_model
+none,latent frame,"dies, AnnexinV only",36.86152005513509,36.223633916071165,37.609063645038916,150,d_model
+none,latent frame,"dies, condensed",36.32659857900519,35.80645055727418,36.90061240426281,95,d_model
+none,latent frame,survives,35.688352738495674,35.16867894121641,36.305184293171166,571,d_model
+none,"latent frame, anchored r40","dies, AnnexinV only",36.82683939615885,36.228203404428314,37.54642286911394,150,d_model
+none,"latent frame, anchored r40","dies, condensed",37.66208265204179,36.7622646907658,38.216066763712014,95,d_model
+none,"latent frame, anchored r40",survives,35.79470247312101,35.2046983180603,36.541770801573264,571,d_model
+none,latent video,"dies, AnnexinV only",37.328023249308266,36.72984248494381,38.03194880643617,150,d_model
+none,latent video,"dies, condensed",36.72092148630242,36.06625258319454,37.112960439956304,95,d_model
+none,latent video,survives,35.945821337858554,35.452805927124594,36.591419297085814,571,d_model
+none,"latent video, anchored r40","dies, AnnexinV only",36.76269690195719,36.16104397480089,37.45543646582104,150,d_model
+none,"latent video, anchored r40","dies, condensed",37.72837498313502,36.480020681203,38.36126488138068,95,d_model
+none,"latent video, anchored r40",survives,35.819387542804776,35.265181859266434,36.6190126759993,571,d_model
+none,"latent video, anchored r56","dies, AnnexinV only",37.38431041717529,36.76857947606519,37.99658981153659,150,d_model
+none,"latent video, anchored r56","dies, condensed",37.40147785387541,36.075178130625495,38.17501261724583,95,d_model
+none,"latent video, anchored r56",survives,36.11133009915594,35.53517233496617,36.83348816837524,571,d_model
+none,"real 6 h in the disc, 0 h rim, r40","dies, AnnexinV only",39.50387214660645,38.62894232021708,40.45658729957885,150,d_model
+none,"real 6 h in the disc, 0 h rim, r40","dies, condensed",41.958963835866825,39.995779552232655,43.46405914554318,95,d_model
+none,"real 6 h in the disc, 0 h rim, r40",survives,36.85146172785717,36.05055167954297,37.99045264475609,571,d_model
+nucleus,"frame model, 64 px, 8 h","dies, AnnexinV only",40.86610781351725,39.937688156520814,41.94533527288351,150,d_model
+nucleus,"frame model, 64 px, 8 h","dies, condensed",38.96291977731805,38.08565677817051,40.80897311369578,95,d_model
+nucleus,"frame model, 64 px, 8 h",survives,34.69943316137311,34.2913699804962,35.1871473732415,571,d_model
+nucleus,"free samples in the disc, 0 h rim, r40","dies, AnnexinV only",38.60372572580973,37.88117102105896,39.41991616919309,150,d_model
+nucleus,"free samples in the disc, 0 h rim, r40","dies, condensed",37.985755719636614,37.025944452293466,39.10868364704329,95,d_model
+nucleus,"free samples in the disc, 0 h rim, r40",survives,31.746286171747798,31.112841072505105,32.57799113745106,571,d_model
+nucleus,latent frame,"dies, AnnexinV only",38.1483411026001,37.30579064647356,39.20161660716838,150,d_model
+nucleus,latent frame,"dies, condensed",38.69861829657304,37.98781848231952,39.5821554441162,95,d_model
+nucleus,latent frame,survives,31.82667544510235,31.264607249171483,32.57669139005055,571,d_model
+nucleus,"latent frame, anchored r40","dies, AnnexinV only",37.653411814371744,36.88613904675147,38.676948592203125,150,d_model
+nucleus,"latent frame, anchored r40","dies, condensed",38.54037684390419,37.63912949727078,39.27858430437841,95,d_model
+nucleus,"latent frame, anchored r40",survives,31.717081808167038,31.101805300750783,32.49968439320057,571,d_model
+nucleus,latent video,"dies, AnnexinV only",38.60372572580973,37.92339224925353,39.38565041095239,150,d_model
+nucleus,latent video,"dies, condensed",37.985755719636614,37.0161551922848,39.158112248528866,95,d_model
+nucleus,latent video,survives,31.746286171747798,31.14450986123315,32.557592160910346,571,d_model
+nucleus,"latent video, anchored r40","dies, AnnexinV only",38.07486181894938,37.417752646954945,38.8912450702802,150,d_model
+nucleus,"latent video, anchored r40","dies, condensed",38.30489493922183,36.5983621092966,39.538418956206854,95,d_model
+nucleus,"latent video, anchored r40",survives,31.60019808099483,30.9030972726164,32.52407352651494,571,d_model
+nucleus,"latent video, anchored r56","dies, AnnexinV only",38.546690483093265,37.85170132582953,39.36347207076966,150,d_model
+nucleus,"latent video, anchored r56","dies, condensed",38.093258666992185,36.799123439940196,39.317984267132495,95,d_model
+nucleus,"latent video, anchored r56",survives,31.64309933557193,30.961619675541208,32.51531970578494,571,d_model
+nucleus,"real 6 h in the disc, 0 h rim, r40","dies, AnnexinV only",0.0,0.0,0.0,150,d_model
+nucleus,"real 6 h in the disc, 0 h rim, r40","dies, condensed",0.0,0.0,0.0,95,d_model
+nucleus,"real 6 h in the disc, 0 h rim, r40",survives,0.0,0.0,0.0,571,d_model
+cell,"frame model, 64 px, 8 h","dies, AnnexinV only",34.167837346394855,33.631978514467974,34.638730811007946,150,s_model
+cell,"frame model, 64 px, 8 h","dies, condensed",34.739210610640676,34.15791545595441,35.04103799385684,95,s_model
+cell,"frame model, 64 px, 8 h",survives,31.235559002530554,30.757952127296537,31.72272562840107,571,s_model
+cell,"free samples in the disc, 0 h rim, r40","dies, AnnexinV only",31.47659107208252,30.992046653522877,31.965430090448308,150,s_model
+cell,"free samples in the disc, 0 h rim, r40","dies, condensed",31.34224618610583,30.841265253780634,31.792203417451756,95,s_model
+cell,"free samples in the disc, 0 h rim, r40",survives,28.690551734429942,28.443890055626913,28.953828729716808,571,s_model
+cell,latent frame,"dies, AnnexinV only",31.742852376302082,31.31066285342415,32.1945022420745,150,s_model
+cell,latent frame,"dies, condensed",32.2023375059429,31.661582716041817,32.550194777092926,95,s_model
+cell,latent frame,survives,29.403999338634378,28.950287057572897,29.883236620560414,571,s_model
+cell,"latent frame, anchored r40","dies, AnnexinV only",28.50681157430013,27.923510390065868,29.060480749293202,150,s_model
+cell,"latent frame, anchored r40","dies, condensed",27.974176728098016,27.614829577776568,28.313502175511022,95,s_model
+cell,"latent frame, anchored r40",survives,25.851592316101396,25.438082606913778,26.28655899100169,571,s_model
+cell,latent video,"dies, AnnexinV only",32.36734629313151,31.861448950898914,32.922050742215596,150,s_model
+cell,latent video,"dies, condensed",32.47140637447959,32.06269113049433,33.06706852194004,95,s_model
+cell,latent video,survives,29.254594462139178,29.012053607766916,29.551060229475002,571,s_model
+cell,"latent video, anchored r40","dies, AnnexinV only",28.292052942911784,27.87842045292139,28.75809068838533,150,s_model
+cell,"latent video, anchored r40","dies, condensed",27.692266142995734,27.232422764641896,28.665961744235112,95,s_model
+cell,"latent video, anchored r40",survives,25.141974300511457,24.90563640127082,25.432382060917313,571,s_model
+cell,"latent video, anchored r56","dies, AnnexinV only",31.71856913248698,31.318858667035542,32.21710062532381,150,s_model
+cell,"latent video, anchored r56","dies, condensed",31.58402533280222,31.175780062395464,32.29446883158826,95,s_model
+cell,"latent video, anchored r56",survives,28.62565029565173,28.3774381098753,28.909111842237266,571,s_model
+cell,"real 6 h in the disc, 0 h rim, r40","dies, AnnexinV only",0.0,0.0,0.0,150,s_model
+cell,"real 6 h in the disc, 0 h rim, r40","dies, condensed",0.0,0.0,0.0,95,s_model
+cell,"real 6 h in the disc, 0 h rim, r40",survives,0.0,0.0,0.0,571,s_model
+none,"frame model, 64 px, 8 h","dies, AnnexinV only",32.36442054748535,32.10125416901467,32.638839422572744,150,s_model
+none,"frame model, 64 px, 8 h","dies, condensed",32.200176399632504,31.81779884756828,32.56183578619871,95,s_model
+none,"frame model, 64 px, 8 h",survives,32.82261812373761,32.45557678782163,33.24801774371265,571,s_model
+none,"free samples in the disc, 0 h rim, r40","dies, AnnexinV only",26.32238976796468,25.797960518292566,26.89816321467366,150,s_model
+none,"free samples in the disc, 0 h rim, r40","dies, condensed",26.02995541221217,25.092505175151555,27.445606075451515,95,s_model
+none,"free samples in the disc, 0 h rim, r40",survives,25.47568822616871,25.05547395017033,25.876331032355445,571,s_model
+none,latent frame,"dies, AnnexinV only",30.494570655822756,30.161284448424393,30.871178061881846,150,s_model
+none,latent frame,"dies, condensed",30.80412692019814,30.27086429552347,31.39186034449901,95,s_model
+none,latent frame,survives,30.72217357388311,30.530093308810926,30.934402963249404,571,s_model
+none,"latent frame, anchored r40","dies, AnnexinV only",19.98605113983154,19.40071103892866,20.644156210754176,150,s_model
+none,"latent frame, anchored r40","dies, condensed",19.560964453847784,19.147686051187193,20.13370798395858,95,s_model
+none,"latent frame, anchored r40",survives,18.84285509273175,18.45319632197528,19.26389490460266,571,s_model
+none,latent video,"dies, AnnexinV only",30.980618069966635,30.611607859069526,31.378124847450984,150,s_model
+none,latent video,"dies, condensed",31.1562567259136,30.69693817412644,31.51888649698262,95,s_model
+none,latent video,survives,30.910216126049463,30.777876323425076,31.067447599630103,571,s_model
+none,"latent video, anchored r40","dies, AnnexinV only",19.7024706586202,19.320506086438023,20.13976013412452,150,s_model
+none,"latent video, anchored r40","dies, condensed",18.931394747683875,18.60317837183072,19.44499790708224,95,s_model
+none,"latent video, anchored r40",survives,18.03777746477812,17.768727204503698,18.381087821702074,571,s_model
+none,"latent video, anchored r56","dies, AnnexinV only",24.593352343241374,24.247460255519204,24.9922205110227,150,s_model
+none,"latent video, anchored r56","dies, condensed",23.927677254927787,23.609832972918063,24.549963738593547,95,s_model
+none,"latent video, anchored r56",survives,24.40203585516133,24.20140551945762,24.60804402470494,571,s_model
+none,"real 6 h in the disc, 0 h rim, r40","dies, AnnexinV only",0.0,0.0,0.0,150,s_model
+none,"real 6 h in the disc, 0 h rim, r40","dies, condensed",0.0,0.0,0.0,95,s_model
+none,"real 6 h in the disc, 0 h rim, r40",survives,0.0,0.0,0.0,571,s_model
+nucleus,"frame model, 64 px, 8 h","dies, AnnexinV only",35.42318353017171,34.96978731264157,35.94581808926629,150,s_model
+nucleus,"frame model, 64 px, 8 h","dies, condensed",35.574815268265574,35.16983185494792,36.0946933838629,95,s_model
+nucleus,"frame model, 64 px, 8 h",survives,29.904938986756548,29.704287293357485,30.17209860258661,571,s_model
+nucleus,"free samples in the disc, 0 h rim, r40","dies, AnnexinV only",35.002621281941735,34.49834284421389,35.55141001689577,150,s_model
+nucleus,"free samples in the disc, 0 h rim, r40","dies, condensed",35.23317467538934,34.55063440258763,36.51744782328865,95,s_model
+nucleus,"free samples in the disc, 0 h rim, r40",survives,28.66030694056309,28.491278477913834,28.89130555160627,571,s_model
+nucleus,latent frame,"dies, AnnexinV only",34.068653691609704,33.488032864374475,34.66657193541293,150,s_model
+nucleus,latent frame,"dies, condensed",34.119997084768194,33.46248695123654,34.842239149718516,95,s_model
+nucleus,latent frame,survives,28.50830009981546,28.23791846820496,28.85935538703453,571,s_model
+nucleus,"latent frame, anchored r40","dies, AnnexinV only",33.21350887298584,32.50983853164635,33.818929168481205,150,s_model
+nucleus,"latent frame, anchored r40","dies, condensed",33.3562799152575,32.998945084614405,33.896265439154355,95,s_model
+nucleus,"latent frame, anchored r40",survives,28.09157578957686,27.758800490151067,28.468615541078464,571,s_model
+nucleus,latent video,"dies, AnnexinV only",35.002621281941735,34.4775831663815,35.58578492972228,150,s_model
+nucleus,latent video,"dies, condensed",35.23317467538934,34.54399765965506,36.57648615793748,95,s_model
+nucleus,latent video,survives,28.66030694056309,28.497873384956684,28.890405365688107,571,s_model
+nucleus,"latent video, anchored r40","dies, AnnexinV only",34.009244206746416,33.481038966800206,34.64768102526664,150,s_model
+nucleus,"latent video, anchored r40","dies, condensed",34.03259078577945,33.222411129730084,35.43838623024168,95,s_model
+nucleus,"latent video, anchored r40",survives,27.663065083598923,27.449190035859363,27.91979473053013,571,s_model
+nucleus,"latent video, anchored r56","dies, AnnexinV only",34.82553535461426,34.374658812534165,35.37100944102604,150,s_model
+nucleus,"latent video, anchored r56","dies, condensed",34.78249142295436,34.01950624306996,36.218105046267205,95,s_model
+nucleus,"latent video, anchored r56",survives,28.226593942859335,28.044643639635716,28.45766100529565,571,s_model
+nucleus,"real 6 h in the disc, 0 h rim, r40","dies, AnnexinV only",0.0,0.0,0.0,150,s_model
+nucleus,"real 6 h in the disc, 0 h rim, r40","dies, condensed",0.0,0.0,0.0,95,s_model
+nucleus,"real 6 h in the disc, 0 h rim, r40",survives,0.0,0.0,0.0,571,s_model
+cell,"frame model, 64 px, 8 h","dies, AnnexinV only",39.063680775960286,38.29656665851543,39.771936273571434,150,d_random
+cell,"frame model, 64 px, 8 h","dies, condensed",39.55557048195287,38.25974021136249,40.26847197867758,95,d_random
+cell,"frame model, 64 px, 8 h",survives,36.39721140886564,36.03105399956334,36.940646924462314,571,d_random
+cell,"free samples in the disc, 0 h rim, r40","dies, AnnexinV only",39.063680775960286,38.32773505352731,39.8136846590342,150,d_random
+cell,"free samples in the disc, 0 h rim, r40","dies, condensed",39.55557048195287,38.26674168914535,40.254939432423335,95,d_random
+cell,"free samples in the disc, 0 h rim, r40",survives,36.39721140886564,36.04219533250215,36.91497157778535,571,d_random
+cell,latent frame,"dies, AnnexinV only",39.063680775960286,38.30272481960399,39.780111575166345,150,d_random
+cell,latent frame,"dies, condensed",39.55557048195287,38.19558034737905,40.22685625930885,95,d_random
+cell,latent frame,survives,36.39721140886564,36.01563698370672,36.914509267716795,571,d_random
+cell,"latent frame, anchored r40","dies, AnnexinV only",39.063680775960286,38.30703900531113,39.79444963629792,150,d_random
+cell,"latent frame, anchored r40","dies, condensed",39.55557048195287,38.257834504476556,40.26418369828709,95,d_random
+cell,"latent frame, anchored r40",survives,36.39721140886564,36.04311129906214,36.944807229515426,571,d_random
+cell,latent video,"dies, AnnexinV only",39.063680775960286,38.28603127266941,39.808134734482614,150,d_random
+cell,latent video,"dies, condensed",39.55557048195287,38.25665281847904,40.22544259254216,95,d_random
+cell,latent video,survives,36.39721140886564,36.03404730311816,36.91822922633384,571,d_random
+cell,"latent video, anchored r40","dies, AnnexinV only",39.063680775960286,38.300332255810424,39.8341250314409,150,d_random
+cell,"latent video, anchored r40","dies, condensed",39.55557048195287,38.263944459759465,40.25494015830356,95,d_random
+cell,"latent video, anchored r40",survives,36.39721140886564,36.01459987811511,36.89942056496687,571,d_random
+cell,"latent video, anchored r56","dies, AnnexinV only",39.063680775960286,38.32098839547394,39.805106005719466,150,d_random
+cell,"latent video, anchored r56","dies, condensed",39.55557048195287,38.27833687543869,40.25275249873891,95,d_random
+cell,"latent video, anchored r56",survives,36.39721140886564,36.04816105375402,36.904635536608964,571,d_random
+cell,"real 6 h in the disc, 0 h rim, r40","dies, AnnexinV only",39.25896636962891,38.13818252369406,40.422674045671585,150,d_random
+cell,"real 6 h in the disc, 0 h rim, r40","dies, condensed",39.91219267594187,38.642976109756646,41.140670364204496,95,d_random
+cell,"real 6 h in the disc, 0 h rim, r40",survives,36.59654698146412,36.11136794241283,37.27427791590692,571,d_random
+none,"frame model, 64 px, 8 h","dies, AnnexinV only",38.57838742574056,38.01830244127134,39.28387929808418,150,d_random
+none,"frame model, 64 px, 8 h","dies, condensed",38.26345608359889,37.85472327756613,38.728832924627426,95,d_random
+none,"frame model, 64 px, 8 h",survives,37.96674370640422,37.684513076988736,38.34479928732821,571,d_random
+none,"free samples in the disc, 0 h rim, r40","dies, AnnexinV only",38.57838742574056,37.9735562098332,39.29400835107741,150,d_random
+none,"free samples in the disc, 0 h rim, r40","dies, condensed",38.26345608359889,37.869530203629644,38.71036848303744,95,d_random
+none,"free samples in the disc, 0 h rim, r40",survives,37.96674370640422,37.67737590533879,38.36120515282104,571,d_random
+none,latent frame,"dies, AnnexinV only",38.57838742574056,37.97313300340696,39.25449672037972,150,d_random
+none,latent frame,"dies, condensed",38.26345608359889,37.862194780902634,38.714257379319996,95,d_random
+none,latent frame,survives,37.96674370640422,37.68296315322095,38.328256412893154,571,d_random
+none,"latent frame, anchored r40","dies, AnnexinV only",38.57838742574056,37.96718785216856,39.295386625172256,150,d_random
+none,"latent frame, anchored r40","dies, condensed",38.26345608359889,37.848561202794656,38.732137576796795,95,d_random
+none,"latent frame, anchored r40",survives,37.96674370640422,37.664040761347295,38.32892811363423,571,d_random
+none,latent video,"dies, AnnexinV only",38.57838742574056,37.98129993680548,39.2758617524344,150,d_random
+none,latent video,"dies, condensed",38.26345608359889,37.84420705966966,38.72635000959355,95,d_random
+none,latent video,survives,37.96674370640422,37.682285691050524,38.34638219705404,571,d_random
+none,"latent video, anchored r40","dies, AnnexinV only",38.57838742574056,37.99765534343883,39.295357021728336,150,d_random
+none,"latent video, anchored r40","dies, condensed",38.26345608359889,37.8545664953807,38.70180325297986,95,d_random
+none,"latent video, anchored r40",survives,37.96674370640422,37.671302399129154,38.370783450981385,571,d_random
+none,"latent video, anchored r56","dies, AnnexinV only",38.57838742574056,37.960860425423654,39.273900984445376,150,d_random
+none,"latent video, anchored r56","dies, condensed",38.26345608359889,37.838537838842186,38.7565383270304,95,d_random
+none,"latent video, anchored r56",survives,37.96674370640422,37.68138760682498,38.33488359237853,571,d_random
+none,"real 6 h in the disc, 0 h rim, r40","dies, AnnexinV only",38.234082832336426,37.10389240321349,39.594457817211875,150,d_random
+none,"real 6 h in the disc, 0 h rim, r40","dies, condensed",38.660623369718856,37.73758539442596,39.40331650757325,95,d_random
+none,"real 6 h in the disc, 0 h rim, r40",survives,38.23638682190048,37.835833967996074,38.72372493530714,571,d_random
+nucleus,"frame model, 64 px, 8 h","dies, AnnexinV only",40.450081774393716,39.91164785461035,41.0450064499453,150,d_random
+nucleus,"frame model, 64 px, 8 h","dies, condensed",40.83073690314042,39.99278211636586,41.38194431678835,95,d_random
+nucleus,"frame model, 64 px, 8 h",survives,35.31167565795043,34.85097471079556,35.901577584417815,571,d_random
+nucleus,"free samples in the disc, 0 h rim, r40","dies, AnnexinV only",40.450081774393716,39.90970869754461,41.035423647949834,150,d_random
+nucleus,"free samples in the disc, 0 h rim, r40","dies, condensed",40.83073690314042,40.0505668052859,41.37298121500988,95,d_random
+nucleus,"free samples in the disc, 0 h rim, r40",survives,35.31167565795043,34.85047433691361,35.92081396976987,571,d_random
+nucleus,latent frame,"dies, AnnexinV only",40.450081774393716,39.89895073590162,41.0794195654052,150,d_random
+nucleus,latent frame,"dies, condensed",40.83073690314042,40.00322786718607,41.39534435423439,95,d_random
+nucleus,latent frame,survives,35.31167565795043,34.84904236821896,35.900898302056326,571,d_random
+nucleus,"latent frame, anchored r40","dies, AnnexinV only",40.450081774393716,39.95713882805282,41.04362712584466,150,d_random
+nucleus,"latent frame, anchored r40","dies, condensed",40.83073690314042,40.0409639334234,41.39498978295936,95,d_random
+nucleus,"latent frame, anchored r40",survives,35.31167565795043,34.846184330698826,35.89190876397498,571,d_random
+nucleus,latent video,"dies, AnnexinV only",40.450081774393716,39.912746876819746,41.01829639156669,150,d_random
+nucleus,latent video,"dies, condensed",40.83073690314042,40.00563093278466,41.391118383480695,95,d_random
+nucleus,latent video,survives,35.31167565795043,34.84320460992855,35.924234430698476,571,d_random
+nucleus,"latent video, anchored r40","dies, AnnexinV only",40.450081774393716,39.89761728475858,41.04724031771707,150,d_random
+nucleus,"latent video, anchored r40","dies, condensed",40.83073690314042,40.04612511178663,41.356993083808774,95,d_random
+nucleus,"latent video, anchored r40",survives,35.31167565795043,34.85904705537604,35.91145883453719,571,d_random
+nucleus,"latent video, anchored r56","dies, AnnexinV only",40.450081774393716,39.91042864420094,41.009077582409404,150,d_random
+nucleus,"latent video, anchored r56","dies, condensed",40.83073690314042,40.032911690676386,41.41158933805383,95,d_random
+nucleus,"latent video, anchored r56",survives,35.31167565795043,34.849175175461866,35.90038407269267,571,d_random
+nucleus,"real 6 h in the disc, 0 h rim, r40","dies, AnnexinV only",39.88206329345703,38.75327291792061,41.04009260469013,150,d_random
+nucleus,"real 6 h in the disc, 0 h rim, r40","dies, condensed",41.17449965226023,39.60702964246032,42.77200754904279,95,d_random
+nucleus,"real 6 h in the disc, 0 h rim, r40",survives,35.09763602074725,34.40835907566757,36.02403815489701,571,d_random
+cell,"frame model, 64 px, 8 h","dies, AnnexinV only",38.44238333384196,38.13355819042247,38.70595920322437,150,s_random
+cell,"frame model, 64 px, 8 h","dies, condensed",38.516717368678044,38.2004328287077,38.824958305626026,95,s_random
+cell,"frame model, 64 px, 8 h",survives,36.01882980333318,35.807913588018465,36.246881754869,571,s_random
+cell,"free samples in the disc, 0 h rim, r40","dies, AnnexinV only",38.44238333384196,38.122648834951164,38.71210242736241,150,s_random
+cell,"free samples in the disc, 0 h rim, r40","dies, condensed",38.516717368678044,38.1958497508468,38.80507811399682,95,s_random
+cell,"free samples in the disc, 0 h rim, r40",survives,36.01882980333318,35.81513321050285,36.241867330640794,571,s_random
+cell,latent frame,"dies, AnnexinV only",38.44238333384196,38.12447762225892,38.713279401168975,150,s_random
+cell,latent frame,"dies, condensed",38.516717368678044,38.19827619436546,38.81028065469982,95,s_random
+cell,latent frame,survives,36.01882980333318,35.806304589951914,36.23691722581162,571,s_random
+cell,"latent frame, anchored r40","dies, AnnexinV only",38.44238333384196,38.13074586459569,38.7020175404318,150,s_random
+cell,"latent frame, anchored r40","dies, condensed",38.516717368678044,38.2317355396588,38.81909621394411,95,s_random
+cell,"latent frame, anchored r40",survives,36.01882980333318,35.813738698398424,36.233424151976386,571,s_random
+cell,latent video,"dies, AnnexinV only",38.44238333384196,38.11615788826261,38.71071195261819,150,s_random
+cell,latent video,"dies, condensed",38.516717368678044,38.206614629014744,38.79488666311679,95,s_random
+cell,latent video,survives,36.01882980333318,35.81492904297285,36.23578351104095,571,s_random
+cell,"latent video, anchored r40","dies, AnnexinV only",38.44238333384196,38.104158880792816,38.7118622116559,150,s_random
+cell,"latent video, anchored r40","dies, condensed",38.516717368678044,38.20798696010144,38.79975808407968,95,s_random
+cell,"latent video, anchored r40",survives,36.01882980333318,35.81607042099245,36.25279568038003,571,s_random
+cell,"latent video, anchored r56","dies, AnnexinV only",38.44238333384196,38.13133978955585,38.70195452887758,150,s_random
+cell,"latent video, anchored r56","dies, condensed",38.516717368678044,38.18955857888707,38.81156676098988,95,s_random
+cell,"latent video, anchored r56",survives,36.01882980333318,35.824152972121645,36.2320641663936,571,s_random
+cell,"real 6 h in the disc, 0 h rim, r40","dies, AnnexinV only",0.0,0.0,0.0,150,s_random
+cell,"real 6 h in the disc, 0 h rim, r40","dies, condensed",0.0,0.0,0.0,95,s_random
+cell,"real 6 h in the disc, 0 h rim, r40",survives,0.0,0.0,0.0,571,s_random
+none,"frame model, 64 px, 8 h","dies, AnnexinV only",37.14296480814616,36.89403880239935,37.399132980867655,150,s_random
+none,"frame model, 64 px, 8 h","dies, condensed",37.228835336785565,36.92757289752022,37.46969885605502,95,s_random
+none,"frame model, 64 px, 8 h",survives,38.111550149065806,37.83590978143003,38.34333721425793,571,s_random
+none,"free samples in the disc, 0 h rim, r40","dies, AnnexinV only",37.14296480814616,36.899366372098406,37.38662206001612,150,s_random
+none,"free samples in the disc, 0 h rim, r40","dies, condensed",37.228835336785565,36.91943200608958,37.47519549737897,95,s_random
+none,"free samples in the disc, 0 h rim, r40",survives,38.111550149065806,37.85571763842004,38.32740007975149,571,s_random
+none,latent frame,"dies, AnnexinV only",37.14296480814616,36.89260848138026,37.38769054495996,150,s_random
+none,latent frame,"dies, condensed",37.228835336785565,36.92217082135818,37.49039495488008,95,s_random
+none,latent frame,survives,38.111550149065806,37.85931620773267,38.32729560292903,571,s_random
+none,"latent frame, anchored r40","dies, AnnexinV only",37.14296480814616,36.89352584485785,37.38635348762478,150,s_random
+none,"latent frame, anchored r40","dies, condensed",37.228835336785565,36.92317527374535,37.49895519088297,95,s_random
+none,"latent frame, anchored r40",survives,38.111550149065806,37.86047902174116,38.33188587368971,571,s_random
+none,latent video,"dies, AnnexinV only",37.14296480814616,36.901439028434496,37.389575068412285,150,s_random
+none,latent video,"dies, condensed",37.228835336785565,36.91813880066539,37.47509437266247,95,s_random
+none,latent video,survives,38.111550149065806,37.85285656640582,38.34685996938877,571,s_random
+none,"latent video, anchored r40","dies, AnnexinV only",37.14296480814616,36.89753228011658,37.39369154217582,150,s_random
+none,"latent video, anchored r40","dies, condensed",37.228835336785565,36.936476653667505,37.48384424441504,95,s_random
+none,"latent video, anchored r40",survives,38.111550149065806,37.858495079282264,38.32979457982631,571,s_random
+none,"latent video, anchored r56","dies, AnnexinV only",37.14296480814616,36.8856249733992,37.39032971819505,150,s_random
+none,"latent video, anchored r56","dies, condensed",37.228835336785565,36.93479069805061,37.48517055870651,95,s_random
+none,"latent video, anchored r56",survives,38.111550149065806,37.865420651193645,38.33444685411384,571,s_random
+none,"real 6 h in the disc, 0 h rim, r40","dies, AnnexinV only",0.0,0.0,0.0,150,s_random
+none,"real 6 h in the disc, 0 h rim, r40","dies, condensed",0.0,0.0,0.0,95,s_random
+none,"real 6 h in the disc, 0 h rim, r40",survives,0.0,0.0,0.0,571,s_random
+nucleus,"frame model, 64 px, 8 h","dies, AnnexinV only",40.10726654052734,39.53757469299144,40.699910645975415,150,s_random
+nucleus,"frame model, 64 px, 8 h","dies, condensed",40.44617952045641,40.13070794211493,41.02745997191786,95,s_random
+nucleus,"frame model, 64 px, 8 h",survives,35.330585142359425,35.00052688695107,35.63457966532295,571,s_random
+nucleus,"free samples in the disc, 0 h rim, r40","dies, AnnexinV only",40.10726654052734,39.53043543587717,40.715036768876864,150,s_random
+nucleus,"free samples in the disc, 0 h rim, r40","dies, condensed",40.44617952045641,40.13675544040147,40.99261136781723,95,s_random
+nucleus,"free samples in the disc, 0 h rim, r40",survives,35.330585142359425,35.0126385001541,35.623713836740215,571,s_random
+nucleus,latent frame,"dies, AnnexinV only",40.10726654052734,39.53068421587932,40.685483085239845,150,s_random
+nucleus,latent frame,"dies, condensed",40.44617952045641,40.13469562934115,41.034221570275044,95,s_random
+nucleus,latent frame,survives,35.330585142359425,35.02366791443915,35.62846033629677,571,s_random
+nucleus,"latent frame, anchored r40","dies, AnnexinV only",40.10726654052734,39.55601661502409,40.670030660099975,150,s_random
+nucleus,"latent frame, anchored r40","dies, condensed",40.44617952045641,40.14502223303938,41.050532206274525,95,s_random
+nucleus,"latent frame, anchored r40",survives,35.330585142359425,35.0329724462033,35.623753027689034,571,s_random
+nucleus,latent video,"dies, AnnexinV only",40.10726654052734,39.55887665199723,40.662413492924024,150,s_random
+nucleus,latent video,"dies, condensed",40.44617952045641,40.123780032250124,41.05234160282242,95,s_random
+nucleus,latent video,survives,35.330585142359425,35.01121381658972,35.62611251325808,571,s_random
+nucleus,"latent video, anchored r40","dies, AnnexinV only",40.10726654052734,39.548133902057884,40.707067881888506,150,s_random
+nucleus,"latent video, anchored r40","dies, condensed",40.44617952045641,40.13370288814973,40.997297798910296,95,s_random
+nucleus,"latent video, anchored r40",survives,35.330585142359425,35.00625252622075,35.61498502620325,571,s_random
+nucleus,"latent video, anchored r56","dies, AnnexinV only",40.10726654052734,39.54218218568203,40.67505482838566,150,s_random
+nucleus,"latent video, anchored r56","dies, condensed",40.44617952045641,40.13359358310699,41.05188558614822,95,s_random
+nucleus,"latent video, anchored r56",survives,35.330585142359425,35.01605580262613,35.61555321637141,571,s_random
+nucleus,"real 6 h in the disc, 0 h rim, r40","dies, AnnexinV only",0.0,0.0,0.0,150,s_random
+nucleus,"real 6 h in the disc, 0 h rim, r40","dies, condensed",0.0,0.0,0.0,95,s_random
+nucleus,"real 6 h in the disc, 0 h rim, r40",survives,0.0,0.0,0.0,571,s_random

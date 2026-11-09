@@ -1,0 +1,56 @@
+model,space,res,auroc,n
+"64 px, 8 h",readouts,64,0.5358651119761629,6528
+"64 px, 8 h",handcrafted,64,0.57967770058391,6528
+"64 px, 8 h",dinov2,64,0.9965255250384468,6528
+ae128,readouts,64,0.5367296006944444,6528
+ae128,handcrafted,64,0.5544607242406767,6528
+ae128,dinov2,64,0.995422903000048,6528
+latent frame,readouts,64,0.5494816071342753,6528
+latent frame,handcrafted,64,0.5680782519043157,6528
+latent frame,dinov2,64,0.998953227124183,6528
+"latent frame, anchored r40",readouts,64,0.6057063201352846,6528
+"latent frame, anchored r40",handcrafted,64,0.6327117837790753,6528
+"latent frame, anchored r40",dinov2,64,0.9984687943038736,6528
+latent video,readouts,64,0.5514522847282295,6528
+latent video,handcrafted,64,0.5805984139213283,6528
+latent video,dinov2,64,0.9989242231052959,6528
+"latent video, anchored r40",readouts,64,0.6016785160755478,6528
+"latent video, anchored r40",handcrafted,64,0.6501756761221645,6528
+"latent video, anchored r40",dinov2,64,0.9985808680855921,6528
+"latent video, anchored r56",readouts,64,0.5750539531069782,6528
+"latent video, anchored r56",handcrafted,64,0.6127139351451365,6528
+"latent video, anchored r56",dinov2,64,0.9990626727100155,6528
+"real 6 h in the disc, 0 h rim, r40",readouts,64,0.5583569777098952,6528
+"real 6 h in the disc, 0 h rim, r40",handcrafted,64,0.5801678591166859,6528
+"real 6 h in the disc, 0 h rim, r40",dinov2,64,0.9879049486675798,6528
+"real 6 h in the disc, 0 h rim, r56",readouts,64,0.5098305320519753,6528
+"real 6 h in the disc, 0 h rim, r56",handcrafted,64,0.5200802144157295,6528
+"real 6 h in the disc, 0 h rim, r56",dinov2,64,0.9924978148428489,6528
+"free samples in the disc, 0 h rim, r40",readouts,64,0.5781953042399558,6528
+"free samples in the disc, 0 h rim, r40",handcrafted,64,0.6286707448757689,6528
+"free samples in the disc, 0 h rim, r40",dinov2,64,0.9966738303777393,6528
+"free samples in the disc, 0 h rim, r56",readouts,64,0.5514058219795271,6528
+"free samples in the disc, 0 h rim, r56",handcrafted,64,0.5876434807225586,6528
+"free samples in the disc, 0 h rim, r56",dinov2,64,0.9993616299920703,6528
+"64 px, 8 h",handcrafted,128,0.7480999082384179,6528
+"64 px, 8 h",dinov2,128,0.9999935233744233,6528
+ae128,handcrafted,128,0.6739445165321032,6528
+ae128,dinov2,128,0.9991736201220683,6528
+latent frame,handcrafted,128,0.6396018808871587,6528
+latent frame,dinov2,128,0.999923876183439,6528
+"latent frame, anchored r40",handcrafted,128,0.6592778693891772,6528
+"latent frame, anchored r40",dinov2,128,0.9998728140919357,6528
+latent video,handcrafted,128,0.6353243982182334,6528
+latent video,dinov2,128,0.9999136449923107,6528
+"latent video, anchored r40",handcrafted,128,0.6799933093641868,6528
+"latent video, anchored r40",dinov2,128,0.999882200505815,6528
+"latent video, anchored r56",handcrafted,128,0.6618181145773261,6528
+"latent video, anchored r56",dinov2,128,0.9999519415609381,6528
+"real 6 h in the disc, 0 h rim, r40",handcrafted,128,0.5749071965259756,6528
+"real 6 h in the disc, 0 h rim, r40",dinov2,128,0.9916945255430604,6528
+"real 6 h in the disc, 0 h rim, r56",handcrafted,128,0.5188179294772444,6528
+"real 6 h in the disc, 0 h rim, r56",dinov2,128,0.9934152429354095,6528
+"free samples in the disc, 0 h rim, r40",handcrafted,128,0.6427349719759227,6528
+"free samples in the disc, 0 h rim, r40",dinov2,128,0.9994962311670991,6528
+"free samples in the disc, 0 h rim, r56",handcrafted,128,0.6266585793324683,6528
+"free samples in the disc, 0 h rim, r56",dinov2,128,0.9999669598231449,6528

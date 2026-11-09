@@ -48,11 +48,23 @@ def energy_score(samples: np.ndarray, y: np.ndarray) -> float:
     x = samples[~np.isnan(samples).any(axis=1)]
     if len(x) == 0 or np.isnan(y).any():
         return np.nan
+    first, second = energy_terms(x, y)
+    return float(first - 0.5 * second)
+
+
+def energy_terms(samples: np.ndarray, y: np.ndarray) -> tuple[float, float]:
+    """The two terms of the energy score: mean distance to y, and mean distance between samples.
+
+    ES = first - 0.5 * second. The first term is the accuracy of the samples, the second their
+    spread; a sharper ensemble with the same accuracy scores worse, which is what a proper score
+    should do, but the two are worth reading apart. With one sample the second term is 0.
+    """
+    x = samples[~np.isnan(samples).any(axis=1)]
     first = np.linalg.norm(x - y, axis=1).mean()
     if len(x) == 1:
-        return float(first)
+        return float(first), 0.0
     second = np.linalg.norm(x[:, None] - x[None], axis=2).sum() / (len(x) * (len(x) - 1))
-    return float(first - 0.5 * second)
+    return float(first), float(second)
 
 
 def rank_of_own(queries: np.ndarray, candidates: np.ndarray, own: np.ndarray):
