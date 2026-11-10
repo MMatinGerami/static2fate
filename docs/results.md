@@ -11,11 +11,11 @@ for 6 h and then stained for AnnexinV, so every cell has a video and a known fat
 ([S-BIAD2515](https://www.ebi.ac.uk/biostudies/BioImages/studies/S-BIAD2515), Lippincott et al.,
 Way lab, CC0).
 
-Status (8 November 2026): data pipeline, baselines, a fate-conditioned generative model, a
+Status (10 November 2026): data pipeline, baselines, a fate-conditioned generative model, a
 version that also sees an earlier frame of the cell, GPU runs showing that more training,
 resolution, width or cells do not change the readout scores, a video model with temporal
-attention, a KL autoencoder, and latent frame and video models scored on the whole crop and
-masked to the cell.
+attention, a KL autoencoder, latent frame and video models scored on the whole crop and
+masked to the cell, and a latent video model conditioned on three fate classes.
 
 ## Findings so far
 
@@ -903,6 +903,65 @@ angles. Condensation is the one change these models predict better than "nothing
 From here the two terms are reported, not their difference, and "model minus random" is
 read as the spread it mostly is.
 
+### Three fate classes
+
+The one target the 0 h copy does not already give is the AnnexinV-only dying cell, whose
+nucleus every two-class model redraws as condensing: "dies" lumps the two ways of dying
+together, and the condensed way is the one the model learns. So the fate conditioning now has
+three classes, survives / dies AnnexinV only / dies condensed (`--fates 3` in
+`scripts/09_train_flow.py` and `34_train_latent.py`, from the `condensed` column of the fate
+labels; the no-fate class of classifier-free guidance is always the last index, so the
+two-class checkpoints load unchanged). Training set 1167 / 337 / 415 cells, held-out 571 / 150 /
+95. The latent video model was trained from scratch with it for 6 h on Kaggle (seed 4, 90,173
+steps, `kaggle/fate3/`), next to a two-class run with the same seed and budget on the other
+GPU (86,153 steps), so that a difference to the seed 3 reference can be told from seed noise.
+The three runs end at the same training loss (1.31 to 1.32 over the last 5,000 steps). Scoring
+chain with tag `_fate3`; the energy-score terms recomputed per cell against the copy by
+`scripts/43_masked_vs_copy.py` (`results/tables/energy_masked_vs_copy.csv`, same masks,
+features and normalisation as `39_energy_masked.py`, so the whole-crop numbers sit 0.2 below
+those of `42_energy_terms.py`). DINOv2 at 64 px, held-out cells at 6 h, survive / condensed /
+AnnexinV only:
+
+| | distance d to the real 6 h frame | spread s between the samples |
+|---|---|---|
+| whole crop: 0 h copy | 36.0 / 39.5 / 37.2 | 0 |
+| whole crop: latent video (seed 3) | 35.9 / 36.7 / 37.3 | 30.9 / 31.2 / 31.0 |
+| whole crop: latent video, seed 4 | 36.0 / 36.7 / 37.3 | 31.0 / 31.3 / 31.0 |
+| whole crop: latent video, 3 fates | 35.9 / 36.8 / 37.0 | 30.8 / 31.3 / 31.0 |
+| nucleus (r = 24 px): 0 h copy | 32.2 / 44.5 / 37.3 | 0 |
+| nucleus: latent video (seed 3) | 31.7 / 38.0 / 38.6 | 28.7 / 35.2 / 35.0 |
+| nucleus: latent video, seed 4 | 31.8 / 38.0 / 38.8 | 28.5 / 35.8 / 35.7 |
+| nucleus: latent video, 3 fates | 31.8 / 37.7 / 37.7 | 28.4 / 34.2 / 34.8 |
+
+The AnnexinV-only nuclei are not closer to their real future than the 0 h copy, but they are
+no longer further. At the nucleus the three-class model is 37.7 (CI 36.5 to 38.9) against the
+copy's 37.3, a paired difference of 0.5 (CI -0.6 to 1.5), where the two-class models are 1.3
+(CI -0.4 to 3.1, seed 3) and 1.5 (CI -0.1 to 3.2, seed 4) further than the copy; on the whole
+crop it is 37.0 against 37.2 (difference -0.2, CI -1.4 to 1.2). The gain over the seed-matched
+two-class run, 1.1 at the nucleus (CI -2.2 to 0.2 for three fates minus seed 4), is not itself
+established with 150 cells. Survivors and condensing cells are unchanged (31.8 and 37.7 at the
+nucleus, against 32.2 and 44.5 for the copy), the spread is the same to 1 unit, and so are the
+realism probe (handcrafted at 128 px 0.65 against 0.63 and 0.64; DINOv2 saturated for all) and
+the identity rank (0.46 against 0.47).
+
+What did change is how the two kinds of dying cell move. The nucleus-area reversals per clip
+(`temporal_fate3.csv`) now separate them: 1.14 (CI 1.10 to 1.16) for AnnexinV-only cells against
+1.07 (CI 0.94 to 1.20) real, and 0.71 (CI 0.66 to 0.80) for condensing cells against 0.65 (CI
+0.57 to 0.83) real, where the two-class runs give 0.89 and 0.90 for the first group and 0.78
+and 0.88 for the second, one number for both ways of dying. The size of the change
+overshoots: the median absolute nucleus-area change over 60 min is 154 px² (CI 144 to 168) for
+AnnexinV-only cells against 119 (CI 93 to 158) real and 107 to 111 for the two-class runs,
+while condensing cells are 93 (CI 81 to 116) against 114 real. The per-cell skills at 6 h
+(`percell_skill_fate3.csv`) move the same way, by less than their CIs: nucleus area in
+AnnexinV-only cells Spearman 0.38 (CI 0.19 to 0.52) against 0.34 and 0.31 for the two-class
+runs and 0.23 for the copy; Hoechst intensity 0.16 (CI 0.01 to 0.27) against 0.01 and 0.14,
+and in condensing cells 0.34 (CI 0.12 to 0.54) against 0.22 and 0.16 (copy 0.26). So the third
+class gives the model a second way of dying that it draws as moving rather than condensing, and
+that brings the AnnexinV-only nucleus level with the copy; getting closer than the copy, for
+any group but the condensing one, is still open.
+
+![masked, three fates](../results/figures/fig18_energy_masked_fate3.png)
+
 ## Next
 
 - Invert the context frame under the context model, so it keeps the cell's identity and uses
@@ -920,9 +979,10 @@ read as the spread it mostly is.
   the neighbours' futures have to be predicted too. Splitting the energy score shows every
   model at the same distance from the cell's own future as the 0 h copy, except for
   condensing cells; the next measure of progress is that distance, at the nucleus and on the
-  whole crop, against the copy. The next model step is a target the copy does not already
-  give: the AnnexinV-only cells, which every model redraws as condensing (fate conditioning
-  with three classes instead of two, since "dies" lumps the two ways of dying together).
+  whole crop, against the copy. Conditioning on three fate classes instead of two gives the
+  AnnexinV-only cells their own way of dying (reversals 1.14 against 1.07 real) and brings
+  their nuclei level with the copy (37.7 against 37.3, from 38.6), not past it; no group but
+  the condensing one is closer than the copy yet.
 - Link daughters to mothers in the tracker so dividing cells get a fate too; do cells that
   divide under drug die more or less often?
 - Get the colour of apoptosis right. The per-field scaling is part of it (Hoechst white point
@@ -932,4 +992,6 @@ read as the spread it mostly is.
   motion between them, so it is now the default generator. Two things to fix in it: it
   treats AnnexinV-only dying cells like condensing ones (reversals 0.84 against 1.07), and
   longer training makes the clips too still. The latent video model has the same smoothness
-  with nucleus-area changes closer to real (0.89 reversals for AnnexinV-only cells).
+  with nucleus-area changes closer to real (0.89 reversals for AnnexinV-only cells), and
+  with three fate classes 1.14; the next thing to check is why that model's nucleus-area
+  change for AnnexinV-only cells overshoots (154 px² over 60 min against 119 real).

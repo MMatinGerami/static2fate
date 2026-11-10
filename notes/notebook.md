@@ -832,3 +832,31 @@ at the nucleus); AnnexinV-only nuclei are further than the copy for every model.
 "Keeping the neighbourhood by hand" and "What the energy score was counting"; README rows
 updated; Next points at the two terms as the measure and at AnnexinV-only cells (three fate
 classes) as the model step. Mac on battery from 08:56 (at university), no further compute.
+
+18:40: three fate classes. UNet and VideoUNet keep n_fates and the no-fate class is the last
+index (static2fate.flow.null_fate), so the two-class checkpoints load unchanged (tests for
+both model types); 09_train_flow.fate_classes builds survives / dies AnnexinV only / dies
+condensed from fate_labels.parquet (train 1167 / 337 / 415, held out 571 / 150 / 95),
+--fates 3 in 09 and 34, read back from run.json by 35. Smoke run of 34 and 35 with three
+classes on fake latents on the Mac. Pushed to main (2dd73a1). Kaggle week: the editor says
+10 h remaining, enough for one 6 h session, so kaggle/fate3/ pushed at 18:42 (slug
+static2fate-fate-3): GPU 0 lat_video_fate3 (latent video, three classes, from scratch,
+seed 4, 6 h), GPU 1 lat_video_s4 (two classes, same seed, the seed-matched control; the
+reference lat_video is seed 3). Waiter in place; chain with tag _fate3 to follow.
+
+## 2026-11-10
+
+11:50: fate3 round scored. The kernel ran 18:42 to about 01:00 (both runs the full 6 h, no
+errors; lat_video_fate3 90,173 steps, lat_video_s4 86,153, final losses 1.31 to 1.32 like the
+seed 3 reference). Download note: `kaggle kernels output` (CLI 2.2.5) fetches only the first page
+of 20 files, so the control's run.json, samples and train log came through the Python API with a
+file pattern. Chain with tag _fate3 10:42 to 11:25 on mains. Result: the AnnexinV-only nucleus is
+level with the 0 h copy (masked DINOv2 d 37.7, CI 36.5 to 38.9, against 37.3; paired difference
+0.5, CI -0.6 to 1.5; the two-class runs are 1.3 to 1.5 further than the copy, the seed-matched
+one 38.8), not past it, and the gain over the seed-matched control (1.1) is within its CI.
+Reversals now separate the two ways of dying (1.14 AnnexinV only, 0.71 condensed; real 1.07 and
+0.65), but the 60 min nucleus-area change of AnnexinV-only cells overshoots (154 px² against 119
+real). Per-cell skills move the same way within CIs. Realism and identity unchanged. New
+scripts/43_masked_vs_copy.py pairs the per-cell distances with the copy (39 had no copy row and
+per-model CIs only); the whole-crop numbers of that pipeline sit 0.2 below 42's. Written up as
+"Three fate classes" in docs/results.md.
