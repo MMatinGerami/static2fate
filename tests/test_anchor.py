@@ -7,6 +7,7 @@ from pathlib import Path
 import torch
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "scripts"))
+sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "scripts/archive"))
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "src"))
 
 from static2fate.flow import UNet, sample  # noqa: E402

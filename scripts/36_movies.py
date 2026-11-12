@@ -2,10 +2,11 @@
 
 Cell level: for each fate group, held-out cells with clean tracks (never near the field
 border, no jump over 25 px between frames), chosen with a fixed seed. Each row is one cell:
-its real course at 128 px, the same at 64 px (the resolution the generator works at), then
-generated clips of the video model started from the frame model (results/kaggle/video64_init,
-29_generate_clips.py). The generator saw only the 0 h frame, so until 3 h the generated
-columns show that frame, marked "given"; from 3 h on they play the clip. One GIF per group with
+its real course, then generated clips of the latent video model with three fate classes
+(results/kaggle/lat_video_fate3, 35_generate_latent.py; a 64 px model also gets the real course
+at 64 px). The generator is given only the 0 h frame and the fate group and draws 3 to 6 h, so
+until 3 h the generated columns show the 0 h frame, dimmed and marked "given"; from 3 h on
+they play the clip. One GIF per group with
 three cells and three clips, and a strip for the README with one cell per group and two clips.
 
 Field level: the central quarter of one held-out field at 19.53 nM over the 13 frames, colour
@@ -68,7 +69,7 @@ def clean_heldout_cells(train) -> pd.DataFrame:
     inside = g.apply(lambda d: (d.y.min() > 64) & (d.x.min() > 64) & (d.y.max() < 1900 - 64) & (d.x.max() < 1900 - 64))
     step = g.apply(lambda d: np.hypot(d.y.diff(), d.x.diff()).max())
     ok = lab.loc[inside[inside & (step < 25)].index].copy()
-    ok["group"] = [group_of(int(a), bool(c)) for a, c in zip(ok["apoptotic"], ok["condensed"])]
+    ok["group"] = [group_of(int(a), bool(c)) for a, c in zip(ok["apoptotic"], ok["condensed"], strict=True)]
     return ok
 
 
@@ -81,7 +82,9 @@ def load_clips(mdir: Path):
 
 def cell_movie(rows: list[tuple[str, int, str]], crops, clip_pos, clips, n_clips: int, title: str, path: Path):
     """rows: (track, crop index, group). Columns: real 128, real 64, generated clips."""
-    cols = ["real, 128 px", "real, 64 px"] + [f"generated {k + 1}" for k in range(n_clips)]
+    native = clips.shape[-1] == TILE  # a 128 px model needs no second, downsampled real column
+    cols = (["real"] if native else ["real, 128 px", "real, 64 px"]) + [f"generated {k + 1}" for k in range(n_clips)]
+    n_real = len(cols) - n_clips
     w = GAP + len(cols) * (TILE + GAP)
     h = HEAD + 22 + len(rows) * (TILE + GAP + 14)
     f_small, f_big = font(11), font(13)
@@ -96,10 +99,12 @@ def cell_movie(rows: list[tuple[str, int, str]], crops, clip_pos, clips, n_clips
             y0 = HEAD + 22 + r * (TILE + GAP + 14)
             x = np.asarray(crops[ci, f])
             small = x.reshape(3, 64, 2, 64, 2).mean((2, 4)).round().astype(np.uint8)
-            tiles = [rgb(x), rgb(small)]
+            tiles = [rgb(x)] if native else [rgb(x), rgb(small)]
             for k in range(n_clips):
                 if f < 6:
-                    ctx = np.asarray(crops[ci, 0]).reshape(3, 64, 2, 64, 2).mean((2, 4)).round().astype(np.uint8)
+                    ctx = np.asarray(crops[ci, 0])
+                    if not native:
+                        ctx = ctx.reshape(3, 64, 2, 64, 2).mean((2, 4)).round().astype(np.uint8)
                     t = rgb(ctx).point(lambda v: v * 0.45)
                 else:
                     t = rgb(np.asarray(clips[clip_pos[track], k, f - 6]))
@@ -107,7 +112,7 @@ def cell_movie(rows: list[tuple[str, int, str]], crops, clip_pos, clips, n_clips
             for j, t in enumerate(tiles):
                 x0 = GAP + j * (TILE + GAP)
                 im.paste(t, (x0, y0))
-                if j >= 2 and f < 6:
+                if j >= n_real and f < 6:
                     d.text((x0 + 4, y0 + 4), "given: 0 h frame", fill=(230, 230, 230), font=f_small)
             d.rectangle([GAP - 2, y0 - 2, GAP + TILE + 1, y0 + TILE + 1], outline=COLOURS[grp], width=2)
             d.text((GAP, y0 + TILE + 1), f"{grp} ({track})", fill=COLOURS[grp], font=f_small)
@@ -178,5 +183,5 @@ def main(mdir: Path, well_fov: str) -> None:
 
 
 if __name__ == "__main__":
-    main(Path(sys.argv[1]) if len(sys.argv) > 1 else ROOT / "results/kaggle/video64_init",
+    main(Path(sys.argv[1]) if len(sys.argv) > 1 else ROOT / "results/kaggle/lat_video_fate3",
          sys.argv[2] if len(sys.argv) > 2 else "E-08_F0001")

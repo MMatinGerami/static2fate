@@ -2,7 +2,7 @@
 
 Takes the autoencoder of the static2fate-ae kernel ("ae128"), re-encodes the two-fate cells
 (33_encode_latents.py, a few minutes), then trains from scratch, as the reference latent video
-model was (the warm start from the frame model bought nothing, docs/results.md "Do more steps
+model was (the warm start from the frame model bought nothing, docs/log.md "Do more steps
 or a warm start buy content?"), with the fate split into survives / dies AnnexinV only /
 dies condensed (34_train_latent.py --fates 3): on GPU 0 "lat_video_fate3", seed 4. GPU 1
 would otherwise idle for the same 6 h of quota, so it trains "lat_video_s4", the two-class

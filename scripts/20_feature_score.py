@@ -14,7 +14,7 @@ Features are cached in results/features/.
 
 Usage: uv run scripts/20_feature_score.py [name=dir ...]   (default: the three context models)
 Writes results/tables/feature_score.csv, feature_score_vs_1h.csv,
-results/figures/fig12_feature_score.png (model minus copy + typical change) and
+results/figures/supporting/fig12_feature_score.png (model minus copy + typical change) and
 fig12b_feature_score_vs_random_cell.png.
 """
 
@@ -162,9 +162,9 @@ def main(models: dict[str, Path]) -> None:
               .round(2).to_string())
 
     plot(tab, list(models), "model_minus_drift", "copy + typical change",
-         ROOT / f"results/figures/fig12_feature_score{TAG}.png")
+         ROOT / f"results/figures/supporting/fig12_feature_score{TAG}.png")
     plot(tab, list(models), "model_minus_random", "random same-fate cell",
-         ROOT / f"results/figures/fig12b_feature_score_vs_random_cell{TAG}.png")
+         ROOT / f"results/figures/supporting/fig12b_feature_score_vs_random_cell{TAG}.png")
 
 
 def plot(tab: pd.DataFrame, models: list[str], measure: str, baseline: str, out: Path) -> None:

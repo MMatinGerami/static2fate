@@ -18,7 +18,7 @@ the fraction of cells whose samples all agree, and the real 6 h frame under the 
 label (which used raw whole-field intensities) as a check on the crop-space rule.
 
 Usage: STATIC2FATE_TAG=<tag> uv run scripts/45_guidance_mixture.py [name=dir ...]
-Writes results/tables/guidance_mixture<tag>.csv and results/figures/fig20_guidance_mixture<tag>.png.
+Writes results/tables/guidance_mixture<tag>.csv and results/figures/supporting/fig20_guidance_mixture<tag>.png.
 """
 
 import importlib
@@ -137,8 +137,8 @@ def figure(tab: pd.DataFrame, cells: pd.DataFrame, order: list[str]) -> None:
     ax.legend(fontsize=8)
     fig.suptitle("Held-out cells at 6 h, crop-space rules at 64 px, 95% CI over 12 fields", fontsize=10)
     fig.tight_layout()
-    (ROOT / "results/figures").mkdir(parents=True, exist_ok=True)
-    fig.savefig(ROOT / f"results/figures/fig20_guidance_mixture{TAG}.png", dpi=130)
+    (ROOT / "results/figures/supporting").mkdir(parents=True, exist_ok=True)
+    fig.savefig(ROOT / f"results/figures/supporting/fig20_guidance_mixture{TAG}.png", dpi=130)
 
 
 if __name__ == "__main__":

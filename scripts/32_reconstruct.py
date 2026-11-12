@@ -13,7 +13,7 @@ reconstruction.
 
 Usage: uv run scripts/32_reconstruct.py [ae dir, default results/autoencoder] [name]
 Writes <ae dir>/recon/samples.npy (cells, 4, 1, 3, 128, 128) uint8 and samples_tracks.npy,
-results/tables/autoencoder_<name>.csv and results/figures/fig16_recon_<name>.png (copies of
+results/tables/autoencoder_<name>.csv and results/figures/supporting/fig16_recon_<name>.png (copies of
 both in <ae dir>/recon/).
 """
 
@@ -104,8 +104,8 @@ def main(mdir: Path, name: str) -> None:
         tab.to_csv(d / f"autoencoder_{name}.csv", index=False)
     pd.set_option("display.width", 200)
     print(tab.round(3).to_string(index=False))
-    (ROOT / "results/figures").mkdir(parents=True, exist_ok=True)
-    figure(x, recon.view_as(x), group, name, [ROOT / "results/figures", rdir])
+    (ROOT / "results/figures/supporting").mkdir(parents=True, exist_ok=True)
+    figure(x, recon.view_as(x), group, name, [ROOT / "results/figures/supporting", rdir])
 
 
 def figure(x, recon, group, name, dirs):

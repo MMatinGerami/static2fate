@@ -1,0 +1,7 @@
+step,cells
+"nuclei segmented at 0 h, 119 fields",23902
+tracked from 0 h to the terminal image,7503
+with a cell mask and an AnnexinV value (labelled),6676
+at the four doses the models use (4.88 to 39.06 nM),2735
+"of these, training wells (rows C and D)",1919
+"of these, held-out wells (row E, 12 fields)",816

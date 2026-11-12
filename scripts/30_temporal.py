@@ -13,7 +13,7 @@ Usage: STATIC2FATE_TAG=<tag> uv run scripts/30_temporal.py [name=dir ...]
 A dir with clips.npy (29_generate_clips.py) is a video model; one with samples.npy only
 (19_generate_samples.py) is a frame model. Default: video=results/kaggle/video64 and
 "frame model"=results/kaggle/ctx64_long.
-Writes results/tables/temporal<tag>.csv and results/figures/fig15_temporal<tag>.png.
+Writes results/tables/temporal<tag>.csv and results/figures/supporting/fig15_temporal<tag>.png.
 """
 
 import importlib
@@ -177,7 +177,7 @@ def figure(out, sources, pos, group, fate, lab, tracks):
                     ax.set_title(f"{group[i]}, {h / 2:.0f} h" if j == 0 else f"{h / 2:.0f} h", fontsize=8)
     fig.suptitle("Temporal consistency of generated futures (held-out cells, context 0 h, true fate)", fontsize=11)
     fig.tight_layout()
-    fig.savefig(ROOT / f"results/figures/fig15_temporal{TAG}.png", dpi=130)
+    fig.savefig(ROOT / f"results/figures/supporting/fig15_temporal{TAG}.png", dpi=130)
 
 
 if __name__ == "__main__":

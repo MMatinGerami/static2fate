@@ -910,3 +910,25 @@ default, 1.5 untested. DINOv2 d to the real 6 h frame, AnnexinV-only: 36.9 (36.2
 first below the copy's 37.4 on the whole crop, CIs overlapping; condensed 36.7, survivors 36.1.
 Handcrafted AUROC 128 px 0.62; identity 0.45; reversals 1.08 / 0.74 (real 1.07 / 0.65). Docs
 section, README row and fig 20 updated with the fourth sampler.
+
+20:00 to 22:00: audit and trim before the ENS interview (19 November). Scientific audit first.
+(1) The AnnexinV threshold is the control 90th percentile, so 10% of untreated cells are
+"dying"; expected background share of the AnnexinV-only label 0.70 / 0.66 / 0.38 / 0.22 at 4.88 /
+9.77 / 19.53 / 39.06 nM, 0.44 over the model doses. (2) AnnexinV positive in only 63 to 72% of
+condensed cells; endpoint image registered at r 0.5 to 0.7, cells move or detach. (3) 49% of
+"survivors" at 39.06 nM have turned green: censoring at 6 h. (4) Single-frame AUROC under the
+fate label in untreated wells 0.41 / 0.62 / 0.70 / 0.79 at 0 / 2 / 4 / 6 h against 0.50 / 0.61 /
+0.77 / 0.84 at 19.53 nM: the old headline curve is mostly not about the drug. (5) Within 39.06
+nM, leave one field out: AnnexinV 0.52 at 0 h to 0.71 at 6 h; colour shift 0.62 to 0.98;
+condensation 0.74 at 0 h, a signal that changes sign with an absolute rule (area AUROC 0.65
+against 0.29), so it is the definition. (6) Of cells condensing in the movie at 19.53 nM and
+above, 95 to 98% turn green, 61 to 73% of them first, median lead 0.5 h. New
+scripts/46_label_audit.py, src/static2fate/audit.py. Then the trim: 23 scripts and 7 kernels to
+archive folders (paths fixed, all still import), old figures to results/figures/supporting,
+results.md renamed log.md, new report.md, gallery.md, code_tour.md, scripts/README.md, README
+rewritten. New display convention (src/static2fate/display.py, plate-wide ranges, 0.325 um per
+px from the Way lab's pixel_dimension.toml), scripts/47_gallery.py (fields by dose, field over
+time, masks and registration, 24 cells per group, colour shift, real against generated,
+counterfactual), scripts/48_scorecard.py. 35_generate_latent.py takes a fate class;
+counterfactual futures for 128 held-out cells under each of the three classes, same noise.
+Movies redrawn from the three-class latent video model.

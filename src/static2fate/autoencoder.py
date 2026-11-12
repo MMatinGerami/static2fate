@@ -2,7 +2,7 @@
 
 Every pixel-space model so far hits the same floor: a frozen encoder tells generated from
 real without error, and the floor does not move with training time, width or more cells
-(docs/results.md). The pixel loss asks the velocity field to regress texture, and the mean
+(docs/log.md). The pixel loss asks the velocity field to regress texture, and the mean
 of many plausible textures is a blur. Generating in the latent of an autoencoder trained to
 reconstruct these cells moves texture out of the generator: the decoder owns it, the flow
 model only has to place the cell's state in a 4 x 32 x 32 code (Rombach et al., 2022,

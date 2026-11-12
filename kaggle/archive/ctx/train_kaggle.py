@@ -1,0 +1,41 @@
+"""Kaggle job: train two context models at once, one per T4.
+
+GPU 0: 128 px. GPU 1: 64 px, same setup as the one-hour Mac run but 8 h, to see what
+longer training alone buys. Outputs (weights, logs, run.json, commit) end up in /kaggle/working.
+Push with: kaggle kernels push -p kaggle   (after replacing USERNAME in kernel-metadata.json)
+"""
+
+import os
+import subprocess
+import time
+from pathlib import Path
+
+HOURS = float(os.environ.get("HOURS", 8))  # Kaggle sessions stop at 9 h (12 h on some accounts)
+WORK = Path("/kaggle/working")
+REPO = WORK / "static2fate"
+
+data = next(Path("/kaggle/input").rglob("crops_tracks.npy")).parent
+subprocess.run(["git", "clone", "--depth", "1", "https://github.com/MMatinGerami/static2fate", str(REPO)], check=True)
+commit = subprocess.run(["git", "-C", str(REPO), "rev-parse", "HEAD"], capture_output=True, text=True).stdout
+(WORK / "commit.txt").write_text(commit)
+subprocess.run(["nvidia-smi"])
+
+# batch 64 at 128 px needs more than the 15 GB of a T4 (out of memory on the first try)
+runs = {"ctx128": ["--size", "128", "--seed", "0", "--batch", "32"], "ctx64_long": ["--size", "64", "--seed", "1"]}
+procs = []
+for gpu, (name, extra) in enumerate(runs.items()):
+    env = dict(os.environ, CUDA_VISIBLE_DEVICES=str(gpu), STATIC2FATE_DATA=str(data),
+               PYTORCH_CUDA_ALLOC_CONF="expandable_segments:True")
+    cmd = ["python", str(REPO / "scripts/archive/13_train_ctx.py"), "--device", "cuda", "--minutes", str(HOURS * 60),
+           "--out", str(WORK / name), *extra]
+    procs.append(subprocess.Popen(cmd, env=env, stdout=open(WORK / f"{name}.log", "w"), stderr=subprocess.STDOUT))
+# progress in the Kaggle log: first after 3 min (to catch a crash early), then every 10 min
+wait = 180
+while any(p.poll() is None for p in procs):
+    time.sleep(wait)
+    wait = 600
+    for name, p in zip(runs, procs):
+        lines = (WORK / f"{name}.log").read_text().strip().splitlines()
+        print(name, "running" if p.poll() is None else f"exited {p.returncode}", lines[-1] if lines else "", flush=True)
+for name in runs:
+    print(name, (WORK / f"{name}.log").read_text()[-400:])

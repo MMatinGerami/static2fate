@@ -7,6 +7,7 @@ from pathlib import Path
 import numpy as np
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "scripts"))
+sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "scripts/archive"))
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "src"))
 
 gr = importlib.import_module("44_green_red")

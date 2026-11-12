@@ -2,55 +2,62 @@
 
 [![CI](https://github.com/MMatinGerami/static2fate/actions/workflows/ci.yml/badge.svg)](https://github.com/MMatinGerami/static2fate/actions/workflows/ci.yml)
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
-[![Release](https://img.shields.io/github/v/release/MMatinGerami/static2fate)](https://github.com/MMatinGerami/static2fate/releases)
-<!-- After enabling the repo on zenodo.org (GitHub integration) and cutting v0.1.1, add:
-[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.XXXXXXX.svg)](https://doi.org/10.5281/zenodo.XXXXXXX) -->
 
-From one image of a drug-treated cell, can we tell which of two futures it will take, and when
-that became decided?
+HeLa cells treated with the same dose of staurosporine do not all die at once. From one image
+of a treated cell, how early can its fate be read? And given that first image and a fate, can
+a generative model draw the cell's future?
 
-**In one line:** 6,676 HeLa cells tracked for 6 h under a staurosporine dose series, each with a
-known fate (S-BIAD2515, CC0); a fate-conditioned flow-matching model written from scratch that
-generates both futures of the same cell; and a measured answer to "when": from a single frame,
-fate is not readable before about 2 h and largely readable by 4 h.
+Data: one plate of the Way lab's ChromaLIVE time-lapse
+([S-BIAD2515](https://www.ebi.ac.uk/biostudies/BioImages/studies/S-BIAD2515), CC0), ten doses,
+13 frames over 6 h, then an AnnexinV stain. The project tracks 6,676 cells from the first frame
+to the stain, labels their fate, checks that label, and trains a flow-matching video model
+written from scratch.
 
-![real course and generated futures](results/movies/strip.gif)
+![fields by dose](results/figures/fig01_fields_by_dose.png)
 
-*Held-out cells over 6 h (one per fate group, 128 px and the 64 px the generator works at)
-next to two futures drawn by the video model from the 0 h frame alone. Until 3 h the generated
-columns show the frame the model was given; from 3 h on they play its clip. More cells per
-group in `results/movies/`, and a whole field with every tracked nucleus outlined by its fate
-in `results/movies/field_E-08_F0001.gif` (`scripts/36_movies.py`).*
+*One field per dose at 0 h and 6 h, and the AnnexinV image taken afterwards. Blue Hoechst,
+green ChromaLIVE 488, red ChromaLIVE 561. Circles: tracked nuclei by fate group.*
 
-![two cells](results/figures/fig3_two_cells.png)
+## The project in five steps
 
-*The same starting cells take two fates. Left: a cell that survives; right: a cell that condenses
-its nucleus and dies. Frames every 30 min, AnnexinV at 6 h.*
+| | Step | Result | Figure |
+|---|---|---|---|
+| 1 | **Data.** Segment, track and crop single cells in 119 fields | 23,902 nuclei at 0 h, 6,676 followed to the endpoint with a fate label | [1](results/figures/fig01_fields_by_dose.png), [gallery](docs/gallery.md) |
+| 2 | **Label, and its audit.** AnnexinV above the control 90th percentile, or a condensed nucleus; checked against two markers read from the movie alone | The AnnexinV clause has a 10% background by construction: 44% of the "dies, AnnexinV only" cells at the model doses are expected from the threshold alone, and the stain misses a third of cells with a condensed nucleus. Both outcomes are common at one dose only, 39.06 nM | [2](results/figures/fig02_labels.png) |
+| 3 | **A new live marker.** The cytoplasm turns from red to green | Of the cells whose nucleus condenses, 95 to 98% turn green, most of them first, by a median of half an hour | [4](results/figures/fig04_colour_shift.png) |
+| 4 | **How early is fate readable from one frame?** | Not before the cell starts to change. The rise in AUROC under the fate label (0.50 at 0 h to 0.84 at 6 h) also appears in untreated wells (0.41 to 0.79). Frozen DINOv2 and V-JEPA 2 do not beat eleven nucleus measurements | [5](results/figures/fig05_readability.png) |
+| 5 | **Drawing the future.** A latent flow-matching video model given the 0 h frame and the fate group | Right look, colour and motion for each group, and texture close to its autoencoder's limit. But its futures are closer to the cell's real future than the 0 h frame only for condensing cells, and they are not recognisable as that cell | [6](results/figures/fig06_scorecard.png), [7](results/figures/fig07_real_vs_generated.png), [9](results/figures/fig09_counterfactual.png) |
 
-## Results at a glance
+The full account with numbers and confidence intervals is in **[docs/report.md](docs/report.md)**.
 
-| Question | Answer | Where |
-|---|---|---|
-| When is fate readable from one frame? | Within 19.5 nM, leave-one-field-out AUROC 0.51 at 0 min, 0.60 at 2 h, 0.78 at 4 h, 0.84 at 6 h | [docs/results.md](docs/results.md#findings-so-far), fig 2 |
-| Do frozen foundation encoders see it earlier? | No. Eleven handcrafted nuclear measurements match or beat frozen DINOv2 at every informative dose; V-JEPA 2 on frames 1 to 8 is 0.045 worse than one frame of handcrafted features (95% CI -0.067 to -0.021) | `results/tables/vjepa_vs_frame.csv` |
-| Does the generated future follow the right cell? | For 72% of cells that die with a condensed nucleus, the model's 6 h prediction is closer to the real cell than its own 0 h frame is (95% CI 54 to 80%); per-cell nucleus-size predictions correlate with the real future as well as copying does (Spearman 0.50) and better for AnnexinV-only dying cells (0.48 against 0.23) | [docs/results.md](docs/results.md#starting-from-a-real-cell) |
-| Does more compute help? | Eight times the training steps or twice the resolution moves the readout scores by less than 0.1; the images do look more real (DINOv2 distance to a random real cell 0.7 to 1.4 against 3.0 to 5.4). Beyond that nothing moves: 8 more hours, a VGG16 perceptual term, four times the parameters or three times the cells all give the same scores, and from the same noise the wide models draw nearly the same image as the small one (pixel difference 0.03 against 0.16 between two samples) | fig 11, fig 12b, [docs/results.md](docs/results.md#training-for-realism) |
-| Is the predicted future one trajectory? | Not frame by frame: independent draws make the nucleus jump 150 to 190 px between hours (real cells 100 to 120) and change direction at random. A video model that draws the 3 to 6 h clip jointly (temporal attention after every UNet stage) matches real cells on both (98 to 105 px; 0.74 reversals for condensing cells against 0.65 real). Started from the trained frame model, it also matches the frame model on every per-frame score, so the two are had together | fig 15, [docs/results.md](docs/results.md#the-future-as-one-clip-not-one-frame-at-a-time) |
-| What does the realism probe measure? | Less than it seemed. The DINOv2 probe also tells a 33 dB autoencoder reconstruction from the real cell (AUROC 0.995) and a 1 px Gaussian blur of the real frame from it (1.000), while a blur of half a pixel scores 0.87 and matched noise changes nothing: above 0.99 it is saturated on sub-pixel texture. The handcrafted probe at 128 px ranks them: generated frames 0.75, a 1 px blur 0.74, the reconstruction 0.67 | [docs/results.md](docs/results.md#what-survives-the-autoencoders-latent-and-what-the-probe-reads), fig 16 |
-| Does generating in a latent help? | For texture, yes: the frame and video models on the 4 x 32 x 32 codes of the autoencoder bring the handcrafted probe at 128 px from 0.75 to 0.64, past the reconstruction's own 0.67, where no pixel-space change had moved it. For content, no: the generated future is as far from the cell's own in DINOv2 space as before (identity rank 0.44), and the latent frame model's nucleus-area skill in condensing cells drops (0.17 against 0.35); the latent video model recovers it (0.38) and keeps real cells' smoothness. Masking the crops to the cell before DINOv2 reverses the order: the latent models get the cell right (at the nucleus, as close to its own future as a random same-fate cell) and invent the surroundings, the pixel model keeps the surroundings and blurs the cell. Twice the steps for the latent frame model and a warm start of the latent video model from it change none of this, so the gap is not training budget. Nor does holding the 0 h neighbourhood by anchoring the sampler outside a disc (tag `_anchor`): the rim is kept to 0.2 grey levels and every score gets worse, and a 6 h old neighbourhood is further from the real frame than a random cell's even with the real 6 h cell pasted in, so the neighbours' futures have to be predicted too | [docs/results.md](docs/results.md#generating-in-the-latent), fig 14b, fig 15, fig 18 |
-| What does the energy score count? | Mostly spread. ES = mean distance to the real frame minus half the mean distance between samples; split into the two terms (`scripts/42_energy_terms.py`), every model since the 8 h one sits at the same distance from the cell's own future (36 to 38 DINOv2 units at 64 px, 2 closer than a random same-fate cell and no closer than the 0 h copy, except for condensing cells) and the differences between models read off "model minus random" so far are the spread of their samples. The latent models' advantage at the nucleus is a distance (3 to 4 units for survivors); the pixel model's on the whole crop was diversity. Against the 0 h copy the models are closer only for condensing cells, and further for AnnexinV-only dying cells, whose nuclei every model redraws as condensing | [docs/results.md](docs/results.md#what-the-energy-score-was-counting), `results/tables/energy_terms_anchor.csv` |
-| Does a third fate class help? | Partly. With survives / dies AnnexinV only / dies condensed as the conditioning (the null class stays last, so old checkpoints load), the latent video model trained from scratch for 6 h gives the two ways of dying different motion (nucleus-area reversals 1.14 against 1.07 real for AnnexinV-only cells, 0.71 against 0.65 for condensing ones, where the two-class runs give one number for both) and brings the AnnexinV-only nucleus level with the 0 h copy in masked DINOv2 distance (37.7 against 37.3, paired difference 0.5, 95% CI -0.6 to 1.5; the two-class runs are 1.3 to 1.5 further than the copy). Not past it: no group but the condensing one is closer than the copy, the realism and identity scores do not move, and the gain over a seed-matched two-class run (1.1) is within its CI | [docs/results.md](docs/results.md#three-fate-classes), `results/tables/energy_masked_vs_copy.csv` |
-| Does the cytoplasm turn green when a cell dies? | Yes, in the raw counts, for most dying cells: the cytoplasm's ChromaLIVE 488 / 561 ratio goes from 1.0 to a median 5.6 in cells that die with a condensed nucleus and 2.3 in AnnexinV-only ones by 6 h (488 up 1.5 to 2.3x, 561 down to 0.5 to 0.6x), flat in survivors; 78% and 62% of dying cells rise by more than 1.41x, against 25% of survivors (49% at 39 nM). The change from 0 h separates dying from surviving held-out cells at AUROC 0.78 at 6 h, 0.68 at 3 h, independently of the AnnexinV and Hoechst labels, so it is a third apoptosis marker. Every generated model turns dying cytoplasm green too, by the right amount for condensing cells but in 93 to 98% of dying cells and 3 to 7% of survivors; the three-class model alone gives AnnexinV-only cells their own, weaker shift (1.58 against 1.71 real) | [docs/results.md](docs/results.md#does-the-cytoplasm-turn-green-when-a-cell-dies), fig 19, `results/tables/green_red_change.csv` |
-| Was the two-class model's certainty the guidance? | Mostly, for the AnnexinV-only cells: resampling the same two-class latent video model at guidance 1 instead of 2 brings their condensing rate back to the real one (21% of samples against 19% real, from 36%) and puts the green fractions on the real ones (72%, 79% and 16% against 73%, 79% and 28% of survivors), but condensing cells lose condensation too (42% against 60%); the plain conditional tells the two ways of dying apart less than the data do, and guidance raised both. The three-class model gets both right (12% and 70%) without touching the guidance, so the label, not the guidance scale, is the fix. Guidance scales every effect of the label at once: the three-class model at guidance 1 goes under on condensation (10% and 52%) and on AnnexinV-only colour (62%), so no one scale puts all six fractions right and the three-class model at guidance 2 stays the default. Distance to the real future, realism and identity barely move; the three-class model at guidance 1 is the first sampler below the 0 h copy for AnnexinV-only cells on the whole crop (36.9 against 37.4, within the field spread) | [docs/results.md](docs/results.md#is-the-two-class-models-certainty-the-guidance), fig 20, `results/tables/guidance_mixture_guide.csv` |
-| What is still wrong | No model is closer to the cell's own future than its 0 h copy except for condensing cells, and the two-class models redraw AnnexinV-only dying nuclei as condensing, a shift the guidance makes and three fate classes remove (without getting past the copy); keeping the 0 h surroundings by force does not help and the neighbours' futures have to be predicted as well; generated dying cytoplasm turns green in nearly every dying cell and almost no survivor at guidance 2, where real cells do so in 62 to 78% and 25% (fig 19; at guidance 1 the dying fractions are right and survivors half right); the generated future is not recognisable as this cell's in DINOv2 space (as far from it as a random real cell, where the reconstruction is 28 units closer) | fig 13 |
+![counterfactual](results/figures/fig09_counterfactual.png)
 
-Dose matters: both fates occur in one band, 9.8 to 39 nM. Static2Dynamic's ChromaLive model
-([Boyer et al., 2026](https://doi.org/10.64898/2026.05.18.725860)) was trained at 78 and 156 nM,
-where nearly all cells die.
+*The same 0 h cell drawn at 6 h under each of the three fate classes, from the same noise.*
 
-| dose (nM) | 0 to 2.4 | 4.9 | 9.8 | 19.5 | 39.1 | 78 | 156 |
-|---|---|---|---|---|---|---|---|
-| fraction apoptotic at 6 h | 0.11 to 0.17 | 0.19 | 0.19 | 0.31 | 0.74 | 0.91 | 0.92 |
+![scorecard](results/figures/fig06_scorecard.png)
+
+## Limits
+
+- One plate, three wells per dose, dose not randomised across the plate; held-out wells are one row.
+- The fate label is the weakest part (step 2). The three groups are stages reached by 6 h more than three fates.
+- The model is told the fate. Nothing here predicts it, and counterfactual futures cannot be checked cell by cell.
+- 28% of nuclei end with a label, and almost no dividing cell.
+- One training run per model.
+
+## Where things are
+
+| | |
+|---|---|
+| [docs/report.md](docs/report.md) | the direct path: data, label audit, two questions, limits, next steps |
+| [docs/gallery.md](docs/gallery.md) | many more images of real and generated cells |
+| [docs/code_tour.md](docs/code_tour.md) | the code file by file |
+| [docs/log.md](docs/log.md) | all 25 experiments in the order they were run, dead ends included |
+| [notes/notebook.md](notes/notebook.md) | dated notes and corrections |
+| `src/static2fate/` | library: fields, cells, audit, flow, video, autoencoder, evaluate, features, display |
+| `scripts/` | the pipeline, in order ([scripts/README.md](scripts/README.md)); `scripts/archive/` holds superseded experiments |
+| `kaggle/` | the GPU jobs for the autoencoder and the latent models |
+| `results/figures/` | the report's figures; `supporting/` holds the log's |
+| `results/tables/` | every number as CSV |
 
 ## Quickstart
 
@@ -58,88 +65,16 @@ One well is about 1.5 GB and runs on a laptop; all 30 wells are 45 GB.
 
 ```bash
 uv sync
-scripts/00_download_subset.sh C-08      # one well of S-BIAD2515 (CC0), 19.53 nM, both fates; no argument = all 30 wells
-scripts/run_all.sh                       # segmentation, tracking, fate labels, single-frame baselines
-```
-
-Then the models (Apple M5 Pro, MPS; a GPU is faster):
-
-```bash
-uv run scripts/09_train_flow.py --minutes 45     # fate-conditioned flow model, then scripts 10 to 15 to evaluate
-uv run scripts/13_train_ctx.py --minutes 60      # same model given an earlier frame of the cell
+scripts/00_download_subset.sh C-08       # one well of S-BIAD2515, 19.53 nM; no argument = all 30 wells
+scripts/run_all.sh                       # segmentation, tracking, fate labels, crops, baseline
+uv run scripts/46_label_audit.py         # label audit and readability (needs all wells)
+uv run scripts/47_gallery.py real        # image galleries
 uv run pytest
 ```
 
-On a GPU: `uv run scripts/export_kaggle.py <user>` writes all 6,676 labelled cells at the ten doses
-(4.3 GB; the two-fate models select their 2,735 cells from it); the scripts in `kaggle/` train from it on Kaggle.
-
-## When to use this
-
-- You have live-cell movies with a terminal fate stain and want a tracked single-cell dataset
-  with fate labels (`src/static2fate/fields.py`, `tracking`, `labels`).
-- You want a tested baseline for "how early is fate readable", including frozen DINOv2 and
-  V-JEPA 2 against handcrafted features.
-- You want a small conditional flow-matching model (`src/static2fate/flow.py`, 9.4 M parameters,
-  45 min on a laptop) to adapt to your own crops, with the evaluation scripts (energy score,
-  identity rank, per-cell skill) that go with it.
-
-Not a general cell tracker and not a production model: one plate, one cell line, one drug.
-
-## What is here
-
-- Nuclear segmentation, tracking over 13 frames and registration of the terminal AnnexinV image
-  for all 30 wells (119 fields): 6,676 cells followed from start to end with a fate label.
-- Fate label: AnnexinV above the control 90th percentile inside a cell mask, or a condensed
-  nucleus (area halved, Hoechst doubled). Replicate wells agree within a few points.
-- Single-cell crops (13 frames x 3 channels x 128 px) and single-frame fate baselines.
-- Two flow-matching models (fate-conditioned; fate plus an earlier frame), their Kaggle runs at
-  8x the steps, 2x the resolution and 2x the width, and the paired and SDEdit-style variants
-  that did not help.
-- A video model (`src/static2fate/video.py`) that draws the 3 to 6 h course of a cell as one
-  clip, started from the frame model, with the temporal consistency measurements that
-  motivate it (`scripts/30_temporal.py`).
-- An autoencoder for the 128 px crops (`src/static2fate/autoencoder.py`, factor 4, four latent
-  channels, L1 + perceptual + KL, optional PatchGAN), trained 5 h on Kaggle (`kaggle/ae/`):
-  held-out cells come back at 33 dB with readouts that correlate 0.99 with their own
-  (`scripts/32_reconstruct.py`), which bounds what generation in its latent can reach. The
-  check of what the real-vs-generated probe reacts to (`scripts/38_probe_sensitivity.py`).
-- The frame and video models in that latent (`scripts/33_encode_latents.py` to
-  `35_generate_latent.py`, `src/static2fate/latent.py`): the same UNets on 4 x 32 x 32 codes,
-  decoded to 128 px before scoring, so the scoring chain runs unchanged; trained 6 h each on
-  Kaggle (`kaggle/latent/`), scored against the pixel models and the reconstruction ceiling,
-  then continued and warm-started for 6 h more (`kaggle/latent2/`) to rule out training budget.
-- Anchored sampling that holds the latent outside a disc on the noise-to-context path
-  (`scripts/40_anchor_neighbourhood.py`, a `project` hook in both samplers), pixel-space
-  composite controls (`41_composite_control.py`) and the split of the energy score into its
-  distance and spread terms (`42_energy_terms.py`, `static2fate.evaluate.energy_terms`).
-- Three-class fate conditioning (`--fates 3` in `09_train_flow.py` and `34_train_latent.py`,
-  `n_fates` in both UNets with the no-fate class last), the latent video model trained with it
-  next to a seed-matched two-class control (`kaggle/fate3/`), and the per-cell distances to the
-  real future against the 0 h copy (`43_masked_vs_copy.py`).
-- The green-to-red shift of dying cytoplasm measured on raw tracks and on generated crops
-  (`scripts/44_green_red.py`): time course, per-cell change, AUROC by hour, fig 19.
-- Resampling at a chosen guidance scale and output directory (`35_generate_latent.py`, arguments 4 and
-  5), and the per-sample reading of the two ways of dying, condensed and green, by fate group and
-  sampler (`scripts/45_guidance_mixture.py`, fig 20).
-
-## Limitations
-
-- One plate; the label fixes a 10% positive rate in controls.
-- The crops are scaled per field, and the Hoechst white point follows the death rate across
-  doses (1.38x higher at 39 nM than at 4.88 nM), so intensity is on a field-dependent scale.
-  Within a dose the effect is weak; a plate-wide scaling would be the fix if the crops were rebuilt
-  ([docs/results.md](docs/results.md#does-the-per-field-scaling-of-the-crops-carry-the-dose)).
-- Tracking keeps a quarter to half of cells, fewer in dense regions, and almost none that divide,
-  so every model is trained on cells that did not divide during the movie.
-- At most 2.1% of "dying" labels may be mitotic cells caught rounding up.
-- Two deposited files are truncated and the deposited terminal images need field matching
-  (handled in `src/static2fate/fields.py`).
-
-## Full results
-
-Every experiment, table and figure, in the order it was run, is in
-[docs/results.md](docs/results.md). Dated notes, decisions and corrections are in
-[notes/notebook.md](notes/notebook.md).
+The models were trained on Kaggle T4 GPUs: `uv run scripts/export_kaggle.py <user>` writes the
+crops as a dataset, and `kaggle/ae` and `kaggle/fate3` train the autoencoder and the latent
+video model. Scoring and figures then run on a laptop (see [docs/report.md](docs/report.md#reproduce)).
 
 ## Citation
 

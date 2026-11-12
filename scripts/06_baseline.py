@@ -6,7 +6,7 @@ handcrafted nucleus measurements from the tracks parquet (area, eccentricity, so
 means in nucleus and ring). Evaluation is leave-one-field-out over the 12 fields; AUROC on the
 pooled out-of-fold scores, overall and within each dose. 'dose only' is the AUROC of the dose
 value itself, the floor any pooled number has to clear. Writes results/tables/baseline_auroc.csv
-and results/figures/fig2_single_frame_baseline.png.
+and results/figures/supporting/fig2_single_frame_baseline.png.
 """
 
 import glob
@@ -116,7 +116,7 @@ def main() -> None:
         a.set_ylim(0.4, 1)
         a.legend(fontsize=7)
     plt.tight_layout()
-    plt.savefig(ROOT / "results/figures/fig2_single_frame_baseline.png", dpi=90)
+    plt.savefig(ROOT / "results/figures/supporting/fig2_single_frame_baseline.png", dpi=90)
 
 
 if __name__ == "__main__":

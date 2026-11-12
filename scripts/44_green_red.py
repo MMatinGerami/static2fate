@@ -20,7 +20,7 @@ if their cytoplasm goes from red to green. Two questions, measured rather than e
 Usage: uv run scripts/44_green_red.py
 Writes results/tables/green_red_tracks.csv (group x frame time course), green_red_auroc.csv,
 green_red_change.csv (per-group fractions and means, real and generated) and
-results/figures/fig19_green_red.png.
+results/figures/supporting/fig19_green_red.png.
 """
 
 import importlib
@@ -206,8 +206,8 @@ def figure(course: pd.DataFrame, auc: pd.DataFrame, real: pd.DataFrame, gen: pd.
     ax.set_title("Held-out cells, crop space at 64 px, 95% CI over 12 fields", fontsize=10)
     ax.legend(fontsize=8)
     fig.tight_layout()
-    (ROOT / "results/figures").mkdir(parents=True, exist_ok=True)
-    fig.savefig(ROOT / "results/figures/fig19_green_red.png", dpi=130)
+    (ROOT / "results/figures/supporting").mkdir(parents=True, exist_ok=True)
+    fig.savefig(ROOT / "results/figures/supporting/fig19_green_red.png", dpi=130)
 
 
 def main() -> None:

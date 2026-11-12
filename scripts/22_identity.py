@@ -12,7 +12,7 @@ a reference for how identifiable a cell is from a real frame 1 to 3 h earlier. S
 resolutions as in 20, features from its cache (run 20 first). 95% CIs resample the 12 fields.
 
 Usage: uv run scripts/22_identity.py [name=dir ...]   (default: the three context models)
-Writes results/tables/identity_rank.csv and results/figures/fig13_identity.png.
+Writes results/tables/identity_rank.csv and results/figures/supporting/fig13_identity.png.
 """
 
 import importlib
@@ -119,7 +119,7 @@ def main(models: dict[str, Path]) -> None:
     ax[0, 0].legend(fontsize=7)
     ax[0, 0].set_ylim(0, 0.6)
     plt.tight_layout()
-    plt.savefig(ROOT / f"results/figures/fig13_identity{fs.TAG}.png", dpi=110)
+    plt.savefig(ROOT / f"results/figures/supporting/fig13_identity{fs.TAG}.png", dpi=110)
 
 
 if __name__ == "__main__":

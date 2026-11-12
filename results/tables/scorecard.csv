@@ -1,0 +1,40 @@
+panel,series,group,estimate,ci_low,ci_high
+A. Realism,generated 6 h frames,all,0.6513730070766051,,
+A. Realism,autoencoder reconstruction of the real frame,all,0.6739445165321032,,
+A. Realism,real frame blurred by 1 px,all,0.7379545089328624,,
+B. Whose future is it,generated,survives,36.01583278074782,35.51319475021535,36.60865980929085
+B. Whose future is it,generated,"dies, AnnexinV only",37.18480475107829,36.47119676335908,37.949161033543675
+B. Whose future is it,generated,"dies, condensed",36.94564064427426,36.34572013104466,37.464040234299745
+B. Whose future is it,the cell's own 0 h frame,survives,36.15457221797803,35.61438426252583,36.85884427064251
+B. Whose future is it,the cell's own 0 h frame,"dies, AnnexinV only",37.41722445170085,36.324720685282365,38.44368423545167
+B. Whose future is it,the cell's own 0 h frame,"dies, condensed",39.73740543566253,38.552876962250785,40.40361194292704
+B. Whose future is it,"a random real cell, same fate",survives,38.1232588746293,37.82607742873555,38.47116719907315
+B. Whose future is it,"a random real cell, same fate","dies, AnnexinV only",38.76235104878744,38.139336866213355,39.509118653382615
+B. Whose future is it,"a random real cell, same fate","dies, condensed",38.449359612715874,38.03122675753211,38.9372731974064
+"C. Identity (0 = nearest, 0.5 = chance)",generated,survives,0.4554359848833994,0.4230400639936188,0.493128951284775
+"C. Identity (0 = nearest, 0.5 = chance)",generated,"dies, AnnexinV only",0.4588422131147541,0.4202834212817463,0.4964395207182249
+"C. Identity (0 = nearest, 0.5 = chance)",generated,"dies, condensed",0.4083692838654011,0.3708774275969458,0.4334529452890594
+"C. Identity (0 = nearest, 0.5 = chance)",the cell's own 0 h frame,survives,0.3529818416443911,0.3286906864822135,0.3814281550153254
+"C. Identity (0 = nearest, 0.5 = chance)",the cell's own 0 h frame,"dies, AnnexinV only",0.3328415300546448,0.2828394117036729,0.382055217841044
+"C. Identity (0 = nearest, 0.5 = chance)",the cell's own 0 h frame,"dies, condensed",0.4953839516824849,0.3869231259215889,0.5412692110655738
+"C. Identity (0 = nearest, 0.5 = chance)",its real 3 h frame,survives,0.2523243309675239,0.2350424861382675,0.2742128368643952
+"C. Identity (0 = nearest, 0.5 = chance)",its real 3 h frame,"dies, AnnexinV only",0.2490710382513661,0.2118750909399553,0.2971684261563231
+"C. Identity (0 = nearest, 0.5 = chance)",its real 3 h frame,"dies, condensed",0.2943485763589301,0.2478257490107405,0.3294421306152863
+D. Nucleus condensed at 6 h,real,survives,0.0087565674255691,0.0020156260060524,0.0166674397031539
+D. Nucleus condensed at 6 h,real,"dies, AnnexinV only",0.1866666666666666,0.1007194244604316,0.2642601341054555
+D. Nucleus condensed at 6 h,real,"dies, condensed",0.6,0.4705659536541889,0.6754643962848296
+D. Nucleus condensed at 6 h,generated,survives,0.0008756567425569,0.0,0.0023313576667235
+D. Nucleus condensed at 6 h,generated,"dies, AnnexinV only",0.1158333333333333,0.0890382228555667,0.1404343681917211
+D. Nucleus condensed at 6 h,generated,"dies, condensed",0.6973684210526315,0.5634830447330448,0.778409941480675
+E. Cytoplasm turned green at 6 h,real,survives,0.2819614711033275,0.2399202499898238,0.3489714717701826
+E. Cytoplasm turned green at 6 h,real,"dies, AnnexinV only",0.7333333333333333,0.6218430615489439,0.8333333333333334
+E. Cytoplasm turned green at 6 h,real,"dies, condensed",0.7894736842105263,0.4753666954270923,0.9161157024793386
+E. Cytoplasm turned green at 6 h,generated,survives,0.0899737302977232,0.0755564573943483,0.1058525113924454
+E. Cytoplasm turned green at 6 h,generated,"dies, AnnexinV only",0.7641666666666667,0.7304209484998818,0.7929145446752722
+E. Cytoplasm turned green at 6 h,generated,"dies, condensed",0.875,0.7031185963114754,0.950688477193436
+F. Motion (1 = random),real,survives,1.1050788091068302,1.0463156991965334,1.1674982538048673
+F. Motion (1 = random),real,"dies, AnnexinV only",1.0666666666666669,0.9399939759036144,1.2000387596899222
+F. Motion (1 = random),real,"dies, condensed",0.6526315789473685,0.5625,0.8305790960451974
+F. Motion (1 = random),generated,survives,1.0893169877408055,1.0738522349973176,1.1058061656490394
+F. Motion (1 = random),generated,"dies, AnnexinV only",1.135,1.1026199821716125,1.1661026658125553
+F. Motion (1 = random),generated,"dies, condensed",0.7105263157894737,0.6610859996938151,0.8032800546448088

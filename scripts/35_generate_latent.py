@@ -9,7 +9,12 @@ runs unchanged: samples[_start_stop].npy (cells, 4, M, 3, 128, 128) uint8 with i
 file, and for a video model also clips[_start_stop].npy (cells, M, 7, 3, 128, 128).
 
 Usage: uv run scripts/35_generate_latent.py [model dir] [M, default 8] [cells: n or start:stop]
-       [guidance, default 2.0] [output dir, default the model dir]
+       [guidance, default 2.0] [output dir, default the model dir] [fate class for every cell]
+
+With a fate class (0 survives, 1 dies, or with three classes 1 AnnexinV only and 2 condensed)
+every cell is drawn under that fate instead of its own. The noise depends only on the seed and
+the cell order, so runs with different classes give counterfactual futures of the same cells
+from the same noise.
 """
 
 import contextlib
@@ -32,7 +37,8 @@ FUTURE = [6, 8, 10, 12]
 CELLS_PER_BATCH = {"cuda": 16, "mps": 4, "cpu": 2}
 
 
-def main(mdir: Path, m: int, cells: str | None, guidance: float = 2.0, out: Path | None = None) -> None:
+def main(mdir: Path, m: int, cells: str | None, guidance: float = 2.0, out: Path | None = None,
+         force_fate: int | None = None) -> None:
     out = mdir if out is None else out
     out.mkdir(parents=True, exist_ok=True)
     train = importlib.import_module("09_train_flow")
@@ -49,6 +55,10 @@ def main(mdir: Path, m: int, cells: str | None, guidance: float = 2.0, out: Path
     model = model.to(device).eval()
     x, _, tracks = train.load("test", run["size"], frames=[0])
     fate = train.fate_classes(tracks, fates)
+    if force_fate is not None:
+        if not 0 <= force_fate < fates:
+            raise ValueError(f"fate class {force_fate} outside 0..{fates - 1}")
+        fate = torch.full_like(fate, force_fate)
     suffix = ""
     if cells:
         a, _, b = cells.partition(":")
@@ -109,4 +119,5 @@ if __name__ == "__main__":
          int(sys.argv[2]) if len(sys.argv) > 2 else 8,
          sys.argv[3] if len(sys.argv) > 3 else None,
          float(sys.argv[4]) if len(sys.argv) > 4 else 2.0,
-         Path(sys.argv[5]) if len(sys.argv) > 5 else None)
+         Path(sys.argv[5]) if len(sys.argv) > 5 else None,
+         int(sys.argv[6]) if len(sys.argv) > 6 else None)
