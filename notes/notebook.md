@@ -898,3 +898,15 @@ px, AnnexinV-only 37.2 (g1) vs 37.5 (g2), 37.2 (3 fates), copy 37.4; condensed 3
 reversals AnnexinV-only 0.99 vs 0.89 / 1.14 (real 1.07), condensed 0.88 vs 0.78 (real 0.65);
 nucleus area per hour larger in every group at g1. Written up as "Is the two-class model's
 certainty the guidance?", README row, fig 20. Open: the three-class model at guidance 1.
+
+18:10: three-class model resampled at guidance 1 (results/guidance/lat_video_fate3_g1, 67 min),
+whole chain rerun with four samplers under tag _guide. Condensed fraction AnnexinV-only /
+condensed / survives: 0.10 / 0.52 / 0.01 (real 0.19 / 0.60 / 0.01; 3 fates at g2 0.12 / 0.70);
+green 0.62 / 0.80 / 0.18 (real 0.73 / 0.79 / 0.28; g2 0.76 / 0.88 / 0.09). So the guidance is
+one knob on every effect of the label: dropping it under three classes lowers condensation in
+both dying groups again and takes AnnexinV-only colour under the real value while bringing
+survivors closer. No single scale fits all six fractions; three classes at guidance 2 stay the
+default, 1.5 untested. DINOv2 d to the real 6 h frame, AnnexinV-only: 36.9 (36.2 to 37.5), the
+first below the copy's 37.4 on the whole crop, CIs overlapping; condensed 36.7, survivors 36.1.
+Handcrafted AUROC 128 px 0.62; identity 0.45; reversals 1.08 / 0.74 (real 1.07 / 0.65). Docs
+section, README row and fig 20 updated with the fourth sampler.
