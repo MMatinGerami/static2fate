@@ -1026,6 +1026,74 @@ separate motion for that group in the section above.
 
 ![green and red](../results/figures/fig19_green_red.png)
 
+## Is the two-class model's certainty the guidance?
+
+The two-class latent video model redraws AnnexinV-only dying cells as condensing ones (fig 18
+and the three-class comparison above). Two things could do that. The label: "dies" covers both
+looks, and a sampler that cannot tell them apart from the 0 h frame draws the typical one. Or
+the sampler: classifier-free guidance at 2.0 pushes every sample further along the direction
+from "no fate" to "dies", which sharpens whatever the conditional already leans towards. The
+three-class run fixed the label; this run keeps the two-class model and its weights and only
+drops the guidance to 1.0, the plain conditional, 8 samples per held-out cell
+(`35_generate_latent.py results/kaggle/lat_video 8 "" 1.0 results/guidance/lat_video_g1`,
+67 min on the Mac). The same caches and scores as before, plus a per-sample reading of the two
+looks (`45_guidance_mixture.py`): a sample is condensed when the label's own rule holds in crop
+space (nucleus area below half the cell's real 0 h area and nucleus Hoechst above twice it) and
+green when the cytoplasm ring's 488 / 561 ratio is more than 1.41x the real 0 h one (the rule
+of fig 19). On the real 6 h frame the crop-space condensed call agrees with the label on 91% of
+held-out cells (11% called, 12% labelled), so the rule reads the right thing.
+
+Fraction of 6 h samples, mean over held-out cells, 95% CI over the 12 fields (150 AnnexinV-only,
+95 condensed, 571 surviving cells):
+
+| | condensed nucleus, AnnexinV only | condensed nucleus, condensed | condensed nucleus, survives | green, AnnexinV only | green, condensed | green, survives |
+|---|---|---|---|---|---|---|
+| real 6 h | 0.19 (0.10 to 0.27) | 0.60 (0.46 to 0.68) | 0.01 | 0.73 (0.63 to 0.85) | 0.79 (0.51 to 0.92) | 0.28 (0.24 to 0.34) |
+| latent video, guidance 2 | 0.36 (0.27 to 0.43) | 0.63 (0.48 to 0.71) | 0.00 | 0.87 (0.83 to 0.91) | 0.90 (0.78 to 0.95) | 0.09 (0.08 to 0.11) |
+| latent video, guidance 1 | 0.21 (0.15 to 0.26) | 0.42 (0.26 to 0.50) | 0.01 | 0.72 (0.66 to 0.77) | 0.79 (0.63 to 0.86) | 0.16 (0.14 to 0.18) |
+| latent video, 3 fates, guidance 2 | 0.12 (0.09 to 0.14) | 0.70 (0.56 to 0.78) | 0.00 | 0.76 (0.73 to 0.79) | 0.88 (0.70 to 0.95) | 0.09 (0.08 to 0.11) |
+
+How a cell's 8 samples split (fraction of cells whose samples are all condensed, some, or none):
+
+| | AnnexinV only: none, some, all | condensed: none, some, all |
+|---|---|---|
+| latent video, guidance 2 | 0.42, 0.55, 0.03 | 0.17, 0.61, 0.22 |
+| latent video, guidance 1 | 0.47, 0.52, 0.01 | 0.17, 0.78, 0.05 |
+| latent video, 3 fates, guidance 2 | 0.55, 0.45, 0.00 | 0.17, 0.52, 0.32 |
+
+Three readings:
+
+- The two-class model at guidance 2 was never collapsed onto one look. Over half of its
+  AnnexinV-only cells get both looks among their 8 samples. What guidance did was shift the
+  mixture: 36% of samples condensed against 19% real.
+- Dropping the guidance removes that shift, for every dying cell alike. AnnexinV-only cells
+  come back to the real rate (0.21 against 0.19) and the three colour fractions land on the real
+  ones (0.72, 0.79 and 0.16 against 0.73, 0.79 and 0.28). But the condensing cells lose
+  condensation too, 0.42 against 0.60 real, and almost none of them is condensed in all 8
+  samples (0.05 against 0.22 at guidance 2 and 0.60 for the real cell, which has one future).
+  So the plain conditional does tell the two groups apart from the 0 h frame (0.21 against
+  0.42), but less than the data do (0.19 against 0.60); guidance widened that gap in the wrong
+  way, by raising both.
+- The three-class model gets both groups right in direction without touching the guidance
+  (0.12 and 0.70 against 0.19 and 0.60) because the label carries the information the 0 h frame
+  does not. That, not a guidance scale, is the fix: the guidance was mostly amplifying a label
+  that did not say which way the cell dies.
+
+The other scores move little (`energy_terms_guide.csv`, `real_vs_generated_auroc_guide.csv`,
+`identity_rank_guide.csv`, `temporal_guide.csv`). Whole-crop DINOv2 distance to the cell's own
+6 h frame at 64 px: AnnexinV-only 37.2 (36.6 to 37.8) at guidance 1 against 37.5 (37.0 to
+38.3) at guidance 2 and 37.2 for the three-class model, copy 37.4; condensing cells 36.9 for all
+three, copy 39.7; survivors 36.2, 36.1 and 36.0, copy 36.2. The spread between a cell's samples
+grows without guidance (31.6 against 31.1), as it should. Realism probes: handcrafted AUROC
+0.62 at 128 px against 0.64 and 0.65, 0.59 at 64 px against 0.58 and 0.59; identity rank
+unchanged at 0.45. Motion: nucleus-area reversals of AnnexinV-only cells 0.99 at guidance 1
+against 0.89 at guidance 2 and 1.07 real, condensing cells 0.88 against 0.78 and 0.65, and the
+nucleus area moves more per hour in every group (109 against 102 real for survivors), so the
+unguided samples are slightly more restless. Fig 20 shows the two fractions and the split of
+the AnnexinV-only samples.
+
+![fig20](../results/figures/fig20_guidance_mixture_guide.png)
+
 ## Next
 
 - Invert the context frame under the context model, so it keeps the cell's identity and uses
@@ -1046,12 +1114,19 @@ separate motion for that group in the section above.
   whole crop, against the copy. Conditioning on three fate classes instead of two gives the
   AnnexinV-only cells their own way of dying (reversals 1.14 against 1.07 real) and brings
   their nuclei level with the copy (37.7 against 37.3, from 38.6), not past it; no group but
-  the condensing one is closer than the copy yet.
+  the condensing one is closer than the copy yet. The two-class model's excess condensation
+  of AnnexinV-only cells was the guidance amplifying a label that does not say which way the
+  cell dies: at guidance 1 they come back to the real rate (0.21 against 0.19) but condensing
+  cells fall below theirs (0.42 against 0.60), so three classes, not a lower guidance, is the
+  fix (fig 20). Still to check: the three-class model at guidance 1, which may give the real
+  colour fractions as well.
 - Link daughters to mothers in the tracker so dividing cells get a fate too; do cells that
   divide under drug die more or less often?
 - The colour of apoptosis is right in direction (the cytoplasm's 488 / 561 ratio rises in real
-  dying cells, fig 19) and overdone in certainty: nearly every generated dying cell turns green
-  and almost no generated survivor, against 62 to 78% and 25% of real cells. The ratio's change
+  dying cells, fig 19) and overdone in certainty at guidance 2: nearly every generated dying cell
+  turns green and almost no generated survivor, against 62 to 78% and 25% of real cells; at
+  guidance 1 the dying fractions are the real ones and survivors are halfway (0.16 against
+  0.28). The ratio's change
   from 0 h is a third apoptosis marker next to AnnexinV and condensation (AUROC 0.78 at 6 h) and
   belongs in a two-frame baseline. The per-field scaling (Hoechst white point 1.38x higher at
   39 nM than at 4.88 nM, fig 17) stays a documented limitation; a plate-wide scaling is the fix

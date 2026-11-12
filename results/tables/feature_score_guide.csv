@@ -1,0 +1,901 @@
+model,space,res,group,hours,estimate,ci_low,ci_high,n,measure
+latent video,dinov2,64,"dies, AnnexinV only",3.0,-15.446706085205077,-16.566442326575512,-14.14372970657627,150,model_minus_copy
+latent video,dinov2,64,"dies, AnnexinV only",4.0,-15.825697320302327,-16.786869451839625,-14.802808843023897,150,model_minus_copy
+latent video,dinov2,64,"dies, AnnexinV only",5.0,-15.602259457906086,-16.584942984132685,-14.47348171110811,150,model_minus_copy
+latent video,dinov2,64,"dies, AnnexinV only",6.0,-15.469483769734701,-16.671547835248912,-13.955380322079234,150,model_minus_copy
+latent video,dinov2,64,"dies, condensed",3.0,-16.055352411772077,-17.340124926545002,-14.209484513674559,95,model_minus_copy
+latent video,dinov2,64,"dies, condensed",4.0,-17.35990931862279,-18.73516477342648,-15.055560622790736,95,model_minus_copy
+latent video,dinov2,64,"dies, condensed",5.0,-18.074770837081108,-18.995273768196196,-15.854048905486152,95,model_minus_copy
+latent video,dinov2,64,"dies, condensed",6.0,-18.483423684772692,-19.137405926825164,-17.426237103570077,95,model_minus_copy
+latent video,dinov2,64,survives,3.0,-14.699888022267464,-15.149244418618812,-14.288538062315794,571,model_minus_copy
+latent video,dinov2,64,survives,4.0,-15.285121588698619,-15.749634174634526,-14.832392210246137,571,model_minus_copy
+latent video,dinov2,64,survives,5.0,-15.583564698174204,-16.097818025378576,-15.163252146059447,571,model_minus_copy
+latent video,dinov2,64,survives,6.0,-15.574009329132775,-15.945255306093726,-15.241381689782223,571,model_minus_copy
+latent video,dinov2,128,"dies, AnnexinV only",3.0,-13.477903111775715,-14.594019725202005,-12.2591422635576,150,model_minus_copy
+latent video,dinov2,128,"dies, AnnexinV only",4.0,-13.23841983795166,-14.178060973108382,-12.269660324300458,150,model_minus_copy
+latent video,dinov2,128,"dies, AnnexinV only",5.0,-13.331026039123536,-14.556969573858726,-12.118597475944949,150,model_minus_copy
+latent video,dinov2,128,"dies, AnnexinV only",6.0,-13.023926429748535,-14.16889943063569,-11.557799976176913,150,model_minus_copy
+latent video,dinov2,128,"dies, condensed",3.0,-15.09765298742997,-16.53343683138001,-13.037245834546145,95,model_minus_copy
+latent video,dinov2,128,"dies, condensed",4.0,-15.779965631585371,-17.10103801601338,-13.565430045752299,95,model_minus_copy
+latent video,dinov2,128,"dies, condensed",5.0,-16.558402764169795,-17.62910087376376,-14.34755514855141,95,model_minus_copy
+latent video,dinov2,128,"dies, condensed",6.0,-16.82442143088893,-17.932957506652624,-15.772120332873296,95,model_minus_copy
+latent video,dinov2,128,survives,3.0,-13.246480006470154,-13.751921322084524,-12.77204365625623,571,model_minus_copy
+latent video,dinov2,128,survives,4.0,-13.850518188209334,-14.374899866517561,-13.376791062798894,571,model_minus_copy
+latent video,dinov2,128,survives,5.0,-14.06343182164608,-14.600097380614491,-13.58217504022916,571,model_minus_copy
+latent video,dinov2,128,survives,6.0,-14.288580268151707,-14.600561052562625,-14.018160967692552,571,model_minus_copy
+latent video,handcrafted,64,"dies, AnnexinV only",3.0,-1.1064339690741065,-1.3316225293465385,-0.9270875229584119,150,model_minus_copy
+latent video,handcrafted,64,"dies, AnnexinV only",4.0,-1.057259958401293,-1.3157499363019394,-0.8045436079932895,150,model_minus_copy
+latent video,handcrafted,64,"dies, AnnexinV only",5.0,-0.997449240927181,-1.299630040036565,-0.676994463115285,150,model_minus_copy
+latent video,handcrafted,64,"dies, AnnexinV only",6.0,-1.3287179090069514,-1.680635841489948,-0.9910714427969216,150,model_minus_copy
+latent video,handcrafted,64,"dies, condensed",3.0,-1.3198120662629014,-1.5461558520783718,-0.8661831002137497,95,model_minus_copy
+latent video,handcrafted,64,"dies, condensed",4.0,-2.034883021077027,-2.3637472112049425,-1.3512314324601926,95,model_minus_copy
+latent video,handcrafted,64,"dies, condensed",5.0,-2.53042278006745,-2.8555200012037494,-1.7245904890059256,95,model_minus_copy
+latent video,handcrafted,64,"dies, condensed",6.0,-2.9478853738834254,-3.187249040256165,-2.4051645272280777,95,model_minus_copy
+latent video,handcrafted,64,survives,3.0,-0.80655159904742,-0.9199485194334628,-0.6972648852053304,571,model_minus_copy
+latent video,handcrafted,64,survives,4.0,-0.8534887844446122,-0.9667891536918929,-0.7517204712106546,571,model_minus_copy
+latent video,handcrafted,64,survives,5.0,-0.863526140984842,-0.978044175190966,-0.745999518508784,571,model_minus_copy
+latent video,handcrafted,64,survives,6.0,-0.8914484480837499,-0.9839564152978617,-0.7970934485278547,571,model_minus_copy
+latent video,handcrafted,128,"dies, AnnexinV only",3.0,-1.0365194198172238,-1.237687209991432,-0.8750408425203933,150,model_minus_copy
+latent video,handcrafted,128,"dies, AnnexinV only",4.0,-1.1181284417552544,-1.4104478170258228,-0.8519625957082902,150,model_minus_copy
+latent video,handcrafted,128,"dies, AnnexinV only",5.0,-1.0692546957788283,-1.3549051424831076,-0.7891665127288808,150,model_minus_copy
+latent video,handcrafted,128,"dies, AnnexinV only",6.0,-1.25513023311306,-1.5525589588301276,-0.9500078114293354,150,model_minus_copy
+latent video,handcrafted,128,"dies, condensed",3.0,-1.3243539563017173,-1.5388580713850653,-0.8823339171339227,95,model_minus_copy
+latent video,handcrafted,128,"dies, condensed",4.0,-1.918054173813817,-2.2346426154943595,-1.1985372280111166,95,model_minus_copy
+latent video,handcrafted,128,"dies, condensed",5.0,-2.406008437847425,-2.7276929047728773,-1.6208535613367911,95,model_minus_copy
+latent video,handcrafted,128,"dies, condensed",6.0,-2.8341981345215643,-3.085490217329374,-2.25356004730765,95,model_minus_copy
+latent video,handcrafted,128,survives,3.0,-0.7853383287007717,-0.9372575445575432,-0.6309227624071502,571,model_minus_copy
+latent video,handcrafted,128,survives,4.0,-0.8031911483109011,-0.957531790088312,-0.6603681324266093,571,model_minus_copy
+latent video,handcrafted,128,survives,5.0,-0.8118219374169184,-0.9755770348669317,-0.6563070873419223,571,model_minus_copy
+latent video,handcrafted,128,survives,6.0,-0.8782223444287182,-0.9961118349039461,-0.774225381898737,571,model_minus_copy
+latent video,readouts,64,"dies, AnnexinV only",3.0,-0.5857639837304375,-0.7472008483222603,-0.4581473006827001,150,model_minus_copy
+latent video,readouts,64,"dies, AnnexinV only",4.0,-0.5891698761277102,-0.8405701766634488,-0.34983403087648673,150,model_minus_copy
+latent video,readouts,64,"dies, AnnexinV only",5.0,-0.5681423467384189,-0.8618607908374438,-0.28470390011448365,150,model_minus_copy
+latent video,readouts,64,"dies, AnnexinV only",6.0,-0.750423582420447,-1.0811526466881722,-0.4202363592992279,150,model_minus_copy
+latent video,readouts,64,"dies, condensed",3.0,-0.9222710816688161,-1.1435025183301495,-0.508253247212093,95,model_minus_copy
+latent video,readouts,64,"dies, condensed",4.0,-1.5861093660650547,-1.9016325117925228,-0.9728133879576493,95,model_minus_copy
+latent video,readouts,64,"dies, condensed",5.0,-2.0412955800743173,-2.3865894897932876,-1.244296465575311,95,model_minus_copy
+latent video,readouts,64,"dies, condensed",6.0,-2.3371677094369185,-2.5600498189864154,-1.8769249959564394,95,model_minus_copy
+latent video,readouts,64,survives,3.0,-0.39279766157384416,-0.4448369442830485,-0.3478645929358582,571,model_minus_copy
+latent video,readouts,64,survives,4.0,-0.4400240526033716,-0.5033610282570176,-0.38268298588122995,571,model_minus_copy
+latent video,readouts,64,survives,5.0,-0.4782440654022714,-0.5378052672081898,-0.41959900971035846,571,model_minus_copy
+latent video,readouts,64,survives,6.0,-0.5030552865992307,-0.5857336471085076,-0.43253928898250715,571,model_minus_copy
+"latent video, 3 fates",dinov2,64,"dies, AnnexinV only",3.0,-15.98957649230957,-16.915130500447894,-14.860957475182579,150,model_minus_copy
+"latent video, 3 fates",dinov2,64,"dies, AnnexinV only",4.0,-16.38496639887492,-17.272036892652114,-15.487089145392703,150,model_minus_copy
+"latent video, 3 fates",dinov2,64,"dies, AnnexinV only",5.0,-16.078549429575602,-17.060243070713884,-15.038418957928641,150,model_minus_copy
+"latent video, 3 fates",dinov2,64,"dies, AnnexinV only",6.0,-15.77749455134074,-16.920349161706845,-14.520117087184948,150,model_minus_copy
+"latent video, 3 fates",dinov2,64,"dies, condensed",3.0,-16.120082232826636,-17.587345400936464,-14.253616714637404,95,model_minus_copy
+"latent video, 3 fates",dinov2,64,"dies, condensed",4.0,-17.455901938990543,-18.83521649176539,-14.866272309775644,95,model_minus_copy
+"latent video, 3 fates",dinov2,64,"dies, condensed",5.0,-18.097459501969187,-19.06921658909928,-15.758779935800694,95,model_minus_copy
+"latent video, 3 fates",dinov2,64,"dies, condensed",6.0,-18.532633992245323,-19.188886012875514,-17.33248962233471,95,model_minus_copy
+"latent video, 3 fates",dinov2,64,survives,3.0,-14.732337340373292,-15.180369820921893,-14.320674527138838,571,model_minus_copy
+"latent video, 3 fates",dinov2,64,survives,4.0,-15.226685268448865,-15.670794606579452,-14.841789234869866,571,model_minus_copy
+"latent video, 3 fates",dinov2,64,survives,5.0,-15.498176581387762,-15.913742593200016,-15.144911632990423,571,model_minus_copy
+"latent video, 3 fates",dinov2,64,survives,6.0,-15.580390806582262,-15.973052933613523,-15.300054295242884,571,model_minus_copy
+"latent video, 3 fates",dinov2,128,"dies, AnnexinV only",3.0,-14.249359226226806,-15.143604021877861,-13.188915370306034,150,model_minus_copy
+"latent video, 3 fates",dinov2,128,"dies, AnnexinV only",4.0,-14.276531785329183,-15.17641745744118,-13.332966142196481,150,model_minus_copy
+"latent video, 3 fates",dinov2,128,"dies, AnnexinV only",5.0,-14.191001358032226,-15.252768606687683,-13.076375993426357,150,model_minus_copy
+"latent video, 3 fates",dinov2,128,"dies, AnnexinV only",6.0,-13.540889638264973,-14.609842389308406,-12.269522894168848,150,model_minus_copy
+"latent video, 3 fates",dinov2,128,"dies, condensed",3.0,-15.133500239723608,-16.69075362199045,-12.822528485980902,95,model_minus_copy
+"latent video, 3 fates",dinov2,128,"dies, condensed",4.0,-15.98938190058658,-17.43814105821631,-13.25172062352084,95,model_minus_copy
+"latent video, 3 fates",dinov2,128,"dies, condensed",5.0,-16.695043664229544,-17.843673727759544,-13.870889738476466,95,model_minus_copy
+"latent video, 3 fates",dinov2,128,"dies, condensed",6.0,-17.002192637794895,-18.24413057936547,-15.821282701999026,95,model_minus_copy
+"latent video, 3 fates",dinov2,128,survives,3.0,-13.31028765763585,-13.863065101828917,-12.852865723104273,571,model_minus_copy
+"latent video, 3 fates",dinov2,128,survives,4.0,-13.769551374031241,-14.308081324413317,-13.31310386816324,571,model_minus_copy
+"latent video, 3 fates",dinov2,128,survives,5.0,-13.936813823813523,-14.441871283166446,-13.516449783662706,571,model_minus_copy
+"latent video, 3 fates",dinov2,128,survives,6.0,-14.236251132918323,-14.590531074385769,-13.981002077198152,571,model_minus_copy
+"latent video, 3 fates",handcrafted,64,"dies, AnnexinV only",3.0,-1.0798177691919637,-1.2364687098396678,-0.9292003451292706,150,model_minus_copy
+"latent video, 3 fates",handcrafted,64,"dies, AnnexinV only",4.0,-1.1042021678987672,-1.287031439155402,-0.928864047317269,150,model_minus_copy
+"latent video, 3 fates",handcrafted,64,"dies, AnnexinV only",5.0,-1.2982662343680247,-1.4936521602150614,-1.0630025848639566,150,model_minus_copy
+"latent video, 3 fates",handcrafted,64,"dies, AnnexinV only",6.0,-1.6417684268515125,-1.8882288934052363,-1.401753168504882,150,model_minus_copy
+"latent video, 3 fates",handcrafted,64,"dies, condensed",3.0,-1.2130818204656177,-1.4623358136636981,-0.7066807012403271,95,model_minus_copy
+"latent video, 3 fates",handcrafted,64,"dies, condensed",4.0,-1.8458426593806758,-2.24411038291329,-0.9981390107404726,95,model_minus_copy
+"latent video, 3 fates",handcrafted,64,"dies, condensed",5.0,-2.363986884680633,-2.7913475595712613,-1.290100707102447,95,model_minus_copy
+"latent video, 3 fates",handcrafted,64,"dies, condensed",6.0,-2.826258335736845,-3.1178269261231604,-2.152429434838578,95,model_minus_copy
+"latent video, 3 fates",handcrafted,64,survives,3.0,-0.7977578241800688,-0.9101476584562173,-0.681223444665938,571,model_minus_copy
+"latent video, 3 fates",handcrafted,64,survives,4.0,-0.8464780082601803,-0.9641592148256108,-0.7348363242039176,571,model_minus_copy
+"latent video, 3 fates",handcrafted,64,survives,5.0,-0.8556478684738286,-0.9646296724300947,-0.7434019893233755,571,model_minus_copy
+"latent video, 3 fates",handcrafted,64,survives,6.0,-0.8744927017950603,-0.9723332562206861,-0.7838733524424281,571,model_minus_copy
+"latent video, 3 fates",handcrafted,128,"dies, AnnexinV only",3.0,-0.9993961047756366,-1.1342712682409164,-0.8754715561385433,150,model_minus_copy
+"latent video, 3 fates",handcrafted,128,"dies, AnnexinV only",4.0,-1.1287757509194785,-1.2800168867088781,-0.9458455112881875,150,model_minus_copy
+"latent video, 3 fates",handcrafted,128,"dies, AnnexinV only",5.0,-1.3526585745017774,-1.5631269333423876,-1.1411153175561615,150,model_minus_copy
+"latent video, 3 fates",handcrafted,128,"dies, AnnexinV only",6.0,-1.5618572185929285,-1.7783958512868128,-1.3530239421974588,150,model_minus_copy
+"latent video, 3 fates",handcrafted,128,"dies, condensed",3.0,-1.199525133939163,-1.4590569026876017,-0.6674908601596928,95,model_minus_copy
+"latent video, 3 fates",handcrafted,128,"dies, condensed",4.0,-1.72202439875094,-2.106149461500257,-0.8172329566831434,95,model_minus_copy
+"latent video, 3 fates",handcrafted,128,"dies, condensed",5.0,-2.2371224795773053,-2.672562833208079,-1.1433106311702812,95,model_minus_copy
+"latent video, 3 fates",handcrafted,128,"dies, condensed",6.0,-2.706411947456218,-3.017211171182987,-2.021134381831735,95,model_minus_copy
+"latent video, 3 fates",handcrafted,128,survives,3.0,-0.7658523811795184,-0.9280501712429663,-0.6126701374671427,571,model_minus_copy
+"latent video, 3 fates",handcrafted,128,survives,4.0,-0.7805892020697569,-0.9459360477728912,-0.6326774067915666,571,model_minus_copy
+"latent video, 3 fates",handcrafted,128,survives,5.0,-0.7998367792535714,-0.9490437015023487,-0.6561984015680139,571,model_minus_copy
+"latent video, 3 fates",handcrafted,128,survives,6.0,-0.8521275661067769,-0.9867046821751313,-0.735856159970492,571,model_minus_copy
+"latent video, 3 fates",readouts,64,"dies, AnnexinV only",3.0,-0.591275631913364,-0.6828980334708856,-0.5189931797568084,150,model_minus_copy
+"latent video, 3 fates",readouts,64,"dies, AnnexinV only",4.0,-0.6898342732099126,-0.8318822720558677,-0.534702928331703,150,model_minus_copy
+"latent video, 3 fates",readouts,64,"dies, AnnexinV only",5.0,-0.8822982029013683,-1.0415408772844335,-0.7088612363438149,150,model_minus_copy
+"latent video, 3 fates",readouts,64,"dies, AnnexinV only",6.0,-1.0813638627362934,-1.2687178857861565,-0.8700858982865567,150,model_minus_copy
+"latent video, 3 fates",readouts,64,"dies, condensed",3.0,-0.8335024011548441,-1.1087114920381216,-0.3775690157706034,95,model_minus_copy
+"latent video, 3 fates",readouts,64,"dies, condensed",4.0,-1.4817674421629865,-1.8223069988153142,-0.7229431654889689,95,model_minus_copy
+"latent video, 3 fates",readouts,64,"dies, condensed",5.0,-1.9648051513512392,-2.3174303302830705,-1.1309707400304623,95,model_minus_copy
+"latent video, 3 fates",readouts,64,"dies, condensed",6.0,-2.2628850365918027,-2.4857140927115924,-1.7488149478810078,95,model_minus_copy
+"latent video, 3 fates",readouts,64,survives,3.0,-0.3924348685476086,-0.44695286540476376,-0.34503120478778015,571,model_minus_copy
+"latent video, 3 fates",readouts,64,survives,4.0,-0.43353923078966,-0.5044409613681824,-0.3710336852684476,571,model_minus_copy
+"latent video, 3 fates",readouts,64,survives,5.0,-0.4684669060738359,-0.5244780015404317,-0.4081706406767501,571,model_minus_copy
+"latent video, 3 fates",readouts,64,survives,6.0,-0.4941628682342271,-0.5718271201801997,-0.4212652208138768,571,model_minus_copy
+"latent video, guidance 1",dinov2,64,"dies, AnnexinV only",3.0,-15.865324738820394,-16.913569997017206,-14.74504152152868,150,model_minus_copy
+"latent video, guidance 1",dinov2,64,"dies, AnnexinV only",4.0,-16.26853594462077,-17.192332560675485,-15.322741430687124,150,model_minus_copy
+"latent video, guidance 1",dinov2,64,"dies, AnnexinV only",5.0,-16.159558900197347,-17.163260197660453,-15.142354325055164,150,model_minus_copy
+"latent video, guidance 1",dinov2,64,"dies, AnnexinV only",6.0,-16.047387936909992,-17.105001162293426,-14.760777106440969,150,model_minus_copy
+"latent video, guidance 1",dinov2,64,"dies, condensed",3.0,-16.074799698277523,-17.25699512696266,-14.340039074712701,95,model_minus_copy
+"latent video, guidance 1",dinov2,64,"dies, condensed",4.0,-17.204455927798623,-18.611946888261663,-14.982816402321703,95,model_minus_copy
+"latent video, guidance 1",dinov2,64,"dies, condensed",5.0,-17.975542349564403,-18.803804739429772,-15.944483448336571,95,model_minus_copy
+"latent video, guidance 1",dinov2,64,"dies, condensed",6.0,-18.491847459893478,-19.25157936712876,-17.545468264149505,95,model_minus_copy
+"latent video, guidance 1",dinov2,64,survives,3.0,-14.733196342054056,-15.213608419979751,-14.295439067300782,571,model_minus_copy
+"latent video, guidance 1",dinov2,64,survives,4.0,-15.320300292634714,-15.840645461973141,-14.898772725419866,571,model_minus_copy
+"latent video, guidance 1",dinov2,64,survives,5.0,-15.60960578918457,-16.104106580449166,-15.20393891845167,571,model_minus_copy
+"latent video, guidance 1",dinov2,64,survives,6.0,-15.602625704897264,-16.036942909622244,-15.2693225003878,571,model_minus_copy
+"latent video, guidance 1",dinov2,128,"dies, AnnexinV only",3.0,-14.092256755828858,-15.126568310723888,-12.994534005647706,150,model_minus_copy
+"latent video, guidance 1",dinov2,128,"dies, AnnexinV only",4.0,-14.069391657511392,-15.043319610746595,-13.117936008490469,150,model_minus_copy
+"latent video, guidance 1",dinov2,128,"dies, AnnexinV only",5.0,-14.289818490346272,-15.344582234961408,-13.234811757520104,150,model_minus_copy
+"latent video, guidance 1",dinov2,128,"dies, AnnexinV only",6.0,-13.952452379862468,-14.88429831270586,-12.903315154070459,150,model_minus_copy
+"latent video, guidance 1",dinov2,128,"dies, condensed",3.0,-15.415486887881631,-16.728250498035333,-13.602701313570488,95,model_minus_copy
+"latent video, guidance 1",dinov2,128,"dies, condensed",4.0,-16.022811076515598,-17.542917357184717,-13.768682643143155,95,model_minus_copy
+"latent video, guidance 1",dinov2,128,"dies, condensed",5.0,-16.75679631484182,-17.766182231421425,-14.535743202512917,95,model_minus_copy
+"latent video, guidance 1",dinov2,128,"dies, condensed",6.0,-17.08667933815404,-18.35679014746386,-16.018545871101473,95,model_minus_copy
+"latent video, guidance 1",dinov2,128,survives,3.0,-13.266821238288946,-13.810352915972794,-12.800852284064991,571,model_minus_copy
+"latent video, guidance 1",dinov2,128,survives,4.0,-13.80351192855167,-14.301626606942975,-13.333311545998596,571,model_minus_copy
+"latent video, guidance 1",dinov2,128,survives,5.0,-13.962606465127548,-14.508248976040745,-13.489434334052634,571,model_minus_copy
+"latent video, guidance 1",dinov2,128,survives,6.0,-14.22079549946426,-14.546620758362343,-13.90315544085964,571,model_minus_copy
+"latent video, guidance 1",handcrafted,64,"dies, AnnexinV only",3.0,-1.1448045330538699,-1.290102477435374,-1.0085238170427102,150,model_minus_copy
+"latent video, guidance 1",handcrafted,64,"dies, AnnexinV only",4.0,-1.2147878585700316,-1.3546816054647208,-1.0643896221995295,150,model_minus_copy
+"latent video, guidance 1",handcrafted,64,"dies, AnnexinV only",5.0,-1.3423754239288674,-1.5608183109006966,-1.1169142166307628,150,model_minus_copy
+"latent video, guidance 1",handcrafted,64,"dies, AnnexinV only",6.0,-1.6503317333655054,-1.93143078521678,-1.3774868799229254,150,model_minus_copy
+"latent video, guidance 1",handcrafted,64,"dies, condensed",3.0,-1.2696074487620765,-1.4385746903747492,-0.9523850505050414,95,model_minus_copy
+"latent video, guidance 1",handcrafted,64,"dies, condensed",4.0,-1.954692715773149,-2.221690451346437,-1.4219220552733376,95,model_minus_copy
+"latent video, guidance 1",handcrafted,64,"dies, condensed",5.0,-2.4991975538004847,-2.7625017078259355,-1.8443323723268137,95,model_minus_copy
+"latent video, guidance 1",handcrafted,64,"dies, condensed",6.0,-2.8542409370182993,-3.084782892859348,-2.360367220343032,95,model_minus_copy
+"latent video, guidance 1",handcrafted,64,survives,3.0,-0.8245805748322625,-0.9405521019419132,-0.7099648333413935,571,model_minus_copy
+"latent video, guidance 1",handcrafted,64,survives,4.0,-0.8924410788114062,-1.008868794841058,-0.7842086002037815,571,model_minus_copy
+"latent video, guidance 1",handcrafted,64,survives,5.0,-0.8913590017329776,-1.0022906621457992,-0.7822067559794729,571,model_minus_copy
+"latent video, guidance 1",handcrafted,64,survives,6.0,-0.9190074689341925,-1.0172198590064052,-0.8273838478335874,571,model_minus_copy
+"latent video, guidance 1",handcrafted,128,"dies, AnnexinV only",3.0,-1.0532528065422715,-1.1703803767447747,-0.9539789086765809,150,model_minus_copy
+"latent video, guidance 1",handcrafted,128,"dies, AnnexinV only",4.0,-1.2681597381302496,-1.4292494437633918,-1.112144627213174,150,model_minus_copy
+"latent video, guidance 1",handcrafted,128,"dies, AnnexinV only",5.0,-1.3963408260966068,-1.63036368159702,-1.1728816939141182,150,model_minus_copy
+"latent video, guidance 1",handcrafted,128,"dies, AnnexinV only",6.0,-1.5680100725369164,-1.8051397438877257,-1.3281648486880584,150,model_minus_copy
+"latent video, guidance 1",handcrafted,128,"dies, condensed",3.0,-1.255961416378709,-1.4349677355020358,-0.8989496756266824,95,model_minus_copy
+"latent video, guidance 1",handcrafted,128,"dies, condensed",4.0,-1.8385615305390637,-2.082265925119664,-1.2072122441437876,95,model_minus_copy
+"latent video, guidance 1",handcrafted,128,"dies, condensed",5.0,-2.36425189428339,-2.6099727892911937,-1.8152564992430722,95,model_minus_copy
+"latent video, guidance 1",handcrafted,128,"dies, condensed",6.0,-2.7398441359828043,-2.9807288446914884,-2.1326326819599437,95,model_minus_copy
+"latent video, guidance 1",handcrafted,128,survives,3.0,-0.8150556724496798,-0.9658119625905726,-0.6676354414298488,571,model_minus_copy
+"latent video, guidance 1",handcrafted,128,survives,4.0,-0.855686684587693,-1.007349840730391,-0.7188034445260642,571,model_minus_copy
+"latent video, guidance 1",handcrafted,128,survives,5.0,-0.8664649011039536,-1.0145153371318432,-0.716178025862943,571,model_minus_copy
+"latent video, guidance 1",handcrafted,128,survives,6.0,-0.9176555210225393,-1.0416482721187807,-0.8100938413770516,571,model_minus_copy
+"latent video, guidance 1",readouts,64,"dies, AnnexinV only",3.0,-0.6280193818707545,-0.7127011679773737,-0.5558658772310969,150,model_minus_copy
+"latent video, guidance 1",readouts,64,"dies, AnnexinV only",4.0,-0.763443428486359,-0.9050842708396148,-0.5996925321418132,150,model_minus_copy
+"latent video, guidance 1",readouts,64,"dies, AnnexinV only",5.0,-0.878211704010375,-1.0762209825920197,-0.6811126209147875,150,model_minus_copy
+"latent video, guidance 1",readouts,64,"dies, AnnexinV only",6.0,-1.0557148879019966,-1.2898130161755028,-0.8126989796125389,150,model_minus_copy
+"latent video, guidance 1",readouts,64,"dies, condensed",3.0,-0.8911691824135527,-1.0497528870520765,-0.6105315176244958,95,model_minus_copy
+"latent video, guidance 1",readouts,64,"dies, condensed",4.0,-1.4779480378833625,-1.72485753395219,-0.9425868158488466,95,model_minus_copy
+"latent video, guidance 1",readouts,64,"dies, condensed",5.0,-1.9655349138575173,-2.2297358185840856,-1.399603677113792,95,model_minus_copy
+"latent video, guidance 1",readouts,64,"dies, condensed",6.0,-2.221403302747372,-2.440441004854299,-1.714652459873666,95,model_minus_copy
+"latent video, guidance 1",readouts,64,survives,3.0,-0.409170905478578,-0.45909612378800885,-0.36713875755643416,571,model_minus_copy
+"latent video, guidance 1",readouts,64,survives,4.0,-0.4693750587404137,-0.5343441372745034,-0.40761448002609335,571,model_minus_copy
+"latent video, guidance 1",readouts,64,survives,5.0,-0.5063254547458546,-0.5602707762955594,-0.45659527860483884,571,model_minus_copy
+"latent video, guidance 1",readouts,64,survives,6.0,-0.5368849232447538,-0.617859740420273,-0.47067651178761444,571,model_minus_copy
+latent video,dinov2,64,"dies, AnnexinV only",3.0,-4.534078369140625,-5.359219434184412,-3.5189706221158223,150,model_minus_drift
+latent video,dinov2,64,"dies, AnnexinV only",4.0,-4.600940341949463,-5.247051472493885,-3.9141618883687754,150,model_minus_drift
+latent video,dinov2,64,"dies, AnnexinV only",5.0,-4.159194717407226,-4.753164597377961,-3.6203736153283415,150,model_minus_drift
+latent video,dinov2,64,"dies, AnnexinV only",6.0,-4.225208536783854,-4.962110516343391,-3.4271077084948103,150,model_minus_drift
+latent video,dinov2,64,"dies, condensed",3.0,-4.349205067283229,-5.216182168907274,-3.4192441764435633,95,model_minus_drift
+latent video,dinov2,64,"dies, condensed",4.0,-4.925120022422389,-5.827217773335879,-3.9193461076384284,95,model_minus_drift
+latent video,dinov2,64,"dies, condensed",5.0,-5.029082549245734,-5.562610540306744,-3.9458934412499658,95,model_minus_drift
+latent video,dinov2,64,"dies, condensed",6.0,-5.171796768590023,-5.8670630849749115,-4.54453899587592,95,model_minus_drift
+latent video,dinov2,64,survives,3.0,-4.169202199959296,-4.480627614750581,-3.858961378556434,571,model_minus_drift
+latent video,dinov2,64,survives,4.0,-4.214846099947046,-4.550124166422668,-3.8348636892197208,571,model_minus_drift
+latent video,dinov2,64,survives,5.0,-4.402605604582618,-4.70669968732746,-4.121707164475205,571,model_minus_drift
+latent video,dinov2,64,survives,6.0,-4.344570012936033,-4.7226487679709015,-3.9855149839684487,571,model_minus_drift
+latent video,dinov2,128,"dies, AnnexinV only",3.0,-2.500810610453288,-3.439198530166875,-1.6743523029909908,150,model_minus_drift
+latent video,dinov2,128,"dies, AnnexinV only",4.0,-2.134598782857259,-2.9231136505400594,-1.4528971189260487,150,model_minus_drift
+latent video,dinov2,128,"dies, AnnexinV only",5.0,-1.976275978088379,-2.8407948904792835,-1.2182222671479004,150,model_minus_drift
+latent video,dinov2,128,"dies, AnnexinV only",6.0,-1.7810432052612304,-2.766645168221958,-0.9346181445976687,150,model_minus_drift
+latent video,dinov2,128,"dies, condensed",3.0,-3.216863160384329,-4.369060086768512,-2.309055991109812,95,model_minus_drift
+latent video,dinov2,128,"dies, condensed",4.0,-3.356572080913343,-4.477542705656765,-2.5442820174598157,95,model_minus_drift
+latent video,dinov2,128,"dies, condensed",5.0,-3.333032377142655,-4.082001881314139,-2.322587103517647,95,model_minus_drift
+latent video,dinov2,128,"dies, condensed",6.0,-3.068187733700401,-4.1881470898941995,-2.2744272170459445,95,model_minus_drift
+latent video,dinov2,128,survives,3.0,-2.6942590506398325,-2.980829382149648,-2.3534871223035165,571,model_minus_drift
+latent video,dinov2,128,survives,4.0,-2.785366626211724,-3.1993806564966,-2.3958579856737523,571,model_minus_drift
+latent video,dinov2,128,survives,5.0,-2.8935842463932606,-3.2249846490449303,-2.607602660131499,571,model_minus_drift
+latent video,dinov2,128,survives,6.0,-3.000672008026711,-3.3407818769588595,-2.6768864690770577,571,model_minus_drift
+latent video,handcrafted,64,"dies, AnnexinV only",3.0,-0.24324223164419104,-0.38747465599361747,-0.12811334690433496,150,model_minus_drift
+latent video,handcrafted,64,"dies, AnnexinV only",4.0,-0.15010719188354563,-0.34492996967000705,0.01632537332487182,150,model_minus_drift
+latent video,handcrafted,64,"dies, AnnexinV only",5.0,-0.001091345886225798,-0.16606667421468568,0.12081824362928123,150,model_minus_drift
+latent video,handcrafted,64,"dies, AnnexinV only",6.0,-0.11301106799708764,-0.2581437505987911,-0.0027836616822444968,150,model_minus_drift
+latent video,handcrafted,64,"dies, condensed",3.0,-0.1288592372091582,-0.23398233818196093,0.11568318566333649,95,model_minus_drift
+latent video,handcrafted,64,"dies, condensed",4.0,-0.3582563998375539,-0.5619676771162636,-0.047860152046104956,95,model_minus_drift
+latent video,handcrafted,64,"dies, condensed",5.0,-0.4179371314147551,-0.614246499187613,-0.045483932404324516,95,model_minus_drift
+latent video,handcrafted,64,"dies, condensed",6.0,-0.42798665753455395,-0.5953968158581384,-0.13619600732694226,95,model_minus_drift
+latent video,handcrafted,64,survives,3.0,-0.22770166301043698,-0.31595449338966924,-0.1394383052770829,571,model_minus_drift
+latent video,handcrafted,64,survives,4.0,-0.22578813808622242,-0.3134829522310776,-0.14414609647448007,571,model_minus_drift
+latent video,handcrafted,64,survives,5.0,-0.23297562355139462,-0.31512496819554436,-0.13518899694133726,571,model_minus_drift
+latent video,handcrafted,64,survives,6.0,-0.2363049297270937,-0.31920442380850783,-0.15040350487873255,571,model_minus_drift
+latent video,handcrafted,128,"dies, AnnexinV only",3.0,-0.20927886334051027,-0.35886783047267484,-0.07838030424923209,150,model_minus_drift
+latent video,handcrafted,128,"dies, AnnexinV only",4.0,-0.12927991837880345,-0.3024559722886994,0.047403908561332,150,model_minus_drift
+latent video,handcrafted,128,"dies, AnnexinV only",5.0,0.007265278549797707,-0.1695817112694306,0.16607539045034625,150,model_minus_drift
+latent video,handcrafted,128,"dies, AnnexinV only",6.0,0.025367037296116425,-0.13360034223867212,0.15791561042416424,150,model_minus_drift
+latent video,handcrafted,128,"dies, condensed",3.0,-0.28703286453272825,-0.41740099602598313,-0.00805039718447058,95,model_minus_drift
+latent video,handcrafted,128,"dies, condensed",4.0,-0.3815129091273721,-0.541547497351821,0.013571353015074753,95,model_minus_drift
+latent video,handcrafted,128,"dies, condensed",5.0,-0.4552031260349089,-0.629692575022443,-0.005338128185635895,95,model_minus_drift
+latent video,handcrafted,128,"dies, condensed",6.0,-0.48940759537179374,-0.6019217171574973,-0.2114980857935579,95,model_minus_drift
+latent video,handcrafted,128,survives,3.0,-0.22308441351818287,-0.3487846173937287,-0.09746564320129077,571,model_minus_drift
+latent video,handcrafted,128,survives,4.0,-0.16596844910867245,-0.2899981820739162,-0.05257949993690676,571,model_minus_drift
+latent video,handcrafted,128,survives,5.0,-0.21377099057047852,-0.3401102395968537,-0.10094691996038464,571,model_minus_drift
+latent video,handcrafted,128,survives,6.0,-0.23769594345880826,-0.3443390048826567,-0.13502726226498304,571,model_minus_drift
+latent video,readouts,64,"dies, AnnexinV only",3.0,-0.1157837663059681,-0.23466411218627853,-0.013795287445320636,150,model_minus_drift
+latent video,readouts,64,"dies, AnnexinV only",4.0,-0.06995374132874656,-0.25278300502654044,0.08384117666785189,150,model_minus_drift
+latent video,readouts,64,"dies, AnnexinV only",5.0,0.006805796637344154,-0.14807119990866044,0.1204399988164913,150,model_minus_drift
+latent video,readouts,64,"dies, AnnexinV only",6.0,-0.015487930508464615,-0.16021275219876335,0.11248564055019997,150,model_minus_drift
+latent video,readouts,64,"dies, condensed",3.0,-0.22788650157321524,-0.33785558677582656,-0.04450996569998426,95,model_minus_drift
+latent video,readouts,64,"dies, condensed",4.0,-0.3308966635991552,-0.48194951078985054,-0.05784039978299851,95,model_minus_drift
+latent video,readouts,64,"dies, condensed",5.0,-0.3254696584594273,-0.4746792459527151,0.03470683090681422,95,model_minus_drift
+latent video,readouts,64,"dies, condensed",6.0,-0.3187477564934725,-0.4154492457999133,-0.11780636930234675,95,model_minus_drift
+latent video,readouts,64,survives,3.0,-0.0835552720184131,-0.14208831102408664,-0.03232949184820436,571,model_minus_drift
+latent video,readouts,64,survives,4.0,-0.07663395372008017,-0.14352389838389318,-0.017060886092884885,571,model_minus_drift
+latent video,readouts,64,survives,5.0,-0.09431889854979966,-0.15237427419433863,-0.04480740440244282,571,model_minus_drift
+latent video,readouts,64,survives,6.0,-0.09297098850587951,-0.163855623365747,-0.0345515408597073,571,model_minus_drift
+"latent video, 3 fates",dinov2,64,"dies, AnnexinV only",3.0,-5.1269371032714846,-5.806307449791137,-4.424989164613815,150,model_minus_drift
+"latent video, 3 fates",dinov2,64,"dies, AnnexinV only",4.0,-5.2207762845357255,-5.6746064969938095,-4.743548205717286,150,model_minus_drift
+"latent video, 3 fates",dinov2,64,"dies, AnnexinV only",5.0,-4.699381402333578,-5.281990345101649,-4.088606476941157,150,model_minus_drift
+"latent video, 3 fates",dinov2,64,"dies, AnnexinV only",6.0,-4.3363193575541175,-5.024049364493877,-3.652965173513993,150,model_minus_drift
+"latent video, 3 fates",dinov2,64,"dies, condensed",3.0,-4.317680900975278,-5.2310220601801145,-3.4912529831642614,95,model_minus_drift
+"latent video, 3 fates",dinov2,64,"dies, condensed",4.0,-5.2596800954718335,-6.168046926633984,-4.118539317681276,95,model_minus_drift
+"latent video, 3 fates",dinov2,64,"dies, condensed",5.0,-4.999276683205053,-5.56319698375144,-4.034284518758786,95,model_minus_drift
+"latent video, 3 fates",dinov2,64,"dies, condensed",6.0,-5.392307020488539,-5.89357157665432,-4.903986567565624,95,model_minus_drift
+"latent video, 3 fates",dinov2,64,survives,3.0,-4.064429896099138,-4.409477440973468,-3.6861223398644456,571,model_minus_drift
+"latent video, 3 fates",dinov2,64,survives,4.0,-4.053755908839131,-4.359603725606031,-3.755487007914951,571,model_minus_drift
+"latent video, 3 fates",dinov2,64,survives,5.0,-4.267933810446183,-4.529162933509312,-4.046241135458543,571,model_minus_drift
+"latent video, 3 fates",dinov2,64,survives,6.0,-4.249435281168976,-4.599511116026529,-3.9552256812329976,571,model_minus_drift
+"latent video, 3 fates",dinov2,128,"dies, AnnexinV only",3.0,-3.410457223256429,-4.16065871868883,-2.6262202372289685,150,model_minus_drift
+"latent video, 3 fates",dinov2,128,"dies, AnnexinV only",4.0,-3.328729139963786,-4.108595016842229,-2.5801882830468488,150,model_minus_drift
+"latent video, 3 fates",dinov2,128,"dies, AnnexinV only",5.0,-3.0887332661946614,-3.906244754285824,-2.2747696195296427,150,model_minus_drift
+"latent video, 3 fates",dinov2,128,"dies, AnnexinV only",6.0,-2.5068437576293947,-3.130746985565203,-1.8758386895307742,150,model_minus_drift
+"latent video, 3 fates",dinov2,128,"dies, condensed",3.0,-3.3957314039531505,-4.278172091477791,-2.3939367445127875,95,model_minus_drift
+"latent video, 3 fates",dinov2,128,"dies, condensed",4.0,-3.384097119381553,-4.10310743667977,-2.3878776663710726,95,model_minus_drift
+"latent video, 3 fates",dinov2,128,"dies, condensed",5.0,-3.2514949798583985,-3.812222676118215,-1.8701795650565107,95,model_minus_drift
+"latent video, 3 fates",dinov2,128,"dies, condensed",6.0,-3.174961300900108,-4.184792306884643,-2.4133720729450308,95,model_minus_drift
+"latent video, 3 fates",dinov2,128,survives,3.0,-2.8584814388989983,-3.1913472862343393,-2.4721806727343685,571,model_minus_drift
+"latent video, 3 fates",dinov2,128,survives,4.0,-2.8137911196974237,-3.2291079983791144,-2.45850091826968,571,model_minus_drift
+"latent video, 3 fates",dinov2,128,survives,5.0,-2.8508792232506748,-3.1553403732175123,-2.5606537488490764,571,model_minus_drift
+"latent video, 3 fates",dinov2,128,survives,6.0,-3.0381470094002694,-3.448850035096436,-2.6981423156444357,571,model_minus_drift
+"latent video, 3 fates",handcrafted,64,"dies, AnnexinV only",3.0,-0.2443339741905686,-0.3809983653072261,-0.11815231038103605,150,model_minus_drift
+"latent video, 3 fates",handcrafted,64,"dies, AnnexinV only",4.0,-0.19333593341441282,-0.3951011103067942,-0.010888082803638559,150,model_minus_drift
+"latent video, 3 fates",handcrafted,64,"dies, AnnexinV only",5.0,-0.3063952223147499,-0.5002020912844168,-0.14825589769588193,150,model_minus_drift
+"latent video, 3 fates",handcrafted,64,"dies, AnnexinV only",6.0,-0.34173284897352846,-0.5424647683911822,-0.1817715171213874,150,model_minus_drift
+"latent video, 3 fates",handcrafted,64,"dies, condensed",3.0,-0.12246667669092655,-0.31627680471383,0.2582539567833727,95,model_minus_drift
+"latent video, 3 fates",handcrafted,64,"dies, condensed",4.0,-0.09250645246078948,-0.37897168356412564,0.5252076864988152,95,model_minus_drift
+"latent video, 3 fates",handcrafted,64,"dies, condensed",5.0,-0.09503781512614044,-0.3795080324595448,0.5694911753411005,95,model_minus_drift
+"latent video, 3 fates",handcrafted,64,"dies, condensed",6.0,-0.21889916070508797,-0.39664804191469366,0.16288169381317988,95,model_minus_drift
+"latent video, 3 fates",handcrafted,64,survives,3.0,-0.2161565637583633,-0.31296795853382614,-0.12319063704810454,571,model_minus_drift
+"latent video, 3 fates",handcrafted,64,survives,4.0,-0.21476578272537367,-0.3113720309918316,-0.12978574353916797,571,model_minus_drift
+"latent video, 3 fates",handcrafted,64,survives,5.0,-0.2397907531437866,-0.3265657962293465,-0.15001700959588582,571,model_minus_drift
+"latent video, 3 fates",handcrafted,64,survives,6.0,-0.22180094734294284,-0.30561998118463063,-0.1376846563857725,571,model_minus_drift
+"latent video, 3 fates",handcrafted,128,"dies, AnnexinV only",3.0,-0.20769169339925833,-0.3535997202096954,-0.07241576047127908,150,model_minus_drift
+"latent video, 3 fates",handcrafted,128,"dies, AnnexinV only",4.0,-0.19109997954215543,-0.3652185005551498,-0.031583251561914966,150,model_minus_drift
+"latent video, 3 fates",handcrafted,128,"dies, AnnexinV only",5.0,-0.29610288373790267,-0.4936488387067796,-0.11635671327718852,150,model_minus_drift
+"latent video, 3 fates",handcrafted,128,"dies, AnnexinV only",6.0,-0.31391094297596195,-0.5109636791987352,-0.12216620759449398,150,model_minus_drift
+"latent video, 3 fates",handcrafted,128,"dies, condensed",3.0,-0.1810438285510868,-0.3162540323080269,0.14063201105264825,95,model_minus_drift
+"latent video, 3 fates",handcrafted,128,"dies, condensed",4.0,-0.18537063342271268,-0.4027901830559345,0.3205831452918164,95,model_minus_drift
+"latent video, 3 fates",handcrafted,128,"dies, condensed",5.0,-0.21450790575788403,-0.48537800751070354,0.47112314665500743,95,model_minus_drift
+"latent video, 3 fates",handcrafted,128,"dies, condensed",6.0,-0.3058233652550074,-0.48866184397717527,0.06478529395166219,95,model_minus_drift
+"latent video, 3 fates",handcrafted,128,survives,3.0,-0.1920978896106747,-0.3286970573670917,-0.07330092821942998,571,model_minus_drift
+"latent video, 3 fates",handcrafted,128,survives,4.0,-0.15990646736712294,-0.30581037636234626,-0.03160513381964454,571,model_minus_drift
+"latent video, 3 fates",handcrafted,128,survives,5.0,-0.17305880454011982,-0.3031352276179343,-0.04695162418700411,571,model_minus_drift
+"latent video, 3 fates",handcrafted,128,survives,6.0,-0.19849311622688598,-0.31186758985624524,-0.09838357043063362,571,model_minus_drift
+"latent video, 3 fates",readouts,64,"dies, AnnexinV only",3.0,-0.07598889990220851,-0.22193388626278066,0.032604190618173885,150,model_minus_drift
+"latent video, 3 fates",readouts,64,"dies, AnnexinV only",4.0,-0.09812141023790541,-0.2723360640843846,0.030880264614647105,150,model_minus_drift
+"latent video, 3 fates",readouts,64,"dies, AnnexinV only",5.0,-0.283148436670173,-0.47078957696179163,-0.12395702953164346,150,model_minus_drift
+"latent video, 3 fates",readouts,64,"dies, AnnexinV only",6.0,-0.3168176243207646,-0.5451675363310134,-0.13062128444267596,150,model_minus_drift
+"latent video, 3 fates",readouts,64,"dies, condensed",3.0,-0.05127445051594524,-0.21109112813146394,0.2398493123592741,95,model_minus_drift
+"latent video, 3 fates",readouts,64,"dies, condensed",4.0,-0.222979526322381,-0.4000737001348104,0.13226861557924546,95,model_minus_drift
+"latent video, 3 fates",readouts,64,"dies, condensed",5.0,-0.27196637413750663,-0.4371580881822529,0.09829426802625534,95,model_minus_drift
+"latent video, 3 fates",readouts,64,"dies, condensed",6.0,-0.22857632148791915,-0.38599221379075055,0.05114899477295343,95,model_minus_drift
+"latent video, 3 fates",readouts,64,survives,3.0,-0.08023166573184322,-0.12466824160998072,-0.04016852796241403,571,model_minus_drift
+"latent video, 3 fates",readouts,64,survives,4.0,-0.0744984840079725,-0.1287782256112463,-0.02002902574679614,571,model_minus_drift
+"latent video, 3 fates",readouts,64,survives,5.0,-0.08204958850997067,-0.12251696404503354,-0.034501603799068276,571,model_minus_drift
+"latent video, 3 fates",readouts,64,survives,6.0,-0.08541085786634774,-0.13574227956864227,-0.036076761899821924,571,model_minus_drift
+"latent video, guidance 1",dinov2,64,"dies, AnnexinV only",3.0,-4.83853546778361,-5.630062352203661,-3.9638554860044413,150,model_minus_drift
+"latent video, guidance 1",dinov2,64,"dies, AnnexinV only",4.0,-5.108321812947591,-5.770161512772028,-4.4064460501966884,150,model_minus_drift
+"latent video, guidance 1",dinov2,64,"dies, AnnexinV only",5.0,-4.825637162526449,-5.470764380841286,-4.09569036391048,150,model_minus_drift
+"latent video, guidance 1",dinov2,64,"dies, AnnexinV only",6.0,-4.8962268575032555,-5.708138905447677,-4.155418372362223,150,model_minus_drift
+"latent video, guidance 1",dinov2,64,"dies, condensed",3.0,-4.258854022778963,-5.203461589299618,-3.5023194918471776,95,model_minus_drift
+"latent video, guidance 1",dinov2,64,"dies, condensed",4.0,-4.767200751053659,-5.976280570810146,-4.006500781520499,95,model_minus_drift
+"latent video, guidance 1",dinov2,64,"dies, condensed",5.0,-4.8910167292544715,-5.7798265124718675,-4.140908403881014,95,model_minus_drift
+"latent video, guidance 1",dinov2,64,"dies, condensed",6.0,-4.977402124906841,-6.296010792255402,-4.319652660286387,95,model_minus_drift
+"latent video, guidance 1",dinov2,64,survives,3.0,-4.069779137178812,-4.409099441659696,-3.707566701731326,571,model_minus_drift
+"latent video, guidance 1",dinov2,64,survives,4.0,-4.076222843965173,-4.417391550166394,-3.7617754498989453,571,model_minus_drift
+"latent video, guidance 1",dinov2,64,survives,5.0,-4.355107446059245,-4.708449434551092,-4.042384469790661,571,model_minus_drift
+"latent video, guidance 1",dinov2,64,survives,6.0,-4.304295822116832,-4.779007122296672,-3.9142141104309442,571,model_minus_drift
+"latent video, guidance 1",dinov2,128,"dies, AnnexinV only",3.0,-2.9621436754862467,-3.7227178475686484,-2.280394263113144,150,model_minus_drift
+"latent video, guidance 1",dinov2,128,"dies, AnnexinV only",4.0,-2.8311555353800455,-3.690529416858541,-2.0533536404203416,150,model_minus_drift
+"latent video, guidance 1",dinov2,128,"dies, AnnexinV only",5.0,-3.027740472157796,-3.9133431687864553,-2.278569956680741,150,model_minus_drift
+"latent video, guidance 1",dinov2,128,"dies, AnnexinV only",6.0,-2.594320805867513,-3.4411299916745444,-1.8730383662860812,150,model_minus_drift
+"latent video, guidance 1",dinov2,128,"dies, condensed",3.0,-3.6191271731728003,-4.731802844878113,-2.7684901725571116,95,model_minus_drift
+"latent video, guidance 1",dinov2,128,"dies, condensed",4.0,-3.3036771573518453,-4.531393524265746,-2.4330637287120442,95,model_minus_drift
+"latent video, guidance 1",dinov2,128,"dies, condensed",5.0,-3.190475232977616,-4.351301465323545,-2.3050309849917183,95,model_minus_drift
+"latent video, guidance 1",dinov2,128,"dies, condensed",6.0,-3.401526380840101,-5.282100638228577,-2.453469105458336,95,model_minus_drift
+"latent video, guidance 1",dinov2,128,survives,3.0,-2.624928497808827,-2.8935384887367728,-2.3385946937394366,571,model_minus_drift
+"latent video, guidance 1",dinov2,128,survives,4.0,-2.6792241378757455,-2.9770959159507924,-2.368757941182555,571,model_minus_drift
+"latent video, guidance 1",dinov2,128,survives,5.0,-2.7056000587610356,-3.022896391254982,-2.4157417919659965,571,model_minus_drift
+"latent video, guidance 1",dinov2,128,survives,6.0,-2.847095208911261,-3.2037476898188153,-2.4987691280216273,571,model_minus_drift
+"latent video, guidance 1",handcrafted,64,"dies, AnnexinV only",3.0,-0.2931171130826976,-0.4395244834907992,-0.14358103393749325,150,model_minus_drift
+"latent video, guidance 1",handcrafted,64,"dies, AnnexinV only",4.0,-0.3037007028762407,-0.5204948600793516,-0.15064856666282023,150,model_minus_drift
+"latent video, guidance 1",handcrafted,64,"dies, AnnexinV only",5.0,-0.3204008955000127,-0.5304508587249682,-0.16837119309442886,150,model_minus_drift
+"latent video, guidance 1",handcrafted,64,"dies, AnnexinV only",6.0,-0.355396957725547,-0.5619470443135964,-0.18628918895700472,150,model_minus_drift
+"latent video, guidance 1",handcrafted,64,"dies, condensed",3.0,-0.14254576939404814,-0.23989143599610385,-0.018999444770702915,95,model_minus_drift
+"latent video, guidance 1",handcrafted,64,"dies, condensed",4.0,-0.30322514261109373,-0.5131296676080815,0.03136849746337801,95,model_minus_drift
+"latent video, guidance 1",handcrafted,64,"dies, condensed",5.0,-0.3490236738975948,-0.5622803606352377,-0.014893918524469344,95,model_minus_drift
+"latent video, guidance 1",handcrafted,64,"dies, condensed",6.0,-0.32900731385684256,-0.5980279842573895,0.09465444090096538,95,model_minus_drift
+"latent video, guidance 1",handcrafted,64,survives,3.0,-0.23891187404401018,-0.33273994418464137,-0.15291915727991595,571,model_minus_drift
+"latent video, guidance 1",handcrafted,64,survives,4.0,-0.26608508365230904,-0.3511507888568874,-0.18082591263657136,571,model_minus_drift
+"latent video, guidance 1",handcrafted,64,survives,5.0,-0.27635167790967374,-0.366943867144131,-0.17492445680077803,571,model_minus_drift
+"latent video, guidance 1",handcrafted,64,survives,6.0,-0.2692030183714438,-0.3471880257474162,-0.19171755627839226,571,model_minus_drift
+"latent video, guidance 1",handcrafted,128,"dies, AnnexinV only",3.0,-0.21687212454684351,-0.33180576247622273,-0.1281238628027632,150,model_minus_drift
+"latent video, guidance 1",handcrafted,128,"dies, AnnexinV only",4.0,-0.35010594344739737,-0.5324422707225634,-0.20587373997055367,150,model_minus_drift
+"latent video, guidance 1",handcrafted,128,"dies, AnnexinV only",5.0,-0.36357857620705897,-0.5924793260653419,-0.20848305235402861,150,model_minus_drift
+"latent video, guidance 1",handcrafted,128,"dies, AnnexinV only",6.0,-0.3704899978833896,-0.6007806355439423,-0.2002655338767462,150,model_minus_drift
+"latent video, guidance 1",handcrafted,128,"dies, condensed",3.0,-0.1875215815091233,-0.33596488874203395,0.036680732530485406,95,model_minus_drift
+"latent video, guidance 1",handcrafted,128,"dies, condensed",4.0,-0.2918595968105693,-0.4724717338155883,-0.014247477609475171,95,model_minus_drift
+"latent video, guidance 1",handcrafted,128,"dies, condensed",5.0,-0.3232258982543825,-0.5207185241415265,-0.059627555064397125,95,model_minus_drift
+"latent video, guidance 1",handcrafted,128,"dies, condensed",6.0,-0.36174976552830307,-0.6155119930880718,-0.03647533474204865,95,model_minus_drift
+"latent video, guidance 1",handcrafted,128,survives,3.0,-0.24853629471679833,-0.37084505424603875,-0.13450066314216982,571,model_minus_drift
+"latent video, guidance 1",handcrafted,128,survives,4.0,-0.2256308729836754,-0.34993401464366625,-0.11527181277623205,571,model_minus_drift
+"latent video, guidance 1",handcrafted,128,survives,5.0,-0.2441368552520861,-0.35346890246578644,-0.12729731133026723,571,model_minus_drift
+"latent video, guidance 1",handcrafted,128,survives,6.0,-0.25822788594903345,-0.3582172413091132,-0.1586120012677334,571,model_minus_drift
+"latent video, guidance 1",readouts,64,"dies, AnnexinV only",3.0,-0.22132910411740686,-0.31873308268927386,-0.14304558378814086,150,model_minus_drift
+"latent video, guidance 1",readouts,64,"dies, AnnexinV only",4.0,-0.26306321233425306,-0.41210858289156627,-0.14573161854781047,150,model_minus_drift
+"latent video, guidance 1",readouts,64,"dies, AnnexinV only",5.0,-0.37663556702633744,-0.5413378408854591,-0.24327544975143012,150,model_minus_drift
+"latent video, guidance 1",readouts,64,"dies, AnnexinV only",6.0,-0.3534352920478785,-0.5331415734365299,-0.22611900113599337,150,model_minus_drift
+"latent video, guidance 1",readouts,64,"dies, condensed",3.0,-0.1633334886191723,-0.28508480192087365,-0.004126955921964214,95,model_minus_drift
+"latent video, guidance 1",readouts,64,"dies, condensed",4.0,-0.17719926439395856,-0.2980954228811917,0.0186045730616464,95,model_minus_drift
+"latent video, guidance 1",readouts,64,"dies, condensed",5.0,-0.2833153855479704,-0.40026815342508015,-0.05626134155520714,95,model_minus_drift
+"latent video, guidance 1",readouts,64,"dies, condensed",6.0,-0.19382913507058588,-0.32523144058943787,0.06891521030365765,95,model_minus_drift
+"latent video, guidance 1",readouts,64,survives,3.0,-0.09166369612499492,-0.14054746576076035,-0.05203434277783868,571,model_minus_drift
+"latent video, guidance 1",readouts,64,survives,4.0,-0.11823518921337463,-0.18313121829147666,-0.05966984311436583,571,model_minus_drift
+"latent video, guidance 1",readouts,64,survives,5.0,-0.1264289284415765,-0.18592179720596536,-0.07785087229351753,571,model_minus_drift
+"latent video, guidance 1",readouts,64,survives,6.0,-0.1231291071526792,-0.183797534598846,-0.07060722357939735,571,model_minus_drift
+latent video,dinov2,64,"dies, AnnexinV only",3.0,1.4437851842244467,0.9116448045156658,2.083775856835501,150,model_minus_random
+latent video,dinov2,64,"dies, AnnexinV only",4.0,1.763129660288493,1.3137063472759478,2.2423400202167127,150,model_minus_random
+latent video,dinov2,64,"dies, AnnexinV only",5.0,2.1300513458251955,1.640518147226364,2.561316777557134,150,model_minus_random
+latent video,dinov2,64,"dies, AnnexinV only",6.0,1.9770937283833823,1.5146225252148213,2.4046973562014826,150,model_minus_random
+latent video,dinov2,64,"dies, condensed",3.0,1.2189114520424291,0.3405293568843553,1.9207331066256947,95,model_minus_random
+latent video,dinov2,64,"dies, condensed",4.0,1.1404336427387438,0.4328015769813575,1.537922513409921,95,model_minus_random
+latent video,dinov2,64,"dies, condensed",5.0,1.3932811335513466,0.8168623650032693,1.7723920182153539,95,model_minus_random
+latent video,dinov2,64,"dies, condensed",6.0,1.7694612302278216,1.1538006700967487,2.1487154560283988,95,model_minus_random
+latent video,dinov2,64,survives,3.0,0.8711509604378882,0.6716483676205325,1.0842381303841409,571,model_minus_random
+latent video,dinov2,64,survives,4.0,1.4143873405122507,1.1402481699579272,1.6856640890036558,571,model_minus_random
+latent video,dinov2,64,survives,5.0,1.508672333431745,1.2533191737192924,1.7208818412555094,571,model_minus_random
+latent video,dinov2,64,survives,6.0,1.534618155551249,1.2677958463948182,1.7792263323382402,571,model_minus_random
+latent video,dinov2,128,"dies, AnnexinV only",3.0,3.2508007939656576,2.6892993944155488,3.8053928948884805,150,model_minus_random
+latent video,dinov2,128,"dies, AnnexinV only",4.0,3.9016479937235515,3.3431358300210468,4.4692762299704265,150,model_minus_random
+latent video,dinov2,128,"dies, AnnexinV only",5.0,4.1581989288330075,3.474409427686737,4.78708453087701,150,model_minus_random
+latent video,dinov2,128,"dies, AnnexinV only",6.0,4.112321866353353,3.638652498303774,4.578739149388974,150,model_minus_random
+latent video,dinov2,128,"dies, condensed",3.0,2.421584912350303,1.6372761193384608,3.0434951570835915,95,model_minus_random
+latent video,dinov2,128,"dies, condensed",4.0,2.7360037151135894,1.2837267985127188,3.4903102092486225,95,model_minus_random
+latent video,dinov2,128,"dies, condensed",5.0,2.9725616957011978,1.886929124351745,3.661872468779727,95,model_minus_random
+latent video,dinov2,128,"dies, condensed",6.0,3.6930842851337635,2.385204040660595,4.6779425132378485,95,model_minus_random
+latent video,dinov2,128,survives,3.0,2.3024614805097965,2.091229411227106,2.541523595864126,571,model_minus_random
+latent video,dinov2,128,survives,4.0,2.7147130749062773,2.4842512619935397,2.9420937151978235,571,model_minus_random
+latent video,dinov2,128,survives,5.0,2.735428821810908,2.485097506208598,2.970755361103977,571,model_minus_random
+latent video,dinov2,128,survives,6.0,2.747029215984712,2.4252160828871263,3.1051885860015003,571,model_minus_random
+latent video,handcrafted,64,"dies, AnnexinV only",3.0,-0.17466091459381336,-0.3356817101357976,-0.06486975232640771,150,model_minus_random
+latent video,handcrafted,64,"dies, AnnexinV only",4.0,-0.09336545665107475,-0.26186492263092503,0.04571291268836418,150,model_minus_random
+latent video,handcrafted,64,"dies, AnnexinV only",5.0,0.07677645980037857,-0.09155627788354334,0.21942528346960896,150,model_minus_random
+latent video,handcrafted,64,"dies, AnnexinV only",6.0,0.06567459621329867,-0.10858041448875445,0.18841463168163106,150,model_minus_random
+latent video,handcrafted,64,"dies, condensed",3.0,-0.04756703324841818,-0.17150880291215617,0.031152116048369906,95,model_minus_random
+latent video,handcrafted,64,"dies, condensed",4.0,-0.12525214438930787,-0.259916157022964,-0.02237757994526165,95,model_minus_random
+latent video,handcrafted,64,"dies, condensed",5.0,-0.1518694231861497,-0.3343475056542181,0.014756192348525925,95,model_minus_random
+latent video,handcrafted,64,"dies, condensed",6.0,-0.18743283227662144,-0.34477810928502994,-0.09072466528031826,95,model_minus_random
+latent video,handcrafted,64,survives,3.0,-0.22226447947921552,-0.2689778694601974,-0.17819177794532007,571,model_minus_random
+latent video,handcrafted,64,survives,4.0,-0.16729489862613248,-0.2229881053443797,-0.0956623548116005,571,model_minus_random
+latent video,handcrafted,64,survives,5.0,-0.136564487846062,-0.18729604961289084,-0.07028818843408702,571,model_minus_random
+latent video,handcrafted,64,survives,6.0,-0.1093957723728014,-0.15809877368523767,-0.052669675525439885,571,model_minus_random
+latent video,handcrafted,128,"dies, AnnexinV only",3.0,-0.1879657534152067,-0.3360478055011669,-0.07383524586337456,150,model_minus_random
+latent video,handcrafted,128,"dies, AnnexinV only",4.0,-0.008125562520425863,-0.1715731581910832,0.13592706888185915,150,model_minus_random
+latent video,handcrafted,128,"dies, AnnexinV only",5.0,0.1787067344546136,0.004235676046776864,0.35141171271263044,150,model_minus_random
+latent video,handcrafted,128,"dies, AnnexinV only",6.0,0.20209967825961794,0.05862796815765121,0.3363260604312412,150,model_minus_random
+latent video,handcrafted,128,"dies, condensed",3.0,-0.11148825630104967,-0.19439563162494303,-0.021632881121168915,95,model_minus_random
+latent video,handcrafted,128,"dies, condensed",4.0,-0.13291084796914657,-0.2597375241144054,0.06003085388066976,95,model_minus_random
+latent video,handcrafted,128,"dies, condensed",5.0,-0.19166030680962215,-0.3106225987367058,0.060293328829898726,95,model_minus_random
+latent video,handcrafted,128,"dies, condensed",6.0,-0.22281360886626556,-0.41578870398890594,-0.026156615542326095,95,model_minus_random
+latent video,handcrafted,128,survives,3.0,-0.1850891952995979,-0.22520815179540707,-0.13615255654198172,571,model_minus_random
+latent video,handcrafted,128,survives,4.0,-0.08294008551906035,-0.14338357304874713,-0.007260526426021376,571,model_minus_random
+latent video,handcrafted,128,survives,5.0,-0.10035698786727655,-0.1672688940127091,-0.01806938194926115,571,model_minus_random
+latent video,handcrafted,128,survives,6.0,-0.0677369892882501,-0.11462810770501186,-0.0059150529995524856,571,model_minus_random
+latent video,readouts,64,"dies, AnnexinV only",3.0,-0.12371986384613495,-0.26675392460775277,-0.01766288385065818,150,model_minus_random
+latent video,readouts,64,"dies, AnnexinV only",4.0,-0.008174021987322101,-0.16328921381721143,0.11497334686144974,150,model_minus_random
+latent video,readouts,64,"dies, AnnexinV only",5.0,0.1259504722044798,-0.022109259985058152,0.24424067680425982,150,model_minus_random
+latent video,readouts,64,"dies, AnnexinV only",6.0,0.14910473472763836,0.020052868200360174,0.2699979579888864,150,model_minus_random
+latent video,readouts,64,"dies, condensed",3.0,-0.17348883064264575,-0.33274657604577756,-0.0799184774782149,95,model_minus_random
+latent video,readouts,64,"dies, condensed",4.0,-0.22571173704348216,-0.33243346269660434,-0.0944285511886198,95,model_minus_random
+latent video,readouts,64,"dies, condensed",5.0,-0.22671515963429667,-0.38097650683279705,-0.06085449986761853,95,model_minus_random
+latent video,readouts,64,"dies, condensed",6.0,-0.22650085607199202,-0.3980989175394193,-0.10195041278178764,95,model_minus_random
+latent video,readouts,64,survives,3.0,-0.2531097743746254,-0.2846854189577823,-0.20971339665931046,571,model_minus_random
+latent video,readouts,64,survives,4.0,-0.19620633165672272,-0.23151992256472018,-0.14712694274154445,571,model_minus_random
+latent video,readouts,64,survives,5.0,-0.17116133202351214,-0.2117718287964126,-0.11469625034030614,571,model_minus_random
+latent video,readouts,64,survives,6.0,-0.1428141792038169,-0.19485102049969363,-0.08448206126535925,571,model_minus_random
+"latent video, 3 fates",dinov2,64,"dies, AnnexinV only",3.0,0.7100251642862956,0.3080151987453438,1.0984794421288975,150,model_minus_random
+"latent video, 3 fates",dinov2,64,"dies, AnnexinV only",4.0,1.0599890581766764,0.5790696665601505,1.4695072394452635,150,model_minus_random
+"latent video, 3 fates",dinov2,64,"dies, AnnexinV only",5.0,1.5491818110148112,1.1057365279826825,1.9625768060594881,150,model_minus_random
+"latent video, 3 fates",dinov2,64,"dies, AnnexinV only",6.0,1.6092921638488769,1.1750784225857078,2.0107373147472254,150,model_minus_random
+"latent video, 3 fates",dinov2,64,"dies, condensed",3.0,1.3688900997764186,0.5144557793935141,1.9991051022361863,95,model_minus_random
+"latent video, 3 fates",dinov2,64,"dies, condensed",4.0,1.0772294897782175,0.325081419980997,1.6760342108477715,95,model_minus_random
+"latent video, 3 fates",dinov2,64,"dies, condensed",5.0,1.3898046493530274,0.7516436438126998,1.8715730747418204,95,model_minus_random
+"latent video, 3 fates",dinov2,64,"dies, condensed",6.0,1.671345469826146,1.2629539838509083,2.1202949339571475,95,model_minus_random
+"latent video, 3 fates",dinov2,64,survives,3.0,1.00012062393429,0.8361288592591678,1.1562295910536746,571,model_minus_random
+"latent video, 3 fates",dinov2,64,survives,4.0,1.4534416098519507,1.2086437438730384,1.7102662560567483,571,model_minus_random
+"latent video, 3 fates",dinov2,64,survives,5.0,1.492383906803699,1.301873438934151,1.6727186454392962,571,model_minus_random
+"latent video, 3 fates",dinov2,64,survives,6.0,1.4741387058264737,1.1746953002809204,1.7385027340806005,571,model_minus_random
+"latent video, 3 fates",dinov2,128,"dies, AnnexinV only",3.0,2.3776391410827635,2.030265106599326,2.791403168689592,150,model_minus_random
+"latent video, 3 fates",dinov2,128,"dies, AnnexinV only",4.0,2.836301415761312,2.383376305021027,3.3089568176351745,150,model_minus_random
+"latent video, 3 fates",dinov2,128,"dies, AnnexinV only",5.0,3.079567527770996,2.44750461731834,3.7432051056354965,150,model_minus_random
+"latent video, 3 fates",dinov2,128,"dies, AnnexinV only",6.0,3.575713170369466,3.1445987096093497,4.039107288232496,150,model_minus_random
+"latent video, 3 fates",dinov2,128,"dies, condensed",3.0,2.432260503266987,1.3522981763969768,3.282885070181322,95,model_minus_random
+"latent video, 3 fates",dinov2,128,"dies, condensed",4.0,2.763183463247199,1.9138336366631075,3.2953227794443145,95,model_minus_random
+"latent video, 3 fates",dinov2,128,"dies, condensed",5.0,3.0654454482229134,2.2096762853756284,3.5715781351653013,95,model_minus_random
+"latent video, 3 fates",dinov2,128,"dies, condensed",6.0,3.7090551978663395,2.5208143470865307,4.580305136252951,95,model_minus_random
+"latent video, 3 fates",dinov2,128,survives,3.0,2.2135793381939837,1.9403245618003593,2.4956123146110554,571,model_minus_random
+"latent video, 3 fates",dinov2,128,survives,4.0,2.7860618748305765,2.4527784779909885,3.0943254949333325,571,model_minus_random
+"latent video, 3 fates",dinov2,128,survives,5.0,2.9093682928803504,2.682275981612051,3.1549987175050007,571,model_minus_random
+"latent video, 3 fates",dinov2,128,survives,6.0,2.842483627399505,2.5612647136305013,3.1110224263727804,571,model_minus_random
+"latent video, 3 fates",handcrafted,64,"dies, AnnexinV only",3.0,-0.149440693086779,-0.23329233776588523,-0.05625877541512339,150,model_minus_random
+"latent video, 3 fates",handcrafted,64,"dies, AnnexinV only",4.0,-0.09007768154562429,-0.24628453204879724,0.08676281559638563,150,model_minus_random
+"latent video, 3 fates",handcrafted,64,"dies, AnnexinV only",5.0,-0.20916089223974677,-0.40846007059264544,0.006352806701205585,150,model_minus_random
+"latent video, 3 fates",handcrafted,64,"dies, AnnexinV only",6.0,-0.1515784477054668,-0.33556609470071286,0.020118850199095706,150,model_minus_random
+"latent video, 3 fates",handcrafted,64,"dies, condensed",3.0,-0.026085157849546618,-0.26026602283697825,0.20129304523544997,95,model_minus_random
+"latent video, 3 fates",handcrafted,64,"dies, condensed",4.0,0.1283109255911052,-0.10945731295794314,0.5101432705947114,95,model_minus_random
+"latent video, 3 fates",handcrafted,64,"dies, condensed",5.0,0.127523574990587,-0.1313816380784531,0.5929078945084896,95,model_minus_random
+"latent video, 3 fates",handcrafted,64,"dies, condensed",6.0,-0.006376968173793027,-0.3029280054241065,0.25832447528966496,95,model_minus_random
+"latent video, 3 fates",handcrafted,64,survives,3.0,-0.22616302315042855,-0.278014738086207,-0.17376638834388702,571,model_minus_random
+"latent video, 3 fates",handcrafted,64,survives,4.0,-0.14683775270857125,-0.1979139900683111,-0.0760729630392316,571,model_minus_random
+"latent video, 3 fates",handcrafted,64,survives,5.0,-0.14142072109421763,-0.19845856462609487,-0.058814131490760146,571,model_minus_random
+"latent video, 3 fates",handcrafted,64,survives,6.0,-0.1021365598385673,-0.1536477115663947,-0.02667365802485176,571,model_minus_random
+"latent video, 3 fates",handcrafted,128,"dies, AnnexinV only",3.0,-0.1351513124262712,-0.24400283367361145,-0.008177938756274964,150,model_minus_random
+"latent video, 3 fates",handcrafted,128,"dies, AnnexinV only",4.0,-0.04462666645888833,-0.20424937683279992,0.12524934838660542,150,model_minus_random
+"latent video, 3 fates",handcrafted,128,"dies, AnnexinV only",5.0,-0.13961024104164685,-0.3019667794219286,0.04583636454070489,150,model_minus_random
+"latent video, 3 fates",handcrafted,128,"dies, AnnexinV only",6.0,-0.14792455011236474,-0.33952003054393454,0.0384456289745542,150,model_minus_random
+"latent video, 3 fates",handcrafted,128,"dies, condensed",3.0,0.011862152453583361,-0.1807515146466711,0.15348639676120207,95,model_minus_random
+"latent video, 3 fates",handcrafted,128,"dies, condensed",4.0,0.08425421676084646,-0.17176877703825016,0.42185724246957296,95,model_minus_random
+"latent video, 3 fates",handcrafted,128,"dies, condensed",5.0,0.07852446519252906,-0.1747295923013919,0.5958112324257635,95,model_minus_random
+"latent video, 3 fates",handcrafted,128,"dies, condensed",6.0,-0.05827191825676635,-0.31523302299563544,0.20462112698357438,95,model_minus_random
+"latent video, 3 fates",handcrafted,128,survives,3.0,-0.15590699734197522,-0.19157857467321884,-0.11301360363652564,571,model_minus_random
+"latent video, 3 fates",handcrafted,128,survives,4.0,-0.09906754286158719,-0.14406609757268435,-0.046185463971526716,571,model_minus_random
+"latent video, 3 fates",handcrafted,128,survives,5.0,-0.07084120487683786,-0.13658156518708853,0.004970805803542663,571,model_minus_random
+"latent video, 3 fates",handcrafted,128,survives,6.0,-0.0463598303603713,-0.10628323291232819,0.01235682888309439,571,model_minus_random
+"latent video, 3 fates",readouts,64,"dies, AnnexinV only",3.0,-0.14046070710242803,-0.2204395801545675,-0.06541961858043828,150,model_minus_random
+"latent video, 3 fates",readouts,64,"dies, AnnexinV only",4.0,-0.10587647585975662,-0.24081773109761373,0.021208128582616993,150,model_minus_random
+"latent video, 3 fates",readouts,64,"dies, AnnexinV only",5.0,-0.20626926575935572,-0.3985793260358544,-0.027086401785123695,150,model_minus_random
+"latent video, 3 fates",readouts,64,"dies, AnnexinV only",6.0,-0.19442315462520093,-0.34593142494099804,-0.04336788962945428,150,model_minus_random
+"latent video, 3 fates",readouts,64,"dies, condensed",3.0,-0.032286721983499335,-0.20243655850932699,0.08459209348969568,95,model_minus_random
+"latent video, 3 fates",readouts,64,"dies, condensed",4.0,-0.10054953360927306,-0.20051280193449392,0.07473246569753489,95,model_minus_random
+"latent video, 3 fates",readouts,64,"dies, condensed",5.0,-0.11056884202029993,-0.2516852767147994,0.0983210023404855,95,model_minus_random
+"latent video, 3 fates",readouts,64,"dies, condensed",6.0,-0.10287793801230041,-0.31630875485958376,0.07797476645619777,95,model_minus_random
+"latent video, 3 fates",readouts,64,survives,3.0,-0.2507644515658918,-0.2888204715334161,-0.19970972790855157,571,model_minus_random
+"latent video, 3 fates",readouts,64,survives,4.0,-0.2008296801760967,-0.2371880602794845,-0.14757861950755602,571,model_minus_random
+"latent video, 3 fates",readouts,64,survives,5.0,-0.1651190468648839,-0.2115802320022615,-0.09726412306810468,571,model_minus_random
+"latent video, 3 fates",readouts,64,survives,6.0,-0.1269018111293963,-0.188802591591966,-0.05573742845880237,571,model_minus_random
+"latent video, guidance 1",dinov2,64,"dies, AnnexinV only",3.0,0.9484858512878418,0.5650141447259668,1.409628468957302,150,model_minus_random
+"latent video, guidance 1",dinov2,64,"dies, AnnexinV only",4.0,1.227733669281006,0.7920378139202412,1.6152722134586448,150,model_minus_random
+"latent video, guidance 1",dinov2,64,"dies, AnnexinV only",5.0,1.5756847190856933,1.1477299109961299,1.9747009403025149,150,model_minus_random
+"latent video, guidance 1",dinov2,64,"dies, AnnexinV only",6.0,1.178536688486735,0.7576665324443804,1.5843391123629555,150,model_minus_random
+"latent video, guidance 1",dinov2,64,"dies, condensed",3.0,1.212391572249563,0.22980021237584908,2.0309445273177045,95,model_minus_random
+"latent video, guidance 1",dinov2,64,"dies, condensed",4.0,1.171660714400442,0.11872905697933464,1.8257713175526695,95,model_minus_random
+"latent video, guidance 1",dinov2,64,"dies, condensed",5.0,1.323234638414885,0.6549346650877426,1.801124116581991,95,model_minus_random
+"latent video, guidance 1",dinov2,64,"dies, condensed",6.0,1.770524868212248,0.9701724907107976,2.182778851335072,95,model_minus_random
+"latent video, guidance 1",dinov2,64,survives,3.0,1.0016851608890995,0.8526819780575836,1.151144884226731,571,model_minus_random
+"latent video, guidance 1",dinov2,64,survives,4.0,1.4093133004450755,1.1915373193361152,1.6337312887426152,571,model_minus_random
+"latent video, guidance 1",dinov2,64,survives,5.0,1.4541481605970714,1.2244351991050075,1.6638890078347413,571,model_minus_random
+"latent video, guidance 1",dinov2,64,survives,6.0,1.539909048798623,1.3226628788615877,1.760313243073456,571,model_minus_random
+"latent video, guidance 1",dinov2,128,"dies, AnnexinV only",3.0,2.615281581878662,2.220344556751017,2.9617232665868967,150,model_minus_random
+"latent video, guidance 1",dinov2,128,"dies, AnnexinV only",4.0,3.2147933705647787,2.717739861435449,3.652351753898974,150,model_minus_random
+"latent video, guidance 1",dinov2,128,"dies, AnnexinV only",5.0,3.087660414377848,2.450021536718279,3.650293215977773,150,model_minus_random
+"latent video, guidance 1",dinov2,128,"dies, AnnexinV only",6.0,3.266289291381836,2.6883565886232463,3.813572439318118,150,model_minus_random
+"latent video, guidance 1",dinov2,128,"dies, condensed",3.0,2.2492955659565173,1.3179040174719727,2.9213812828242767,95,model_minus_random
+"latent video, guidance 1",dinov2,128,"dies, condensed",4.0,2.811061005843313,1.4878780710887403,3.5742709194147393,95,model_minus_random
+"latent video, guidance 1",dinov2,128,"dies, condensed",5.0,3.124268210561652,1.7247678325668763,3.879466699560483,95,model_minus_random
+"latent video, guidance 1",dinov2,128,"dies, condensed",6.0,3.5123844749049136,1.5326369211678543,4.500430705482456,95,model_minus_random
+"latent video, guidance 1",dinov2,128,survives,3.0,2.3173837778655955,2.1121290728767907,2.560823421250884,571,model_minus_random
+"latent video, guidance 1",dinov2,128,survives,4.0,2.735127684531404,2.508458737339557,2.9852732207120045,571,model_minus_random
+"latent video, guidance 1",dinov2,128,survives,5.0,2.872410024318929,2.6922065489342675,3.052732000096795,571,model_minus_random
+"latent video, guidance 1",dinov2,128,survives,6.0,2.760523827815014,2.444381896559683,3.1136202718945656,571,model_minus_random
+"latent video, guidance 1",handcrafted,64,"dies, AnnexinV only",3.0,-0.19973440519232308,-0.310472750258905,-0.0907616850014717,150,model_minus_random
+"latent video, guidance 1",handcrafted,64,"dies, AnnexinV only",4.0,-0.22827066609856123,-0.35621204380338595,-0.1255651135375457,150,model_minus_random
+"latent video, guidance 1",handcrafted,64,"dies, AnnexinV only",5.0,-0.22971933728883012,-0.41405481468871724,-0.06551257939633641,150,model_minus_random
+"latent video, guidance 1",handcrafted,64,"dies, AnnexinV only",6.0,-0.19075426810480203,-0.3425403629225607,-0.037342058328537986,150,model_minus_random
+"latent video, guidance 1",handcrafted,64,"dies, condensed",3.0,-0.043458448116225575,-0.2557628515764086,0.04422921502078697,95,model_minus_random
+"latent video, guidance 1",handcrafted,64,"dies, condensed",4.0,-0.08918948900020367,-0.20089234411121626,0.00739295382292359,95,model_minus_random
+"latent video, guidance 1",handcrafted,64,"dies, condensed",5.0,-0.11254438715433486,-0.22063007796599082,0.013626045774073007,95,model_minus_random
+"latent video, guidance 1",handcrafted,64,"dies, condensed",6.0,-0.07731068830672928,-0.18930009846451643,0.08508789265038111,95,model_minus_random
+"latent video, guidance 1",handcrafted,64,survives,3.0,-0.25500531326133324,-0.28726167044066464,-0.22291445281372005,571,model_minus_random
+"latent video, guidance 1",handcrafted,64,survives,4.0,-0.2268151726360139,-0.26656879523340576,-0.17475237999550755,571,model_minus_random
+"latent video, guidance 1",handcrafted,64,survives,5.0,-0.19518040051684246,-0.22431169337794835,-0.15702696984437997,571,model_minus_random
+"latent video, guidance 1",handcrafted,64,survives,6.0,-0.1600937106052033,-0.20746824395668595,-0.09754479441810453,571,model_minus_random
+"latent video, guidance 1",handcrafted,128,"dies, AnnexinV only",3.0,-0.2054799071610297,-0.3145815907512213,-0.11453734838921333,150,model_minus_random
+"latent video, guidance 1",handcrafted,128,"dies, AnnexinV only",4.0,-0.23747633103463198,-0.40520297519105347,-0.09974010756070456,150,model_minus_random
+"latent video, guidance 1",handcrafted,128,"dies, AnnexinV only",5.0,-0.2181316080350549,-0.417645613243904,-0.04868005745021347,150,model_minus_random
+"latent video, guidance 1",handcrafted,128,"dies, AnnexinV only",6.0,-0.244433319677676,-0.4133894851307068,-0.10109645826575277,150,model_minus_random
+"latent video, guidance 1",handcrafted,128,"dies, condensed",3.0,-0.01439554717759046,-0.22950611032547644,0.08435021421449346,95,model_minus_random
+"latent video, guidance 1",handcrafted,128,"dies, condensed",4.0,-0.016872444830556575,-0.10754910132043112,0.08144729592934036,95,model_minus_random
+"latent video, guidance 1",handcrafted,128,"dies, condensed",5.0,-0.05808965155337426,-0.23155737841546273,0.09888301178823125,95,model_minus_random
+"latent video, guidance 1",handcrafted,128,"dies, condensed",6.0,-0.08882072678862633,-0.25091748754663334,0.06342624564833918,95,model_minus_random
+"latent video, guidance 1",handcrafted,128,survives,3.0,-0.20096049016765355,-0.23234610523631125,-0.16974683963205744,571,model_minus_random
+"latent video, guidance 1",handcrafted,128,survives,4.0,-0.14423863312766114,-0.18206540578466104,-0.09806198661047555,571,model_minus_random
+"latent video, guidance 1",handcrafted,128,survives,5.0,-0.13607469595005606,-0.18348718173033524,-0.08186910324999504,571,model_minus_random
+"latent video, guidance 1",handcrafted,128,survives,6.0,-0.10182310655572854,-0.13480480253998964,-0.06399095574841801,571,model_minus_random
+"latent video, guidance 1",readouts,64,"dies, AnnexinV only",3.0,-0.24619268032352204,-0.36507525503227856,-0.15900678923840647,150,model_minus_random
+"latent video, guidance 1",readouts,64,"dies, AnnexinV only",4.0,-0.26307707597681956,-0.421243551703996,-0.12381186091770574,150,model_minus_random
+"latent video, guidance 1",readouts,64,"dies, AnnexinV only",5.0,-0.3097813465608197,-0.49093996544191343,-0.16737416537652888,150,model_minus_random
+"latent video, guidance 1",readouts,64,"dies, AnnexinV only",6.0,-0.24163020225795695,-0.36882166918306447,-0.1216385877567532,150,model_minus_random
+"latent video, guidance 1",readouts,64,"dies, condensed",3.0,-0.12927717694013593,-0.34989961736378244,-0.03636076290569474,95,model_minus_random
+"latent video, guidance 1",readouts,64,"dies, condensed",4.0,-0.06249614271160528,-0.2122003044064442,0.04227621258099167,95,model_minus_random
+"latent video, guidance 1",readouts,64,"dies, condensed",5.0,-0.13503803161491917,-0.26057028250740183,-0.009839364315847915,95,model_minus_random
+"latent video, guidance 1",readouts,64,"dies, condensed",6.0,-0.07833368955055325,-0.18808165659386925,0.0139470197583468,95,model_minus_random
+"latent video, guidance 1",readouts,64,survives,3.0,-0.2543704396828208,-0.29520073316861234,-0.21715108629214078,571,model_minus_random
+"latent video, guidance 1",readouts,64,survives,4.0,-0.23048717779875375,-0.2636236275312244,-0.19672757351450523,571,model_minus_random
+"latent video, guidance 1",readouts,64,survives,5.0,-0.19967266277571888,-0.234679189389065,-0.1568378408849338,571,model_minus_random
+"latent video, guidance 1",readouts,64,survives,6.0,-0.17053854459386972,-0.21574253822696432,-0.12086045377148888,571,model_minus_random
+latent video,dinov2,64,"dies, AnnexinV only",3.0,-10.912627716064453,-11.3737796927784,-10.393452405690386,150,drift_minus_copy
+latent video,dinov2,64,"dies, AnnexinV only",4.0,-11.224756978352865,-11.777830472780288,-10.561967851328312,150,drift_minus_copy
+latent video,dinov2,64,"dies, AnnexinV only",5.0,-11.44306474049886,-12.216887696245516,-10.593821172095346,150,drift_minus_copy
+latent video,dinov2,64,"dies, AnnexinV only",6.0,-11.244275232950846,-12.206243206859897,-10.232840593325777,150,drift_minus_copy
+latent video,dinov2,64,"dies, condensed",3.0,-11.706147344488846,-12.418661709656394,-10.502799834418923,95,drift_minus_copy
+latent video,dinov2,64,"dies, condensed",4.0,-12.434789296200401,-13.16545264689077,-10.861380752682688,95,drift_minus_copy
+latent video,dinov2,64,"dies, condensed",5.0,-13.045688287835372,-13.639167876317732,-11.715349504545875,95,drift_minus_copy
+latent video,dinov2,64,"dies, condensed",6.0,-13.311626916182668,-13.943873568062804,-12.128597301377983,95,drift_minus_copy
+latent video,dinov2,64,survives,3.0,-10.530685822308168,-10.767093618246175,-10.326864547676804,571,drift_minus_copy
+latent video,dinov2,64,survives,4.0,-11.070275488751573,-11.392671019617259,-10.744252487852538,571,drift_minus_copy
+latent video,dinov2,64,survives,5.0,-11.180959093591586,-11.487261697485984,-10.864453022717921,571,drift_minus_copy
+latent video,dinov2,64,survives,6.0,-11.229439316196743,-11.442009841759095,-11.026789023847794,571,drift_minus_copy
+latent video,dinov2,128,"dies, AnnexinV only",3.0,-10.977092501322428,-11.477907966349447,-10.357538165568965,150,drift_minus_copy
+latent video,dinov2,128,"dies, AnnexinV only",4.0,-11.103821055094402,-11.696558654532693,-10.427398410727514,150,drift_minus_copy
+latent video,dinov2,128,"dies, AnnexinV only",5.0,-11.354750061035157,-12.282347894600058,-10.408203603211692,150,drift_minus_copy
+latent video,dinov2,128,"dies, AnnexinV only",6.0,-11.242883224487304,-12.039554533630046,-10.264520888312166,150,drift_minus_copy
+latent video,dinov2,128,"dies, condensed",3.0,-11.880789827045641,-12.526940542719304,-10.422762176031894,95,drift_minus_copy
+latent video,dinov2,128,"dies, condensed",4.0,-12.42339355067203,-13.336383706225087,-10.541619781236369,95,drift_minus_copy
+latent video,dinov2,128,"dies, condensed",5.0,-13.225370387027137,-13.969638632528437,-11.504303506578719,95,drift_minus_copy
+latent video,dinov2,128,"dies, condensed",6.0,-13.756233697188527,-14.326680243042828,-12.656818597562731,95,drift_minus_copy
+latent video,dinov2,128,survives,3.0,-10.552220955830322,-10.922302920659384,-10.267187655926541,571,drift_minus_copy
+latent video,dinov2,128,survives,4.0,-11.06515156199761,-11.359062829279956,-10.799118733354332,571,drift_minus_copy
+latent video,dinov2,128,survives,5.0,-11.16984757525282,-11.59058910244731,-10.815047915239681,571,drift_minus_copy
+latent video,dinov2,128,survives,6.0,-11.287908260124995,-11.603404632170594,-11.035929343364236,571,drift_minus_copy
+latent video,handcrafted,64,"dies, AnnexinV only",3.0,-0.8631917374299152,-1.0114769606377354,-0.7272636308166082,150,drift_minus_copy
+latent video,handcrafted,64,"dies, AnnexinV only",4.0,-0.9071527665177473,-1.159700977472633,-0.6083303520782344,150,drift_minus_copy
+latent video,handcrafted,64,"dies, AnnexinV only",5.0,-0.9963578950409552,-1.3311160492034355,-0.6527410539202734,150,drift_minus_copy
+latent video,handcrafted,64,"dies, AnnexinV only",6.0,-1.2157068410098637,-1.5375635064973547,-0.8824522851796224,150,drift_minus_copy
+latent video,handcrafted,64,"dies, condensed",3.0,-1.190952829053743,-1.337377620904239,-0.9291260656538215,95,drift_minus_copy
+latent video,handcrafted,64,"dies, condensed",4.0,-1.676626621239473,-1.919750099800876,-1.2197158297160104,95,drift_minus_copy
+latent video,handcrafted,64,"dies, condensed",5.0,-2.112485648652695,-2.3373201985628422,-1.646735834157757,95,drift_minus_copy
+latent video,handcrafted,64,"dies, condensed",6.0,-2.5198987163488726,-2.7388395091654614,-2.1692769264904856,95,drift_minus_copy
+latent video,handcrafted,64,survives,3.0,-0.5788499360369831,-0.6261448202439174,-0.5383377008548267,571,drift_minus_copy
+latent video,handcrafted,64,survives,4.0,-0.6277006463583897,-0.6803784603363192,-0.5829972377014196,571,drift_minus_copy
+latent video,handcrafted,64,survives,5.0,-0.6305505174334475,-0.6791448461209765,-0.5922187892795661,571,drift_minus_copy
+latent video,handcrafted,64,survives,6.0,-0.6551435183566563,-0.6936630684918696,-0.6280795099565498,571,drift_minus_copy
+latent video,handcrafted,128,"dies, AnnexinV only",3.0,-0.8272405564767134,-0.9597494082380501,-0.7033553560846826,150,drift_minus_copy
+latent video,handcrafted,128,"dies, AnnexinV only",4.0,-0.9888485233764512,-1.2054414955492427,-0.7567021059378826,150,drift_minus_copy
+latent video,handcrafted,128,"dies, AnnexinV only",5.0,-1.076519974328626,-1.3787783193238552,-0.7642526887842989,150,drift_minus_copy
+latent video,handcrafted,128,"dies, AnnexinV only",6.0,-1.2804972704091764,-1.5946832949554222,-0.9848949062519853,150,drift_minus_copy
+latent video,handcrafted,128,"dies, condensed",3.0,-1.037321091768989,-1.2046193621806724,-0.8224886175705316,95,drift_minus_copy
+latent video,handcrafted,128,"dies, condensed",4.0,-1.5365412646864451,-1.751185124893308,-1.1456350678984502,95,drift_minus_copy
+latent video,handcrafted,128,"dies, condensed",5.0,-1.9508053118125164,-2.1576991978498596,-1.5474952594799014,95,drift_minus_copy
+latent video,handcrafted,128,"dies, condensed",6.0,-2.34479053914977,-2.5527137602864256,-1.9549406903552098,95,drift_minus_copy
+latent video,handcrafted,128,survives,3.0,-0.5622539151825887,-0.6160065300534951,-0.517234173951267,571,drift_minus_copy
+latent video,handcrafted,128,survives,4.0,-0.6372226992022286,-0.7054944249822002,-0.5767023934651158,571,drift_minus_copy
+latent video,handcrafted,128,survives,5.0,-0.59805094684644,-0.666826834250964,-0.5404733007272658,571,drift_minus_copy
+latent video,handcrafted,128,survives,6.0,-0.6405264009699099,-0.6835805622360799,-0.6001736189084487,571,drift_minus_copy
+latent video,readouts,64,"dies, AnnexinV only",3.0,-0.4699802174244695,-0.5652191183299986,-0.3699055164071581,150,drift_minus_copy
+latent video,readouts,64,"dies, AnnexinV only",4.0,-0.5192161347989638,-0.7318548139607943,-0.29621036386228405,150,drift_minus_copy
+latent video,readouts,64,"dies, AnnexinV only",5.0,-0.5749481433757632,-0.8366860894719769,-0.2821504878130318,150,drift_minus_copy
+latent video,readouts,64,"dies, AnnexinV only",6.0,-0.7349356519119823,-1.0729887130535951,-0.38942594782752543,150,drift_minus_copy
+latent video,readouts,64,"dies, condensed",3.0,-0.6943845800956012,-0.8191756513613719,-0.4612012967826279,95,drift_minus_copy
+latent video,readouts,64,"dies, condensed",4.0,-1.2552127024658988,-1.4466848438060858,-0.8937312436327016,95,drift_minus_copy
+latent video,readouts,64,"dies, condensed",5.0,-1.7158259216148903,-1.923700828333202,-1.2584469253317887,95,drift_minus_copy
+latent video,readouts,64,"dies, condensed",6.0,-2.018419952943446,-2.177625027915873,-1.6927141022528263,95,drift_minus_copy
+latent video,readouts,64,survives,3.0,-0.30924238955543104,-0.3319238590256674,-0.2839715212684081,571,drift_minus_copy
+latent video,readouts,64,survives,4.0,-0.36339009888329143,-0.3988960356645405,-0.32989643628701376,571,drift_minus_copy
+latent video,readouts,64,survives,5.0,-0.3839251668524717,-0.4067221476874725,-0.3589479476942659,571,drift_minus_copy
+latent video,readouts,64,survives,6.0,-0.4100842980933511,-0.44738494127805867,-0.36777657719839685,571,drift_minus_copy
+"latent video, 3 fates",dinov2,64,"dies, AnnexinV only",3.0,-10.862639389038087,-11.522021815426623,-10.207199770480702,150,drift_minus_copy
+"latent video, 3 fates",dinov2,64,"dies, AnnexinV only",4.0,-11.164190114339192,-11.834455528836342,-10.468347756375202,150,drift_minus_copy
+"latent video, 3 fates",dinov2,64,"dies, AnnexinV only",5.0,-11.379168027242025,-12.197580516810739,-10.57204661506766,150,drift_minus_copy
+"latent video, 3 fates",dinov2,64,"dies, AnnexinV only",6.0,-11.441175193786622,-12.41522041282628,-10.45502164641987,150,drift_minus_copy
+"latent video, 3 fates",dinov2,64,"dies, condensed",3.0,-11.802401331851357,-12.522354442069974,-10.462410451715643,95,drift_minus_copy
+"latent video, 3 fates",dinov2,64,"dies, condensed",4.0,-12.196221843518709,-12.984778656296108,-10.552015954423801,95,drift_minus_copy
+"latent video, 3 fates",dinov2,64,"dies, condensed",5.0,-13.098182818764135,-13.89384813723933,-11.243464062580788,95,drift_minus_copy
+"latent video, 3 fates",dinov2,64,"dies, condensed",6.0,-13.140326971756785,-13.597017135523785,-12.061984968930483,95,drift_minus_copy
+"latent video, 3 fates",dinov2,64,survives,3.0,-10.667907444274155,-10.958683165911928,-10.431484996753872,571,drift_minus_copy
+"latent video, 3 fates",dinov2,64,survives,4.0,-11.172929359609734,-11.474175897117718,-10.93675316154364,571,drift_minus_copy
+"latent video, 3 fates",dinov2,64,survives,5.0,-11.23024277094158,-11.461156637333767,-10.982939968742011,571,drift_minus_copy
+"latent video, 3 fates",dinov2,64,survives,6.0,-11.330955525413286,-11.601135042553135,-11.131940231786977,571,drift_minus_copy
+"latent video, 3 fates",dinov2,128,"dies, AnnexinV only",3.0,-10.838902002970377,-11.46928710769149,-10.245229486885306,150,drift_minus_copy
+"latent video, 3 fates",dinov2,128,"dies, AnnexinV only",4.0,-10.947802645365398,-11.565031706921312,-10.274455563012827,150,drift_minus_copy
+"latent video, 3 fates",dinov2,128,"dies, AnnexinV only",5.0,-11.102268091837566,-11.945960364879017,-10.228997064083288,150,drift_minus_copy
+"latent video, 3 fates",dinov2,128,"dies, AnnexinV only",6.0,-11.03404588063558,-12.066395093770828,-9.83726264640961,150,drift_minus_copy
+"latent video, 3 fates",dinov2,128,"dies, condensed",3.0,-11.737768835770456,-12.502648427893856,-10.35020886046546,95,drift_minus_copy
+"latent video, 3 fates",dinov2,128,"dies, condensed",4.0,-12.605284781205027,-13.466276422558828,-10.769637374850047,95,drift_minus_copy
+"latent video, 3 fates",dinov2,128,"dies, condensed",5.0,-13.443548684371144,-14.196382403124288,-11.69884512359446,95,drift_minus_copy
+"latent video, 3 fates",dinov2,128,"dies, condensed",6.0,-13.827231336894789,-14.497202357496032,-12.664381506736579,95,drift_minus_copy
+"latent video, 3 fates",dinov2,128,survives,3.0,-10.451806218736852,-10.84232972006739,-10.168962859417412,571,drift_minus_copy
+"latent video, 3 fates",dinov2,128,survives,4.0,-10.955760254333816,-11.30819314595764,-10.66778499207184,571,drift_minus_copy
+"latent video, 3 fates",dinov2,128,survives,5.0,-11.08593460056285,-11.460287472441497,-10.751388114742811,571,drift_minus_copy
+"latent video, 3 fates",dinov2,128,survives,6.0,-11.198104123518053,-11.516998632123983,-10.951569626182943,571,drift_minus_copy
+"latent video, 3 fates",handcrafted,64,"dies, AnnexinV only",3.0,-0.8354837950013952,-0.9500485601020747,-0.7201093105869991,150,drift_minus_copy
+"latent video, 3 fates",handcrafted,64,"dies, AnnexinV only",4.0,-0.9108662344843546,-1.1462440175722315,-0.6336054144486665,150,drift_minus_copy
+"latent video, 3 fates",handcrafted,64,"dies, AnnexinV only",5.0,-0.9918710120532747,-1.2733732339257395,-0.6589060780358004,150,drift_minus_copy
+"latent video, 3 fates",handcrafted,64,"dies, AnnexinV only",6.0,-1.3000355778779835,-1.6250202771907936,-0.9484927803768738,150,drift_minus_copy
+"latent video, 3 fates",handcrafted,64,"dies, condensed",3.0,-1.090615143774691,-1.1907700573318614,-0.9074055817062251,95,drift_minus_copy
+"latent video, 3 fates",handcrafted,64,"dies, condensed",4.0,-1.7533362069198861,-1.9186237017858065,-1.4490370010063816,95,drift_minus_copy
+"latent video, 3 fates",handcrafted,64,"dies, condensed",5.0,-2.268949069554493,-2.463488193786846,-1.8587567977636377,95,drift_minus_copy
+"latent video, 3 fates",handcrafted,64,"dies, condensed",6.0,-2.6073591750317577,-2.775306636619571,-2.2590966408093487,95,drift_minus_copy
+"latent video, 3 fates",handcrafted,64,survives,3.0,-0.5816012604217056,-0.6317944890503763,-0.537838756523796,571,drift_minus_copy
+"latent video, 3 fates",handcrafted,64,survives,4.0,-0.6317122255348065,-0.6987520557661605,-0.5783556019242118,571,drift_minus_copy
+"latent video, 3 fates",handcrafted,64,survives,5.0,-0.6158571153300421,-0.6659304495719751,-0.5734536062439417,571,drift_minus_copy
+"latent video, 3 fates",handcrafted,64,survives,6.0,-0.6526917544521176,-0.6955525845591115,-0.6165407249704611,571,drift_minus_copy
+"latent video, 3 fates",handcrafted,128,"dies, AnnexinV only",3.0,-0.7917044113763781,-0.9153677395478436,-0.6744331906210616,150,drift_minus_copy
+"latent video, 3 fates",handcrafted,128,"dies, AnnexinV only",4.0,-0.9376757713773228,-1.1255924233413288,-0.6978529230715326,150,drift_minus_copy
+"latent video, 3 fates",handcrafted,128,"dies, AnnexinV only",5.0,-1.0565556907638747,-1.350303304965098,-0.7759737134818033,150,drift_minus_copy
+"latent video, 3 fates",handcrafted,128,"dies, AnnexinV only",6.0,-1.2479462756169664,-1.5706495848039523,-0.9544918547987912,150,drift_minus_copy
+"latent video, 3 fates",handcrafted,128,"dies, condensed",3.0,-1.0184813053880764,-1.1775841568606447,-0.749925312454187,95,drift_minus_copy
+"latent video, 3 fates",handcrafted,128,"dies, condensed",4.0,-1.5366537653282275,-1.744418593763074,-1.0974031276955625,95,drift_minus_copy
+"latent video, 3 fates",handcrafted,128,"dies, condensed",5.0,-2.022614573819421,-2.2417872662282137,-1.5881568289277694,95,drift_minus_copy
+"latent video, 3 fates",handcrafted,128,"dies, condensed",6.0,-2.4005885822012103,-2.631778361002784,-1.9929335207805428,95,drift_minus_copy
+"latent video, 3 fates",handcrafted,128,survives,3.0,-0.5737544915688435,-0.6211552817338201,-0.529070666208439,571,drift_minus_copy
+"latent video, 3 fates",handcrafted,128,survives,4.0,-0.6206827347026339,-0.6529943235397354,-0.587895580247175,571,drift_minus_copy
+"latent video, 3 fates",handcrafted,128,survives,5.0,-0.6267779747134518,-0.6693636323570039,-0.588300416676274,571,drift_minus_copy
+"latent video, 3 fates",handcrafted,128,survives,6.0,-0.653634449879891,-0.684755312271855,-0.6257660642169308,571,drift_minus_copy
+"latent video, 3 fates",readouts,64,"dies, AnnexinV only",3.0,-0.5152867320111555,-0.6186592533704152,-0.40486168040501636,150,drift_minus_copy
+"latent video, 3 fates",readouts,64,"dies, AnnexinV only",4.0,-0.5917128629720073,-0.7808458068787256,-0.35593680675102035,150,drift_minus_copy
+"latent video, 3 fates",readouts,64,"dies, AnnexinV only",5.0,-0.5991497662311953,-0.8678964636076465,-0.30057414193014625,150,drift_minus_copy
+"latent video, 3 fates",readouts,64,"dies, AnnexinV only",6.0,-0.7645462384155288,-1.1013744736905138,-0.3918660850023919,150,drift_minus_copy
+"latent video, 3 fates",readouts,64,"dies, condensed",3.0,-0.7822279506388988,-0.9234117347628115,-0.5837326790252307,95,drift_minus_copy
+"latent video, 3 fates",readouts,64,"dies, condensed",4.0,-1.258787915840606,-1.463188792859363,-0.8466495221642559,95,drift_minus_copy
+"latent video, 3 fates",readouts,64,"dies, condensed",5.0,-1.6928387772137325,-1.9020233568902702,-1.188630862466312,95,drift_minus_copy
+"latent video, 3 fates",readouts,64,"dies, condensed",6.0,-2.0343087151038834,-2.1900548529063113,-1.7017510746570237,95,drift_minus_copy
+"latent video, 3 fates",readouts,64,survives,3.0,-0.3122032028157654,-0.34222512441752256,-0.27911554377882974,571,drift_minus_copy
+"latent video, 3 fates",readouts,64,survives,4.0,-0.35904074678168746,-0.39376591710377024,-0.32207145446686425,571,drift_minus_copy
+"latent video, 3 fates",readouts,64,survives,5.0,-0.38641731756386527,-0.41730081873681174,-0.3527894196365519,571,drift_minus_copy
+"latent video, 3 fates",readouts,64,survives,6.0,-0.40875201036787945,-0.45134814051311795,-0.35963692777493583,571,drift_minus_copy
+"latent video, guidance 1",dinov2,64,"dies, AnnexinV only",3.0,-11.026789271036783,-11.513355079889148,-10.525870976062308,150,drift_minus_copy
+"latent video, guidance 1",dinov2,64,"dies, AnnexinV only",4.0,-11.160214131673177,-11.709806731505829,-10.59875803064609,150,drift_minus_copy
+"latent video, guidance 1",dinov2,64,"dies, AnnexinV only",5.0,-11.333921737670899,-12.03840333918121,-10.623510300401719,150,drift_minus_copy
+"latent video, guidance 1",dinov2,64,"dies, AnnexinV only",6.0,-11.151161079406739,-12.011744031458484,-10.201124280368477,150,drift_minus_copy
+"latent video, guidance 1",dinov2,64,"dies, condensed",3.0,-11.815945675498561,-12.489796545664781,-10.344823728288926,95,drift_minus_copy
+"latent video, guidance 1",dinov2,64,"dies, condensed",4.0,-12.437255176744962,-13.491360982770631,-10.246746098553693,95,drift_minus_copy
+"latent video, guidance 1",dinov2,64,"dies, condensed",5.0,-13.08452562030993,-13.916328687766294,-11.069768921732901,95,drift_minus_copy
+"latent video, guidance 1",dinov2,64,"dies, condensed",6.0,-13.514445334986636,-14.272911291558815,-11.784040588696797,95,drift_minus_copy
+"latent video, guidance 1",dinov2,64,survives,3.0,-10.663417204875245,-10.974501644066706,-10.392398034118736,571,drift_minus_copy
+"latent video, guidance 1",dinov2,64,survives,4.0,-11.24407744866954,-11.572414950580201,-10.923536980282893,571,drift_minus_copy
+"latent video, guidance 1",dinov2,64,survives,5.0,-11.254498343125325,-11.545587998594888,-10.93634004783508,571,drift_minus_copy
+"latent video, guidance 1",dinov2,64,survives,6.0,-11.298329882780433,-11.609313969698526,-11.062589282509505,571,drift_minus_copy
+"latent video, guidance 1",dinov2,128,"dies, AnnexinV only",3.0,-11.13011308034261,-11.675724375183341,-10.46136484451783,150,drift_minus_copy
+"latent video, guidance 1",dinov2,128,"dies, AnnexinV only",4.0,-11.238236122131347,-11.78038460217297,-10.577916036662165,150,drift_minus_copy
+"latent video, guidance 1",dinov2,128,"dies, AnnexinV only",5.0,-11.262078018188477,-12.034826118902425,-10.350408411618876,150,drift_minus_copy
+"latent video, guidance 1",dinov2,128,"dies, AnnexinV only",6.0,-11.358131573994955,-12.306852579845081,-10.245826405497207,150,drift_minus_copy
+"latent video, guidance 1",dinov2,128,"dies, condensed",3.0,-11.79635971470883,-12.41192154175094,-10.356370239207086,95,drift_minus_copy
+"latent video, guidance 1",dinov2,128,"dies, condensed",4.0,-12.719133919163754,-13.547890179321683,-10.788496116144568,95,drift_minus_copy
+"latent video, guidance 1",dinov2,128,"dies, condensed",5.0,-13.566321081864206,-14.398842329987263,-11.268538297167366,95,drift_minus_copy
+"latent video, guidance 1",dinov2,128,"dies, condensed",6.0,-13.685152957313939,-14.432728682369051,-11.92258388402058,95,drift_minus_copy
+"latent video, guidance 1",dinov2,128,survives,3.0,-10.641892740480118,-10.9713349552941,-10.33309125557526,571,drift_minus_copy
+"latent video, guidance 1",dinov2,128,survives,4.0,-11.124287790675924,-11.49139122880448,-10.814094366421665,571,drift_minus_copy
+"latent video, guidance 1",dinov2,128,survives,5.0,-11.257006406366513,-11.554792332432154,-10.966945602762426,571,drift_minus_copy
+"latent video, guidance 1",dinov2,128,survives,6.0,-11.373700290552998,-11.665107909464027,-11.118192157909057,571,drift_minus_copy
+"latent video, guidance 1",handcrafted,64,"dies, AnnexinV only",3.0,-0.8516874199711721,-0.9869194664321872,-0.7195219068098582,150,drift_minus_copy
+"latent video, guidance 1",handcrafted,64,"dies, AnnexinV only",4.0,-0.9110871556937907,-1.1401956956441128,-0.6289173381443494,150,drift_minus_copy
+"latent video, guidance 1",handcrafted,64,"dies, AnnexinV only",5.0,-1.0219745284288548,-1.3460454671197724,-0.6644664705877533,150,drift_minus_copy
+"latent video, guidance 1",handcrafted,64,"dies, AnnexinV only",6.0,-1.2949347756399583,-1.6451014007142222,-0.925887054599332,150,drift_minus_copy
+"latent video, guidance 1",handcrafted,64,"dies, condensed",3.0,-1.1270616793680284,-1.3066846062212227,-0.8382981841331641,95,drift_minus_copy
+"latent video, guidance 1",handcrafted,64,"dies, condensed",4.0,-1.6514675731620563,-1.916943822235291,-1.247946893745309,95,drift_minus_copy
+"latent video, guidance 1",handcrafted,64,"dies, condensed",5.0,-2.1501738799028898,-2.3710442776269374,-1.7398407084639447,95,drift_minus_copy
+"latent video, guidance 1",handcrafted,64,"dies, condensed",6.0,-2.5252336231614563,-2.813696767281504,-2.191286857854154,95,drift_minus_copy
+"latent video, guidance 1",handcrafted,64,survives,3.0,-0.5856687007882525,-0.6372199039722072,-0.5441580481194782,571,drift_minus_copy
+"latent video, guidance 1",handcrafted,64,survives,4.0,-0.6263559951590971,-0.6896349318373648,-0.5775428297403733,571,drift_minus_copy
+"latent video, guidance 1",handcrafted,64,survives,5.0,-0.6150073238233038,-0.6633247865861456,-0.5819988273230238,571,drift_minus_copy
+"latent video, guidance 1",handcrafted,64,survives,6.0,-0.6498044505627487,-0.700034510178938,-0.6095922502819411,571,drift_minus_copy
+"latent video, guidance 1",handcrafted,128,"dies, AnnexinV only",3.0,-0.8363806819954283,-0.9582091234289071,-0.7168029592612573,150,drift_minus_copy
+"latent video, guidance 1",handcrafted,128,"dies, AnnexinV only",4.0,-0.9180537946828523,-1.1354177983298899,-0.6599944078467184,150,drift_minus_copy
+"latent video, guidance 1",handcrafted,128,"dies, AnnexinV only",5.0,-1.032762249889548,-1.3083782554610688,-0.7438281722439349,150,drift_minus_copy
+"latent video, guidance 1",handcrafted,128,"dies, AnnexinV only",6.0,-1.1975200746535268,-1.4974837956709623,-0.9084403124351864,150,drift_minus_copy
+"latent video, guidance 1",handcrafted,128,"dies, condensed",3.0,-1.0684398348695856,-1.233956989565821,-0.8157022578553362,95,drift_minus_copy
+"latent video, guidance 1",handcrafted,128,"dies, condensed",4.0,-1.5467019337284937,-1.7572187366627596,-1.1285051483294726,95,drift_minus_copy
+"latent video, guidance 1",handcrafted,128,"dies, condensed",5.0,-2.0410259960290067,-2.2587516740565503,-1.6251259622257983,95,drift_minus_copy
+"latent video, guidance 1",handcrafted,128,"dies, condensed",6.0,-2.3780943704545012,-2.6349785461931745,-1.9610095172509607,95,drift_minus_copy
+"latent video, guidance 1",handcrafted,128,survives,3.0,-0.5665193777328814,-0.6088474545388122,-0.5227202042386923,571,drift_minus_copy
+"latent video, guidance 1",handcrafted,128,survives,4.0,-0.6300558116040176,-0.6724880378834872,-0.586080369165869,571,drift_minus_copy
+"latent video, guidance 1",handcrafted,128,survives,5.0,-0.6223280458518675,-0.6912139890955877,-0.565920294502503,571,drift_minus_copy
+"latent video, guidance 1",handcrafted,128,survives,6.0,-0.659427635073506,-0.7104227318496713,-0.6128027054696861,571,drift_minus_copy
+"latent video, guidance 1",readouts,64,"dies, AnnexinV only",3.0,-0.4066902777533476,-0.48592400281771325,-0.32242973377220535,150,drift_minus_copy
+"latent video, guidance 1",readouts,64,"dies, AnnexinV only",4.0,-0.5003802161521058,-0.6775041384269503,-0.2819124518208516,150,drift_minus_copy
+"latent video, guidance 1",readouts,64,"dies, AnnexinV only",5.0,-0.5015761369840375,-0.725772307299416,-0.23297250122465157,150,drift_minus_copy
+"latent video, guidance 1",readouts,64,"dies, AnnexinV only",6.0,-0.7022795958541181,-0.998850107756927,-0.3743008329607898,150,drift_minus_copy
+"latent video, guidance 1",readouts,64,"dies, condensed",3.0,-0.7278356937943803,-0.8801982201296267,-0.4646189197473951,95,drift_minus_copy
+"latent video, guidance 1",readouts,64,"dies, condensed",4.0,-1.3007487734894039,-1.499100217102777,-0.8624880371552789,95,drift_minus_copy
+"latent video, guidance 1",readouts,64,"dies, condensed",5.0,-1.6822195283095474,-1.8809427407599288,-1.2471203951187537,95,drift_minus_copy
+"latent video, guidance 1",readouts,64,"dies, condensed",6.0,-2.0275741676767858,-2.158499971259588,-1.7200982660374067,95,drift_minus_copy
+"latent video, guidance 1",readouts,64,survives,3.0,-0.31750720935358306,-0.34447677012550626,-0.2890654107768154,571,drift_minus_copy
+"latent video, guidance 1",readouts,64,survives,4.0,-0.3511398695270391,-0.3860561024277131,-0.31449401534105786,571,drift_minus_copy
+"latent video, guidance 1",readouts,64,survives,5.0,-0.37989652630427806,-0.42133673489088813,-0.3311347907834471,571,drift_minus_copy
+"latent video, guidance 1",readouts,64,survives,6.0,-0.4137558160920745,-0.45549137030327647,-0.3635311525831301,571,drift_minus_copy
+latent video,dinov2,64,"dies, AnnexinV only",3.0,-16.890491269429525,-17.840777680275018,-15.866955713493189,150,random_minus_copy
+latent video,dinov2,64,"dies, AnnexinV only",4.0,-17.58882698059082,-18.541984709611487,-16.633092917617954,150,random_minus_copy
+latent video,dinov2,64,"dies, AnnexinV only",5.0,-17.732310803731284,-18.761159211145515,-16.6568045436098,150,random_minus_copy
+latent video,dinov2,64,"dies, AnnexinV only",6.0,-17.44657749811808,-18.879236947516173,-15.860305343781908,150,random_minus_copy
+latent video,dinov2,64,"dies, condensed",3.0,-17.274263863814504,-18.475772103737963,-15.111288559595748,95,random_minus_copy
+latent video,dinov2,64,"dies, condensed",4.0,-18.500342961361532,-19.732452280162484,-15.979335447076119,95,random_minus_copy
+latent video,dinov2,64,"dies, condensed",5.0,-19.46805197063245,-20.49954788623185,-16.947455925364018,95,random_minus_copy
+latent video,dinov2,64,"dies, condensed",6.0,-20.252884915000514,-20.842822615803335,-18.9067583244667,95,random_minus_copy
+latent video,dinov2,64,survives,3.0,-15.571038982705351,-16.034710058402872,-15.13263270032634,571,random_minus_copy
+latent video,dinov2,64,survives,4.0,-16.69950892921087,-17.133041694493404,-16.36071997500184,571,random_minus_copy
+latent video,dinov2,64,survives,5.0,-17.09223703160595,-17.469770208935568,-16.762692245149566,571,random_minus_copy
+latent video,dinov2,64,survives,6.0,-17.108627484684025,-17.548671664054222,-16.75143066386688,571,random_minus_copy
+latent video,dinov2,128,"dies, AnnexinV only",3.0,-16.728703905741373,-17.70147030498165,-15.622505541361514,150,random_minus_copy
+latent video,dinov2,128,"dies, AnnexinV only",4.0,-17.14006783167521,-17.96988276239398,-16.295827401574677,150,random_minus_copy
+latent video,dinov2,128,"dies, AnnexinV only",5.0,-17.48922496795654,-18.65470114328351,-16.416945266082507,150,random_minus_copy
+latent video,dinov2,128,"dies, AnnexinV only",6.0,-17.136248296101886,-18.228024947694756,-15.703143643498928,150,random_minus_copy
+latent video,dinov2,128,"dies, condensed",3.0,-17.519237899780272,-18.696621558496993,-15.318721006264289,95,random_minus_copy
+latent video,dinov2,128,"dies, condensed",4.0,-18.515969346698963,-19.97446625640733,-15.447650702822283,95,random_minus_copy
+latent video,dinov2,128,"dies, condensed",5.0,-19.53096445987099,-20.88697921442169,-16.632937323042672,95,random_minus_copy
+latent video,dinov2,128,"dies, condensed",6.0,-20.517505716022693,-21.604736320117247,-18.73448771228328,95,random_minus_copy
+latent video,dinov2,128,survives,3.0,-15.54894148697995,-16.213816111197747,-15.00471890074969,571,random_minus_copy
+latent video,dinov2,128,survives,4.0,-16.56523126311561,-17.138845961425762,-16.08577513500823,571,random_minus_copy
+latent video,dinov2,128,survives,5.0,-16.79886064345699,-17.444894920863923,-16.23496297464108,571,random_minus_copy
+latent video,dinov2,128,survives,6.0,-17.03560948413642,-17.52417390163682,-16.664012692556426,571,random_minus_copy
+latent video,handcrafted,64,"dies, AnnexinV only",3.0,-0.931773054480293,-1.1087865528768028,-0.7685964173615111,150,random_minus_copy
+latent video,handcrafted,64,"dies, AnnexinV only",4.0,-0.9638945017502181,-1.2055577646322453,-0.6899169523935613,150,random_minus_copy
+latent video,handcrafted,64,"dies, AnnexinV only",5.0,-1.0742257007275597,-1.414936693210803,-0.6928750634114751,150,random_minus_copy
+latent video,handcrafted,64,"dies, AnnexinV only",6.0,-1.3943925052202502,-1.7439230971672552,-1.0395804523850232,150,random_minus_copy
+latent video,handcrafted,64,"dies, condensed",3.0,-1.2722450330144832,-1.4767851699302648,-0.7933399516658084,95,random_minus_copy
+latent video,handcrafted,64,"dies, condensed",4.0,-1.9096308766877192,-2.214730656433577,-1.236518050226261,95,random_minus_copy
+latent video,handcrafted,64,"dies, condensed",5.0,-2.3785533568813,-2.6644342759311055,-1.659365521360091,95,random_minus_copy
+latent video,handcrafted,64,"dies, condensed",6.0,-2.760452541606805,-3.0054526705561653,-2.1390841164492707,95,random_minus_copy
+latent video,handcrafted,64,survives,3.0,-0.5842871195682046,-0.6957244582122315,-0.4834119207690108,571,random_minus_copy
+latent video,handcrafted,64,survives,4.0,-0.6861938858184798,-0.8138055663581223,-0.563054808047171,571,random_minus_copy
+latent video,handcrafted,64,survives,5.0,-0.7269616531387801,-0.8729716474238977,-0.6001151541357371,571,random_minus_copy
+latent video,handcrafted,64,survives,6.0,-0.7820526757109485,-0.8806891035778869,-0.6971471962416724,571,random_minus_copy
+latent video,handcrafted,128,"dies, AnnexinV only",3.0,-0.8485536664020171,-0.9929004137282593,-0.7173116666732765,150,random_minus_copy
+latent video,handcrafted,128,"dies, AnnexinV only",4.0,-1.1100028792348287,-1.3779126655574863,-0.8366340742803633,150,random_minus_copy
+latent video,handcrafted,128,"dies, AnnexinV only",5.0,-1.247961430233442,-1.6220508630778878,-0.8571043053764499,150,random_minus_copy
+latent video,handcrafted,128,"dies, AnnexinV only",6.0,-1.4572299113726779,-1.7813211869005243,-1.102226302862423,150,random_minus_copy
+latent video,handcrafted,128,"dies, condensed",3.0,-1.2128657000006675,-1.4478772135606477,-0.7504751672843601,95,random_minus_copy
+latent video,handcrafted,128,"dies, condensed",4.0,-1.7851433258446707,-2.079744044633115,-1.1665667277851335,95,random_minus_copy
+latent video,handcrafted,128,"dies, condensed",5.0,-2.214348131037803,-2.4601470899922306,-1.61100403402762,95,random_minus_copy
+latent video,handcrafted,128,"dies, condensed",6.0,-2.6113845256552985,-2.8709058573717616,-1.9572284296040614,95,random_minus_copy
+latent video,handcrafted,128,survives,3.0,-0.6002491334011738,-0.7539941880544728,-0.4518549842834088,571,random_minus_copy
+latent video,handcrafted,128,survives,4.0,-0.7202510627918408,-0.8793236168972841,-0.5570171047622936,571,random_minus_copy
+latent video,handcrafted,128,survives,5.0,-0.7114649495496419,-0.893938225860819,-0.538396927472828,571,random_minus_copy
+latent video,handcrafted,128,survives,6.0,-0.8104853551404679,-0.9149409864578473,-0.7179871685570197,571,random_minus_copy
+latent video,readouts,64,"dies, AnnexinV only",3.0,-0.4620441198843027,-0.5780739860251944,-0.3403658500122568,150,random_minus_copy
+latent video,readouts,64,"dies, AnnexinV only",4.0,-0.5809958541403881,-0.8599077159612888,-0.31151173980714963,150,random_minus_copy
+latent video,readouts,64,"dies, AnnexinV only",5.0,-0.6940928189428986,-1.0099784622494963,-0.3478883959653586,150,random_minus_copy
+latent video,readouts,64,"dies, AnnexinV only",6.0,-0.8995283171480853,-1.2357726956347872,-0.5477898158674307,150,random_minus_copy
+latent video,readouts,64,"dies, condensed",3.0,-0.7487822510261704,-0.9678061398632534,-0.3014657224487719,95,random_minus_copy
+latent video,readouts,64,"dies, condensed",4.0,-1.3603976290215718,-1.6661409828642542,-0.7897234810977624,95,random_minus_copy
+latent video,readouts,64,"dies, condensed",5.0,-1.8145804204400209,-2.159212926272932,-1.0682297193429806,95,random_minus_copy
+latent video,readouts,64,"dies, condensed",6.0,-2.110666853364927,-2.407311195480418,-1.5661602878507026,95,random_minus_copy
+latent video,readouts,64,survives,3.0,-0.13968788719921876,-0.204360685066073,-0.08487791336253107,571,random_minus_copy
+latent video,readouts,64,survives,4.0,-0.24381772094664889,-0.3239660259183472,-0.1732666082020369,571,random_minus_copy
+latent video,readouts,64,survives,5.0,-0.30708273337875924,-0.3820996758971862,-0.2406128942471881,571,random_minus_copy
+latent video,readouts,64,survives,6.0,-0.36024110739541376,-0.4458023064633449,-0.2953569955547823,571,random_minus_copy
+"latent video, 3 fates",dinov2,64,"dies, AnnexinV only",3.0,-16.699601656595867,-17.721433349513095,-15.494301209515193,150,random_minus_copy
+"latent video, 3 fates",dinov2,64,"dies, AnnexinV only",4.0,-17.444955457051595,-18.331236413136374,-16.513031516559014,150,random_minus_copy
+"latent video, 3 fates",dinov2,64,"dies, AnnexinV only",5.0,-17.627731240590414,-18.729123431252493,-16.53966327797922,150,random_minus_copy
+"latent video, 3 fates",dinov2,64,"dies, AnnexinV only",6.0,-17.386786715189615,-18.691020142229245,-15.988489422102072,150,random_minus_copy
+"latent video, 3 fates",dinov2,64,"dies, condensed",3.0,-17.48897233260305,-18.72749285951837,-15.275917290162804,95,random_minus_copy
+"latent video, 3 fates",dinov2,64,"dies, condensed",4.0,-18.533131428768762,-19.81619531790094,-15.889396702832192,95,random_minus_copy
+"latent video, 3 fates",dinov2,64,"dies, condensed",5.0,-19.487264151322215,-20.604467562327386,-17.01841254297848,95,random_minus_copy
+"latent video, 3 fates",dinov2,64,"dies, condensed",6.0,-20.20397946207147,-20.7806828731153,-19.04906571798453,95,random_minus_copy
+"latent video, 3 fates",dinov2,64,survives,3.0,-15.732457964307581,-16.16549495965105,-15.361050307867886,571,random_minus_copy
+"latent video, 3 fates",dinov2,64,survives,4.0,-16.680126878300815,-17.092666420853305,-16.319391020883536,571,random_minus_copy
+"latent video, 3 fates",dinov2,64,survives,5.0,-16.990560488191463,-17.341927292484844,-16.604033059297667,571,random_minus_copy
+"latent video, 3 fates",dinov2,64,survives,6.0,-17.054529512408735,-17.50286229431949,-16.71728169455828,571,random_minus_copy
+"latent video, 3 fates",dinov2,128,"dies, AnnexinV only",3.0,-16.62699836730957,-17.46587789847051,-15.77293192825046,150,random_minus_copy
+"latent video, 3 fates",dinov2,128,"dies, AnnexinV only",4.0,-17.112833201090496,-17.930829157349862,-16.321927544121927,150,random_minus_copy
+"latent video, 3 fates",dinov2,128,"dies, AnnexinV only",5.0,-17.270568885803222,-18.20290195601327,-16.390316901956176,150,random_minus_copy
+"latent video, 3 fates",dinov2,128,"dies, AnnexinV only",6.0,-17.11660280863444,-18.098420441724784,-15.838100348587183,150,random_minus_copy
+"latent video, 3 fates",dinov2,128,"dies, condensed",3.0,-17.565760742990594,-18.787709889889708,-15.138277359875769,95,random_minus_copy
+"latent video, 3 fates",dinov2,128,"dies, condensed",4.0,-18.752565363833778,-20.118144530112147,-15.731464076042178,95,random_minus_copy
+"latent video, 3 fates",dinov2,128,"dies, condensed",5.0,-19.760489112452458,-21.02611605433476,-16.673590475355677,95,random_minus_copy
+"latent video, 3 fates",dinov2,128,"dies, condensed",6.0,-20.711247835661236,-21.61041872590624,-18.96221725095403,95,random_minus_copy
+"latent video, 3 fates",dinov2,128,survives,3.0,-15.523866995829835,-16.22861201104011,-15.002708510182375,571,random_minus_copy
+"latent video, 3 fates",dinov2,128,survives,4.0,-16.555613248861818,-17.19859827753717,-16.028691470020735,571,random_minus_copy
+"latent video, 3 fates",dinov2,128,survives,5.0,-16.846182116693875,-17.450875453181695,-16.330016489197504,571,random_minus_copy
+"latent video, 3 fates",dinov2,128,survives,6.0,-17.07873476031783,-17.488521354375127,-16.77912203899042,571,random_minus_copy
+"latent video, 3 fates",handcrafted,64,"dies, AnnexinV only",3.0,-0.9303770761051847,-1.111348591606563,-0.7671771455101576,150,random_minus_copy
+"latent video, 3 fates",handcrafted,64,"dies, AnnexinV only",4.0,-1.0141244863531431,-1.2481161648732553,-0.7572851226383899,150,random_minus_copy
+"latent video, 3 fates",handcrafted,64,"dies, AnnexinV only",5.0,-1.0891053421282781,-1.4417511030493715,-0.7071918860405368,150,random_minus_copy
+"latent video, 3 fates",handcrafted,64,"dies, AnnexinV only",6.0,-1.4901899791460456,-1.8774368688448475,-1.1157190220847288,150,random_minus_copy
+"latent video, 3 fates",handcrafted,64,"dies, condensed",3.0,-1.1869966626160708,-1.3391091393675933,-0.821419244043147,95,random_minus_copy
+"latent video, 3 fates",handcrafted,64,"dies, condensed",4.0,-1.9741535849717806,-2.2103129269519552,-1.4495329980952487,95,random_minus_copy
+"latent video, 3 fates",handcrafted,64,"dies, condensed",5.0,-2.4915104596712196,-2.75138487293321,-1.8794592880158938,95,random_minus_copy
+"latent video, 3 fates",handcrafted,64,"dies, condensed",6.0,-2.819881367563053,-3.0620748081985494,-2.19409016294753,95,random_minus_copy
+"latent video, 3 fates",handcrafted,64,survives,3.0,-0.5715948010296404,-0.6828063431209986,-0.4686091144577557,571,random_minus_copy
+"latent video, 3 fates",handcrafted,64,survives,4.0,-0.6996402555516089,-0.8367192883641109,-0.5768572561139056,571,random_minus_copy
+"latent video, 3 fates",handcrafted,64,survives,5.0,-0.7142271473796109,-0.8676150692159799,-0.5740990706207288,571,random_minus_copy
+"latent video, 3 fates",handcrafted,64,survives,6.0,-0.772356141956493,-0.8873148467096876,-0.6779423234750691,571,random_minus_copy
+"latent video, 3 fates",handcrafted,128,"dies, AnnexinV only",3.0,-0.8642447923493655,-1.0349163972551763,-0.6972549127163798,150,random_minus_copy
+"latent video, 3 fates",handcrafted,128,"dies, AnnexinV only",4.0,-1.08414908446059,-1.3283792951639952,-0.8221244644131522,150,random_minus_copy
+"latent video, 3 fates",handcrafted,128,"dies, AnnexinV only",5.0,-1.2130483334601305,-1.57992462554515,-0.8741010017773139,150,random_minus_copy
+"latent video, 3 fates",handcrafted,128,"dies, AnnexinV only",6.0,-1.4139326684805638,-1.7420692024460802,-1.1002489082387625,150,random_minus_copy
+"latent video, 3 fates",handcrafted,128,"dies, condensed",3.0,-1.2113872863927464,-1.4425567220426032,-0.6830881935348317,95,random_minus_copy
+"latent video, 3 fates",handcrafted,128,"dies, condensed",4.0,-1.806278615511786,-2.0706723029481964,-1.1664530935325985,95,random_minus_copy
+"latent video, 3 fates",handcrafted,128,"dies, condensed",5.0,-2.3156469447698345,-2.550226704090017,-1.7271881470056005,95,random_minus_copy
+"latent video, 3 fates",handcrafted,128,"dies, condensed",6.0,-2.6481400291994515,-2.8871754566730803,-2.051830582181351,95,random_minus_copy
+"latent video, 3 fates",handcrafted,128,survives,3.0,-0.6099453838375432,-0.7627583042705129,-0.4643066847872623,571,random_minus_copy
+"latent video, 3 fates",handcrafted,128,survives,4.0,-0.6815216592081697,-0.8178109831898805,-0.5423897229968141,571,random_minus_copy
+"latent video, 3 fates",handcrafted,128,survives,5.0,-0.7289955743767336,-0.8905579989568366,-0.5750147442966645,571,random_minus_copy
+"latent video, 3 fates",handcrafted,128,survives,6.0,-0.8057677357464057,-0.9089307783092584,-0.711872811432928,571,random_minus_copy
+"latent video, 3 fates",readouts,64,"dies, AnnexinV only",3.0,-0.450814924810936,-0.535242783824467,-0.3714866304594296,150,random_minus_copy
+"latent video, 3 fates",readouts,64,"dies, AnnexinV only",4.0,-0.5839577973501562,-0.8151982306249502,-0.3389442065012239,150,random_minus_copy
+"latent video, 3 fates",readouts,64,"dies, AnnexinV only",5.0,-0.6760289371420126,-0.9684601131728989,-0.34178420410534033,150,random_minus_copy
+"latent video, 3 fates",readouts,64,"dies, AnnexinV only",6.0,-0.8869407081110924,-1.2099517080943953,-0.5445153816721955,150,random_minus_copy
+"latent video, 3 fates",readouts,64,"dies, condensed",3.0,-0.801215679171345,-1.002286229747487,-0.3468320095875294,95,random_minus_copy
+"latent video, 3 fates",readouts,64,"dies, condensed",4.0,-1.3812179085537135,-1.6404671315844819,-0.781766220566585,95,random_minus_copy
+"latent video, 3 fates",readouts,64,"dies, condensed",5.0,-1.8542363093309393,-2.1655989073379147,-1.1218247254054863,95,random_minus_copy
+"latent video, 3 fates",readouts,64,"dies, condensed",6.0,-2.160007098579502,-2.4012175535648974,-1.5973551963648023,95,random_minus_copy
+"latent video, 3 fates",readouts,64,survives,3.0,-0.14167041698171684,-0.20663602028136416,-0.08318779809308054,571,random_minus_copy
+"latent video, 3 fates",readouts,64,survives,4.0,-0.23270955061356324,-0.3109253660126155,-0.1763150066627416,571,random_minus_copy
+"latent video, 3 fates",readouts,64,survives,5.0,-0.3033478592089521,-0.38996519201719787,-0.2330860789185909,571,random_minus_copy
+"latent video, 3 fates",readouts,64,survives,6.0,-0.36726105710483087,-0.4599676549926234,-0.2997757156157338,571,random_minus_copy
+"latent video, guidance 1",dinov2,64,"dies, AnnexinV only",3.0,-16.813810590108236,-17.871765344107153,-15.755103572147345,150,random_minus_copy
+"latent video, guidance 1",dinov2,64,"dies, AnnexinV only",4.0,-17.496269613901774,-18.301662775671637,-16.692416371883766,150,random_minus_copy
+"latent video, guidance 1",dinov2,64,"dies, AnnexinV only",5.0,-17.73524361928304,-18.813186532469793,-16.700388186111255,150,random_minus_copy
+"latent video, guidance 1",dinov2,64,"dies, AnnexinV only",6.0,-17.22592462539673,-18.461689956351105,-15.735001555447644,150,random_minus_copy
+"latent video, guidance 1",dinov2,64,"dies, condensed",3.0,-17.287191270527085,-18.55516065423553,-15.095258415097097,95,random_minus_copy
+"latent video, guidance 1",dinov2,64,"dies, condensed",4.0,-18.376116642199065,-19.85914225430899,-15.469384289639336,95,random_minus_copy
+"latent video, guidance 1",dinov2,64,"dies, condensed",5.0,-19.298776987979288,-20.33675014045787,-16.734585421772326,95,random_minus_copy
+"latent video, guidance 1",dinov2,64,"dies, condensed",6.0,-20.262372328105727,-20.89254970730468,-18.931563750666545,95,random_minus_copy
+"latent video, guidance 1",dinov2,64,survives,3.0,-15.734881502943155,-16.22666606453054,-15.278088262962664,571,random_minus_copy
+"latent video, guidance 1",dinov2,64,survives,4.0,-16.72961359307979,-17.213605529315004,-16.31911265652663,571,random_minus_copy
+"latent video, guidance 1",dinov2,64,survives,5.0,-17.063753949781642,-17.454242226297147,-16.70265437542124,571,random_minus_copy
+"latent video, guidance 1",dinov2,64,survives,6.0,-17.142534753695887,-17.604715073962232,-16.792591108756426,571,random_minus_copy
+"latent video, guidance 1",dinov2,128,"dies, AnnexinV only",3.0,-16.70753833770752,-17.653987418673086,-15.686811622071179,150,random_minus_copy
+"latent video, guidance 1",dinov2,128,"dies, AnnexinV only",4.0,-17.284185028076173,-18.110564642065114,-16.510274876248175,150,random_minus_copy
+"latent video, guidance 1",dinov2,128,"dies, AnnexinV only",5.0,-17.37747890472412,-18.367826906206467,-16.346282601908072,150,random_minus_copy
+"latent video, guidance 1",dinov2,128,"dies, AnnexinV only",6.0,-17.218741671244302,-18.29386619737748,-15.841671584198371,150,random_minus_copy
+"latent video, guidance 1",dinov2,128,"dies, condensed",3.0,-17.664782453838146,-18.739064460093864,-15.491069466000422,95,random_minus_copy
+"latent video, guidance 1",dinov2,128,"dies, condensed",4.0,-18.833872082358912,-20.1874141574682,-15.90365869699912,95,random_minus_copy
+"latent video, guidance 1",dinov2,128,"dies, condensed",5.0,-19.881064525403474,-21.18623892461916,-16.62135150426883,95,random_minus_copy
+"latent video, guidance 1",dinov2,128,"dies, condensed",6.0,-20.599063813058955,-21.63205519952689,-18.394683507968313,95,random_minus_copy
+"latent video, guidance 1",dinov2,128,survives,3.0,-15.584205016154542,-16.234317319851968,-15.065592140296795,571,random_minus_copy
+"latent video, guidance 1",dinov2,128,survives,4.0,-16.538639613083074,-17.17096552708488,-15.973017387129783,571,random_minus_copy
+"latent video, guidance 1",dinov2,128,survives,5.0,-16.835016489446478,-17.365509609967116,-16.359813971944845,571,random_minus_copy
+"latent video, guidance 1",dinov2,128,survives,6.0,-16.981319327279273,-17.446136272867857,-16.611980339686077,571,random_minus_copy
+"latent video, guidance 1",handcrafted,64,"dies, AnnexinV only",3.0,-0.9450701278615466,-1.117201595039883,-0.7901220143074125,150,random_minus_copy
+"latent video, guidance 1",handcrafted,64,"dies, AnnexinV only",4.0,-0.9865171924714703,-1.2002024341325954,-0.7352369846894199,150,random_minus_copy
+"latent video, guidance 1",handcrafted,64,"dies, AnnexinV only",5.0,-1.1126560866400372,-1.4534728807414738,-0.7418250182676167,150,random_minus_copy
+"latent video, guidance 1",handcrafted,64,"dies, AnnexinV only",6.0,-1.4595774652607034,-1.8567631458757707,-1.0623398341376107,150,random_minus_copy
+"latent video, guidance 1",handcrafted,64,"dies, condensed",3.0,-1.226149000645851,-1.4415331997537302,-0.7344094333952259,95,random_minus_copy
+"latent video, guidance 1",handcrafted,64,"dies, condensed",4.0,-1.8655032267729463,-2.1639302032012173,-1.2327146592829192,95,random_minus_copy
+"latent video, guidance 1",handcrafted,64,"dies, condensed",5.0,-2.3866531666461492,-2.641613683302537,-1.7558494332766843,95,random_minus_copy
+"latent video, guidance 1",handcrafted,64,"dies, condensed",6.0,-2.77693024871157,-3.003035720336135,-2.2943588669030324,95,random_minus_copy
+"latent video, guidance 1",handcrafted,64,survives,3.0,-0.5695752615709294,-0.6833970111819222,-0.4655726173215273,571,random_minus_copy
+"latent video, guidance 1",handcrafted,64,survives,4.0,-0.6656259061753923,-0.7871400757741356,-0.5609772894826803,571,random_minus_copy
+"latent video, guidance 1",handcrafted,64,survives,5.0,-0.6961786012161351,-0.8218198351883584,-0.5861822916282948,571,random_minus_copy
+"latent video, guidance 1",handcrafted,64,survives,6.0,-0.7589137583289892,-0.8647989485280684,-0.6677904324193041,571,random_minus_copy
+"latent video, guidance 1",handcrafted,128,"dies, AnnexinV only",3.0,-0.8477728993812419,-1.0049089405714542,-0.6918083151301448,150,random_minus_copy
+"latent video, guidance 1",handcrafted,128,"dies, AnnexinV only",4.0,-1.0306834070956177,-1.2941368489785512,-0.7389893360244378,150,random_minus_copy
+"latent video, guidance 1",handcrafted,128,"dies, AnnexinV only",5.0,-1.1782092180615518,-1.533515008581165,-0.78089791567027,150,random_minus_copy
+"latent video, guidance 1",handcrafted,128,"dies, AnnexinV only",6.0,-1.3235767528592404,-1.6451910248884067,-0.9785219093281207,150,random_minus_copy
+"latent video, guidance 1",handcrafted,128,"dies, condensed",3.0,-1.2415658692011184,-1.4686671808681153,-0.7271977832077727,95,random_minus_copy
+"latent video, guidance 1",handcrafted,128,"dies, condensed",4.0,-1.8216890857085066,-2.0581294039218085,-1.2171910820095602,95,random_minus_copy
+"latent video, guidance 1",handcrafted,128,"dies, condensed",5.0,-2.3061622427300152,-2.564489039586322,-1.7471471575649957,95,random_minus_copy
+"latent video, guidance 1",handcrafted,128,"dies, condensed",6.0,-2.651023409194178,-2.8963253403618343,-2.0774536653560247,95,random_minus_copy
+"latent video, guidance 1",handcrafted,128,survives,3.0,-0.6140951822820263,-0.7460761193457771,-0.4881290022129979,571,random_minus_copy
+"latent video, guidance 1",handcrafted,128,survives,4.0,-0.7114480514600318,-0.8551434139064759,-0.572989360921531,571,random_minus_copy
+"latent video, guidance 1",handcrafted,128,survives,5.0,-0.7303902051538974,-0.8925616178259165,-0.5846764298812922,571,random_minus_copy
+"latent video, guidance 1",handcrafted,128,survives,6.0,-0.8158324144668109,-0.9262910958495474,-0.7251574750653358,571,random_minus_copy
+"latent video, guidance 1",readouts,64,"dies, AnnexinV only",3.0,-0.38182670154723247,-0.5050104287049393,-0.23922710958958798,150,random_minus_copy
+"latent video, guidance 1",readouts,64,"dies, AnnexinV only",4.0,-0.5003663525095394,-0.746695502911147,-0.21817685112255034,150,random_minus_copy
+"latent video, guidance 1",readouts,64,"dies, AnnexinV only",5.0,-0.5684303574495552,-0.8369560354386099,-0.2382919826372107,150,random_minus_copy
+"latent video, guidance 1",readouts,64,"dies, AnnexinV only",6.0,-0.8140846856440397,-1.1152749348500899,-0.4877214722031766,150,random_minus_copy
+"latent video, guidance 1",readouts,64,"dies, condensed",3.0,-0.7618920054734167,-0.9666834099345427,-0.2917338738277,95,random_minus_copy
+"latent video, guidance 1",readouts,64,"dies, condensed",4.0,-1.4154518951717576,-1.6846987669837887,-0.8045537327204798,95,random_minus_copy
+"latent video, guidance 1",readouts,64,"dies, condensed",5.0,-1.830496882242598,-2.1423446424076413,-1.2173706020102024,95,random_minus_copy
+"latent video, guidance 1",readouts,64,"dies, condensed",6.0,-2.1430696131968188,-2.4075992031467797,-1.583326131235915,95,random_minus_copy
+"latent video, guidance 1",readouts,64,survives,3.0,-0.15480046579575715,-0.21607762228918584,-0.09270300577786299,571,random_minus_copy
+"latent video, guidance 1",readouts,64,survives,4.0,-0.23888788094165983,-0.306594427238572,-0.1835812252807663,571,random_minus_copy
+"latent video, guidance 1",readouts,64,survives,5.0,-0.30665279197013573,-0.3810878871249323,-0.24719152583701406,571,random_minus_copy
+"latent video, guidance 1",readouts,64,survives,6.0,-0.36634637865088404,-0.4494576813633292,-0.30513318588985056,571,random_minus_copy

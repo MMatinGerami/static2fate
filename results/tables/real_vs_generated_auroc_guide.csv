@@ -1,0 +1,16 @@
+model,space,res,auroc,n
+latent video,readouts,64,0.5514522847282295,6528
+latent video,handcrafted,64,0.5805984139213283,6528
+latent video,dinov2,64,0.9989242231052959,6528
+"latent video, guidance 1",readouts,64,0.583726154754181,6528
+"latent video, guidance 1",handcrafted,64,0.5904686974360823,6528
+"latent video, guidance 1",dinov2,64,0.9989970616769992,6528
+"latent video, 3 fates",readouts,64,0.5890028211805556,6528
+"latent video, 3 fates",handcrafted,64,0.5870480066260573,6528
+"latent video, 3 fates",dinov2,64,0.9993597527092946,6528
+latent video,handcrafted,128,0.6353243982182334,6528
+latent video,dinov2,128,0.9999136449923107,6528
+"latent video, guidance 1",handcrafted,128,0.6191455059352173,6528
+"latent video, guidance 1",dinov2,128,0.9999618911596502,6528
+"latent video, 3 fates",handcrafted,128,0.6513730070766051,6528
+"latent video, 3 fates",dinov2,128,0.9999260350586313,6528

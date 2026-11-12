@@ -9,6 +9,7 @@ runs unchanged: samples[_start_stop].npy (cells, 4, M, 3, 128, 128) uint8 with i
 file, and for a video model also clips[_start_stop].npy (cells, M, 7, 3, 128, 128).
 
 Usage: uv run scripts/35_generate_latent.py [model dir] [M, default 8] [cells: n or start:stop]
+       [guidance, default 2.0] [output dir, default the model dir]
 """
 
 import contextlib
@@ -31,7 +32,9 @@ FUTURE = [6, 8, 10, 12]
 CELLS_PER_BATCH = {"cuda": 16, "mps": 4, "cpu": 2}
 
 
-def main(mdir: Path, m: int, cells: str | None) -> None:
+def main(mdir: Path, m: int, cells: str | None, guidance: float = 2.0, out: Path | None = None) -> None:
+    out = mdir if out is None else out
+    out.mkdir(parents=True, exist_ok=True)
     train = importlib.import_module("09_train_flow")
     run = json.loads((mdir / "run.json").read_text())
     video = run["model"] == "video"
@@ -56,15 +59,15 @@ def main(mdir: Path, m: int, cells: str | None) -> None:
     clip = run["clip"] if video else FUTURE
     t = len(clip)
     print(f"cells {n}, {m} {'clips' if video else 'samples'} each, latent {run['z']}x{ls}x{ls}, "
-          f"decoded to {size} px, {fates} fate classes, device {device}", flush=True)
+          f"decoded to {size} px, {fates} fate classes, guidance {guidance}, device {device}", flush=True)
     amp = torch.autocast("cuda", dtype=torch.float16) if device == "cuda" else contextlib.nullcontext()
     z0 = encode(ae, x[:, 0], std)  # (n, z, ls, ls) context codes
 
-    samples = np.lib.format.open_memmap(mdir / f"samples{suffix}.npy", mode="w+", dtype=np.uint8,
+    samples = np.lib.format.open_memmap(out / f"samples{suffix}.npy", mode="w+", dtype=np.uint8,
                                         shape=(n, len(FUTURE), m, 3, size, size))
     clips = None
     if video:
-        clips = np.lib.format.open_memmap(mdir / f"clips{suffix}.npy", mode="w+", dtype=np.uint8,
+        clips = np.lib.format.open_memmap(out / f"clips{suffix}.npy", mode="w+", dtype=np.uint8,
                                           shape=(n, m, t, 3, size, size))
         keep = [clip.index(f) for f in FUTURE]
     g = torch.Generator().manual_seed(0)
@@ -79,29 +82,31 @@ def main(mdir: Path, m: int, cells: str | None) -> None:
             frame = torch.tensor(clip, device=device)[None].expand(k * m, -1)
             noise = torch.randn(k * m, t, run["z"], ls, ls, generator=g).to(device)
             with amp:
-                out = sample_video(model, frame, fk, ctx, cf, x0=noise, clamp=False)
-            u8 = float_to_uint8(decode(ae, out.flatten(0, 1).float(), std)).view(k, m, t, 3, size, size)
+                pred = sample_video(model, frame, fk, ctx, cf, x0=noise, clamp=False, guidance=guidance)
+            u8 = float_to_uint8(decode(ae, pred.flatten(0, 1).float(), std)).view(k, m, t, 3, size, size)
             clips[sl] = u8.numpy()
             samples[sl] = u8[:, :, keep].transpose(1, 2).numpy()
         else:
             for j, f in enumerate(FUTURE):
                 noise = torch.randn(k * m, run["z"], ls, ls, generator=g).to(device)
                 with amp:
-                    out = sample(model, torch.full((k * m,), f, device=device), fk, x0=noise, clamp=False,
-                                 ctx=ctx, ctx_frame=cf)
-                samples[sl, j] = float_to_uint8(decode(ae, out.float(), std)).view(k, m, 3, size, size).numpy()
+                    pred = sample(model, torch.full((k * m,), f, device=device), fk, x0=noise, clamp=False,
+                                  ctx=ctx, ctx_frame=cf, guidance=guidance)
+                samples[sl, j] = float_to_uint8(decode(ae, pred.float(), std)).view(k, m, 3, size, size).numpy()
         if device == "mps":
             torch.mps.empty_cache()
         if sl.stop % 16 == 0 or sl.stop == n:
             print(f"cells {sl.stop}/{n}", flush=True)
     samples.flush()
-    np.save(mdir / f"samples{suffix}_tracks.npy", tracks)
+    np.save(out / f"samples{suffix}_tracks.npy", tracks)
     if video:
         clips.flush()
-        np.save(mdir / f"clips{suffix}_tracks.npy", tracks)
+        np.save(out / f"clips{suffix}_tracks.npy", tracks)
 
 
 if __name__ == "__main__":
     main(Path(sys.argv[1]) if len(sys.argv) > 1 else ROOT / "results/latent_frame",
          int(sys.argv[2]) if len(sys.argv) > 2 else 8,
-         sys.argv[3] if len(sys.argv) > 3 else None)
+         sys.argv[3] if len(sys.argv) > 3 else None,
+         float(sys.argv[4]) if len(sys.argv) > 4 else 2.0,
+         Path(sys.argv[5]) if len(sys.argv) > 5 else None)

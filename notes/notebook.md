@@ -879,3 +879,22 @@ real to 0.03. Literature: Cottet et al. 2023 (SLAS Discovery, PMID 39492484) lis
 among the states the dye reports; the channel-specific claim was not verified beyond the
 abstract (Europe PMC full-text search for ChromaLive + staurosporine + 488: no hits). Written up
 as "Does the cytoplasm turn green when a cell dies?" plus a README row; tests for the helpers.
+
+16:40: is the two-class model's certainty the guidance? Resampled results/kaggle/lat_video at
+guidance 1.0 (35_generate_latent.py now takes guidance and an output dir; 816 cells x 8, 67 min
+on the Mac into results/guidance/lat_video_g1), cached and scored with tag _guide, plus new
+45_guidance_mixture.py: per-sample condensed call (label's rule in crop space, agrees with the
+label on 91% of real held-out cells) and green call (44's rule). Fraction of 6 h samples
+condensed, AnnexinV-only / condensed / survives: real 0.19 / 0.60 / 0.01; guidance 2 0.36 /
+0.63 / 0.00; guidance 1 0.21 / 0.42 / 0.01; 3 fates 0.12 / 0.70 / 0.00. Green: real 0.73 / 0.79
+/ 0.28; guidance 2 0.87 / 0.90 / 0.09; guidance 1 0.72 / 0.79 / 0.16; 3 fates 0.76 / 0.88 /
+0.09. Cells with both looks among their 8 samples: 0.55 / 0.61 (g2), 0.52 / 0.78 (g1), 0.45 /
+0.52 (3 fates); so the g2 model was never collapsed, it was shifted. Reading: guidance raised
+condensation for every "dies" cell, right for condensing ones and wrong for AnnexinV-only ones;
+without it the conditional separates the two (0.21 vs 0.42) less than the data (0.19 vs 0.60).
+The label is the fix, not the guidance scale. Other scores: DINOv2 d to the real 6 h frame at 64
+px, AnnexinV-only 37.2 (g1) vs 37.5 (g2), 37.2 (3 fates), copy 37.4; condensed 36.9 all, copy
+39.7; spread 31.6 vs 31.1; handcrafted AUROC 128 px 0.62 vs 0.64 / 0.65; identity 0.45 all;
+reversals AnnexinV-only 0.99 vs 0.89 / 1.14 (real 1.07), condensed 0.88 vs 0.78 (real 0.65);
+nucleus area per hour larger in every group at g1. Written up as "Is the two-class model's
+certainty the guidance?", README row, fig 20. Open: the three-class model at guidance 1.
