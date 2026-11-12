@@ -860,3 +860,22 @@ real). Per-cell skills move the same way within CIs. Realism and identity unchan
 scripts/43_masked_vs_copy.py pairs the per-cell distances with the copy (39 had no copy row and
 per-model CIs only); the whole-crop numbers of that pipeline sit 0.2 below 42's. Written up as
 "Three fate classes" in docs/results.md.
+
+## 2026-11-12
+
+14:51: does dying cytoplasm turn from red to green? Matin saw it in every lab image and asked for
+a check against the earlier note that real dying cells end red and blue. New
+scripts/44_green_red.py, 90 s on the Mac. Raw ring means from the track parquets (2,735 complete
+tracks at the two-fate doses): 488 / 561 median 1.0 to 5.6 (condensed), 2.3 (AnnexinV only), 1.0
+to 1.0 (survivors) by 6 h; 488 up 2.3x / 1.5x, 561 down to 0.46x / 0.61x. Rises past 1.41x: 78%
+(71 to 83), 62% (56 to 69), survivors 25% (22 to 29), dose-dependent (survivors 20% at 4.88 nM,
+49% at 39 nM). AUROC of the change from 0 h, dying vs surviving, held-out wells: 0.78 (0.68 to
+0.85) at 6 h, 0.68 at 3 h, 488 alone 0.80, 561 alone 0.67. So the old sentence was wrong and is
+corrected in "Starting from a real cell". Generated crops (handcrafted ring means cached at 64
+px, change from the real 0 h): every model turns dying cells green, 93 to 98% of them against 73
+to 79% real, and 3 to 7% of survivors against 28%; two-class models give AnnexinV-only cells the
+condensing colour (2.4 to 2.5 against 1.7), the three-class model 1.58. Reconstruction matches
+real to 0.03. Literature: Cottet et al. 2023 (SLAS Discovery, PMID 39492484) lists apoptosis
+among the states the dye reports; the channel-specific claim was not verified beyond the
+abstract (Europe PMC full-text search for ChromaLive + staurosporine + 488: no hits). Written up
+as "Does the cytoplasm turn green when a cell dies?" plus a README row; tests for the helpers.

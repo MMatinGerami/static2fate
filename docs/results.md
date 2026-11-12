@@ -72,8 +72,11 @@ nucleus area, nucleus Hoechst, cytoplasm green and red; 95% CIs from resampling 
 So the dies branch predicts the course of cells that visibly die better than "nothing changes",
 from 4 h on. The survives branch is close to a frozen copy of the first frame and adds nothing.
 Cells that are AnnexinV-positive but still look normal at 6 h are pushed too far. In the images
-the generated dying cytoplasm turns green, while real dying cells end as a condensed red and blue
-body, so the colour of the change is wrong even when its timing is right.
+the generated dying cytoplasm turns green. So does the real one: measured in the raw counts, the
+cytoplasm's 488 / 561 ratio rises in 78% of condensing cells by 6 h ("Does the cytoplasm turn green
+when a cell dies?" below). An earlier version of this paragraph had real dying cells ending red and
+blue, which was wrong. What the models overdo is the certainty: nearly every generated dying cell
+turns green and almost no generated survivor does, where a quarter of real survivors do too.
 
 ![model vs copy](../results/figures/fig6_inversion_vs_copy.png)
 
@@ -962,6 +965,67 @@ any group but the condensing one, is still open.
 
 ![masked, three fates](../results/figures/fig18_energy_masked_fate3.png)
 
+## Does the cytoplasm turn green when a cell dies?
+
+In the colour images (red ChromaLIVE 561, green ChromaLIVE 488, blue Hoechst) a dying cell's
+cytoplasm looks as if it goes from red to green. Measured instead of eyeballed
+(`scripts/44_green_red.py`, fig 19): for every complete labelled track of the two-fate doses
+(2,735 cells, 816 in the held-out wells) the raw camera means of the two channels in the
+cytoplasm ring at each of the 13 frames, their ratio R = 488 / 561, and the per-cell log2 change
+of R from 0 h. The fate label comes from the AnnexinV channel and from Hoechst and nucleus area,
+so the ratio is not part of its own label.
+
+| real cells, medians over all two-fate wells | 488 ring, 0 h to 6 h | 561 ring, 0 h to 6 h | R, 0 h to 6 h | R rises by more than 1.41x by 6 h (95% CI over fields) |
+|---|---|---|---|---|
+| survives (1,738) | 210 to 207 | 218 to 193 | 0.95 to 1.04 | 25% (22 to 29) |
+| dies, AnnexinV only (487) | 214 to 329 | 212 to 129 | 0.99 to 2.27 | 62% (56 to 69) |
+| dies, condensed (510) | 199 to 450 | 191 to 87 | 1.04 to 5.62 | 78% (71 to 83) |
+
+So the observation is right and it is in the raw intensities, not in the display: both channels
+move, 488 up by 1.5x (AnnexinV only) to 2.3x (condensed) and 561 down to 0.6x and 0.5x. It is
+not every dying cell. By the 1.41x threshold 62% of AnnexinV-only and 78% of condensing cells
+have turned by 6 h, and a quarter of the survivors have too, more at the higher doses (20% at
+4.88 nM, 49% at 39 nM, where the condensing fraction also peaks at 86%). Some of those survivors
+may be cells that die after the 6 h window or that the AnnexinV label misses; the ratio cannot
+say which. In the held-out wells the numbers are 29%, 65% and 77%.
+
+As a marker of its own: the log2 change of R from 0 h separates dying from surviving held-out
+cells with AUROC 0.78 at 6 h (95% CI 0.68 to 0.85), 0.68 at 3 h, and passes 0.6 at about 2.5 h;
+the 488 channel alone does the same (0.80 at 6 h), the 561 channel alone less (0.67). It needs
+two frames of the cell, so it is not comparable with the single-frame baselines of the first
+section, which already see each channel's ring mean at one frame. A two-frame baseline is the
+natural next use of it. The ChromaLIVE paper (Cottet et al. 2023, SLAS Discovery,
+doi:10.1016/j.slasd.2023.10.005, PMID 39492484) lists apoptosis among the states the dye's
+intensity and pattern report; the abstract does not say in which channel, and the specific claim
+that the 488 signal rises in staurosporine-treated cells was not checked against the full text.
+
+Do the generated cells do it? Same measure in crop space, on the 816 held-out cells, from the
+handcrafted ring means cached at 64 px by `20_feature_score.py`: the log2 change of the green /
+red ring ratio at 6 h from the cell's own real 0 h frame (the per-field display scaling makes the
+absolute ratio arbitrary), averaged over a model's 8 samples, and the fraction of cells whose
+green ring is brighter than its red one at 6 h, which is what the eye reads.
+
+| held-out cells at 6 h | mean log2 change, survives / AnnexinV only / condensed | rises by more than 1.41x | green ring brighter than red |
+|---|---|---|---|
+| real 6 h | 0.31 / 1.71 / 2.54 | 28% / 73% / 79% | 17% / 53% / 77% |
+| ae128 reconstruction | 0.25 / 1.68 / 2.54 | 24% / 73% / 79% | 15% / 52% / 77% |
+| frame model, 64 px, 8 h | -0.09 / 2.50 / 2.81 | 4% / 93% / 98% | 4% / 79% / 86% |
+| latent frame | -0.11 / 2.43 / 2.57 | 7% / 85% / 88% | 7% / 78% / 80% |
+| latent video | -0.16 / 2.53 / 2.82 | 3% / 98% / 96% | 4% / 83% / 85% |
+| latent video, 3 fates | -0.15 / 1.58 / 2.96 | 4% / 93% / 93% | 3% / 59% / 84% |
+
+The reconstruction gives the real numbers back, so the measure survives the autoencoder. Every
+model turns dying cytoplasm green, in the right direction and by about the right amount for
+condensing cells (2.6 to 3.0 against 2.5 real). What they get wrong is the certainty: 93 to 98%
+of generated dying cells turn where 73 to 79% of real ones do, and 3 to 7% of generated survivors
+where 28% of real ones do. The models use the colour as a badge of the fate they were told, more
+deterministically than the cells. The two-class models also push AnnexinV-only cells to the
+condensing cells' colour (2.4 to 2.5 against 1.7 real); the three-class model is the one that
+gives them their own, 1.58 and 59% green over red against 1.71 and 53% real, which fits its
+separate motion for that group in the section above.
+
+![green and red](../results/figures/fig19_green_red.png)
+
 ## Next
 
 - Invert the context frame under the context model, so it keeps the cell's identity and uses
@@ -985,9 +1049,13 @@ any group but the condensing one, is still open.
   the condensing one is closer than the copy yet.
 - Link daughters to mothers in the tracker so dividing cells get a fate too; do cells that
   divide under drug die more or less often?
-- Get the colour of apoptosis right. The per-field scaling is part of it (Hoechst white point
-  1.38x higher at 39 nM than at 4.88 nM, fig 17); it stays a documented limitation, and a
-  plate-wide scaling is the fix if the crops are ever rebuilt.
+- The colour of apoptosis is right in direction (the cytoplasm's 488 / 561 ratio rises in real
+  dying cells, fig 19) and overdone in certainty: nearly every generated dying cell turns green
+  and almost no generated survivor, against 62 to 78% and 25% of real cells. The ratio's change
+  from 0 h is a third apoptosis marker next to AnnexinV and condensation (AUROC 0.78 at 6 h) and
+  belongs in a two-frame baseline. The per-field scaling (Hoechst white point 1.38x higher at
+  39 nM than at 4.88 nM, fig 17) stays a documented limitation; a plate-wide scaling is the fix
+  if the crops are ever rebuilt.
 - The video model started from the frame model has the frame model's images and real cells'
   motion between them, so it is now the default generator. Two things to fix in it: it
   treats AnnexinV-only dying cells like condensing ones (reversals 0.84 against 1.07), and
