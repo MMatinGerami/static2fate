@@ -1,8 +1,7 @@
 # static2fate: experiment log
 
 Every experiment, table and figure, in the order it was run, dead ends included. The direct
-path is [report.md](report.md); the short summary is in the [README](../README.md); dated notes,
-decisions and corrections are in [notes/notebook.md](../notes/notebook.md).
+path is [report.md](report.md); the short summary is in the [README](../README.md).
 
 Read this log with the label audit in mind (report, section 2, added on 12 November 2026):
 the "dies, AnnexinV only" group is 44% threshold background at the model doses, and the

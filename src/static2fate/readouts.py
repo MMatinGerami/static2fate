@@ -2,7 +2,7 @@
 
 The nucleus is the Otsu-thresholded Hoechst object closest to the crop centre. A per-image
 threshold is used because generated images are slightly dimmer than real ones overall; a fixed
-threshold made generated nuclei look far smaller than they are (notebook, 24 Oct).
+threshold made generated nuclei look far smaller than they are.
 """
 
 from __future__ import annotations

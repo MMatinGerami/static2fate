@@ -103,19 +103,3 @@ encoder. Scripts 20, 21, 22, 30, 42 and 45 each answer one question
 
 **`src/static2fate/display.py`**: one colour and intensity convention for every image of real
 cells, `plate_ranges` for the plate-wide scaling, `mosaic` and `scale_bar`.
-
-## Questions worth preparing
-
-- **Why flow matching and not diffusion?** Straight paths, a plain regression loss, a
-  deterministic sampler with few steps, and the same noise can be reused under two conditions.
-- **Why is the fate an input?** To separate two problems. Given the outcome, can the model draw
-  the course? That is tested here. Predicting the outcome is a different task, and section 3
-  of the report shows a single early frame does not carry it.
-- **How do you know the model did not memorise?** Held-out loss equals training loss
-  ([log](log.md#too-small-or-short-of-cells)), and all scores are on wells the model never saw.
-- **What would you change first?** The label: event times from the movie instead of a
-  thresholded endpoint stain (report, section 7).
-- **Why handcrafted features next to DINOv2?** They are interpretable, they can be computed on
-  a generated crop, and at this scale they are at least as good.
-- **What is the unit of analysis?** The field for confidence intervals, the well for the
-  train/test split. With three wells per dose, well-to-well variation is not estimated.

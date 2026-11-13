@@ -52,7 +52,6 @@ The full account with numbers and confidence intervals is in **[docs/report.md](
 | [docs/gallery.md](docs/gallery.md) | many more images of real and generated cells |
 | [docs/code_tour.md](docs/code_tour.md) | the code file by file |
 | [docs/log.md](docs/log.md) | all 25 experiments in the order they were run, dead ends included |
-| [notes/notebook.md](notes/notebook.md) | dated notes and corrections |
 | `src/static2fate/` | library: fields, cells, audit, flow, video, autoencoder, evaluate, features, display |
 | `scripts/` | the pipeline, in order ([scripts/README.md](scripts/README.md)); `scripts/archive/` holds superseded experiments |
 | `kaggle/` | the GPU jobs for the autoencoder and the latent models |
