@@ -141,7 +141,8 @@ def segment_nuclei_classical(stack: np.ndarray, sigma: float = 2, min_area: int 
         dist = ndi.distance_transform_edt(fg)
         peaks = feature.peak_local_max(dist, min_distance=min_distance, labels=measure.label(fg))
         markers = np.zeros(fg.shape, np.int32)
-        markers[tuple(peaks.T)] = np.arange(1, len(peaks) + 1)
+        for i, (row, col) in enumerate(peaks, start=1):
+            markers[row, col] = i
         out.append(watershed(-dist, markers, mask=fg))
     return np.stack(out).astype(np.int32)
 
